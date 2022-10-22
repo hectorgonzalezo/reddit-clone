@@ -1,0 +1,101 @@
+.App header {
+  max-width: 100vw;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 2px 15px 2px 15px;
+  gap: 10px;
+
+  .icon{
+    height: 22px;
+  }
+
+  & * {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+  }
+  button:not(.default-button){
+    border: none;
+    background-color: inherit;
+    border-radius: 0.2rem;
+    padding: 3px 8px 3px 8px;
+    &:hover:not(#x-circle){
+      outline: 1px solid lightgray;
+    }
+  }
+}
+
+#logos {
+  width: auto;
+  flex:0 0 50px;
+  width: auto;
+  img:first-child{
+    padding: 5px;
+    height: 32px;
+  }
+  
+  img:nth-child(2){
+    width: 60px
+  }
+}
+
+#go-to{
+  flex: 1 2 50px;
+
+  button{
+    width: 100%;
+
+    h1 {
+      width: 100%;
+    }
+  }
+}
+
+#search-bar {
+  flex: 2 0 200px;
+  background-color: rgb(242, 241, 241);
+  border-radius: 1rem;
+  padding: 6px 10px 6px 10px;
+
+  &:hover{
+    outline: 1px solid var(--reddit-blue);
+    background-color: white;
+    > button{
+      display: block
+    }
+  }
+
+  input{
+    width: 100%;
+    border: none;
+    background-color: inherit;
+
+    &:focus{
+      border:none;
+      outline: none;
+    }
+  }
+button {
+      display: none;
+    }
+}
+
+#user-area{
+  button:last-child{
+    gap: 0px;
+  }
+}
+
+@media only screen and (max-width: 900px){
+  #logos img:nth-child(2){
+    display: none;
+  }
+
+  #go-to h1 {
+    display: none;
+  }
+}
