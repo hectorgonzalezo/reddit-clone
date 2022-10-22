@@ -8,9 +8,11 @@
   padding: 2px 15px 2px 15px;
   gap: 10px;
 
-  .icon{
-    height: 22px;
+  a:hover{
+    cursor: pointer;
   }
+
+
 
   & * {
     display: flex;

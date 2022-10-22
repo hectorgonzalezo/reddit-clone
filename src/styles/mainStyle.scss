@@ -1,0 +1,30 @@
+main{
+  background-color: var(--background-color);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: clamp(640px, 40%, 800px) 1fr;
+  grid-template-rows: 50px 150px;
+  padding: 20px;
+}
+
+
+
+.icon{
+  height: 22px;
+}
+
+.main-child{
+  background-color: white;;
+  border-radius: 0.3rem;
+  border: 1px solid lightgrey;
+  padding: 10px;
+}
+
+#popular-bar{
+  display: flex;
+  gap: 15px;
+
+  button:last-child{
+    margin-left: auto;
+  }
+}
