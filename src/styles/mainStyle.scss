@@ -5,12 +5,17 @@ main{
   grid-template-columns: clamp(640px, 40%, 800px) 1fr;
   grid-template-rows: 50px 150px;
   padding: 20px;
+
+  & > div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
-
-
 .icon{
-  height: 22px;
+  // height: 22px;
+  width: 22px;
 }
 
 .main-child{
