@@ -36,6 +36,24 @@ main{
   }
 }
 
+#agreements {
+  a, p{
+    color: grey;
+    font-size: 0.75rem;
+  }
+  div {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+}
+
+#right-side > button:last-child{
+  width: 40%;
+  align-self: center;
+  position: sticky;
+}
+
 
 @media  screen and (max-width: 900px) {
   main{
