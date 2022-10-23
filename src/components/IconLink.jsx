@@ -26,10 +26,8 @@ ${'' /* change svg color when hovering over area */}
       switch (props.fill) {
         case 'blue':
           return 'filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg);';
-          break;
         case 'orange':
           return 'filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg);';
-          break;
         default:
           return '';
       }
