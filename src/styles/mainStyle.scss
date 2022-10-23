@@ -2,7 +2,9 @@ main{
   background-color: var(--background-color);
   min-height: 100vh;
   display: grid;
-  grid-template-columns: clamp(640px, 40%, 800px) 1fr;
+  grid-template-columns: clamp(550px, 60vw, 700px) 300px;
+  justify-content: center;
+  gap: 20px;
   grid-template-rows: 50px 150px;
   padding: 20px;
 
@@ -31,5 +33,15 @@ main{
 
   button:last-child{
     margin-left: auto;
+  }
+}
+
+@media  screen and (max-width: 900px) {
+  main{
+    grid-template-columns: 1fr;
+  } 
+
+  #right-side{
+    display: none;
   }
 }

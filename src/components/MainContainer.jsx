@@ -1,6 +1,7 @@
 import React from 'react';
 import PopularPostsBar from './PopularPostsBar';
 import PostPreview from './PostPreview';
+import TopCommunitiesBar from './TopCommunitiesBar';
 import '../styles/mainStyle.scss';
 
 function MainContainer() {
@@ -13,7 +14,7 @@ function MainContainer() {
       </div>
     </div>
     <div id="right-side">
-
+      <TopCommunitiesBar />
     </div>
     </main>
   )
