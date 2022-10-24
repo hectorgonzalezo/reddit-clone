@@ -10,10 +10,16 @@
   font-family: "Noto Sans" Arial sans-serif;
 }
 
+body {
+  background-color: var(--background-color);
+}
+
 .App {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   font-family: "Noto Sans"; 
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 button{
@@ -25,6 +31,6 @@ a {
   color: inherit;
 }
 
-/* * {
-  outline: 2px dashed red;
-} */
+// * {
+//   outline: 2px dashed red;
+// }

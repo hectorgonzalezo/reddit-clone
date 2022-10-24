@@ -23,7 +23,8 @@ async function getSubredditsData() {
   const subreddits = await getDocs(query(collection(db, 'subreddits')));
 
   subreddits.forEach((subreddit) => names.push(
-    {name: subreddit.data().name, icon: subreddit.data().icon }));
+    { name: subreddit.data().name, icon: subreddit.data().icon }
+  ));
 
   return names;
 }
