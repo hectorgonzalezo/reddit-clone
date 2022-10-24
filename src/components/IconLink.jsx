@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { element, bool, string } from 'prop-types';
+import { arrayOf, element, bool, string, oneOfType } from 'prop-types';
 
 const Button = styled.button`
 border: none;
@@ -48,6 +48,7 @@ img {
 `;
 
 function IconLink({ children, round, fill }) {
+  console.log({children})
   return (
     <Button round={round} fill={fill}>
       {children}
@@ -61,7 +62,7 @@ IconLink.defaultProps = {
 };
 
 IconLink.propTypes = {
-  children: element.isRequired,
+  children: oneOfType([element, arrayOf(oneOfType([element, string]))]).isRequired,
   round: bool,
   fill: string,
 };
