@@ -48,7 +48,6 @@ img {
 `;
 
 function IconLink({ children, round, fill }) {
-  console.log({children})
   return (
     <Button round={round} fill={fill}>
       {children}

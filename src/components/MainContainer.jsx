@@ -7,7 +7,7 @@ import database from '../firebase/firebase';
 import '../styles/mainStyle.scss';
 
 function MainContainer() {
-  const [subredditsData, setSubredditsData] = useState({});
+  const [subredditsData, setSubredditsData] = useState([]);
   useEffect(() => {
     async function getNames() {
       let data;

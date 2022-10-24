@@ -70,8 +70,15 @@ const Post = styled.article`
   }
 `;
 
-function PostPreview({ subredditName, subredditIcon, poster, title, upVotes, timePosted, comments }) {
-  console.log(comments)
+function PostPreview({
+  subredditName,
+  subredditIcon,
+  poster,
+  title,
+  upVotes,
+  timePosted,
+  comments,
+}) {
   return (
     <Post className="main-child">
       <div className="vote-area-post">
@@ -83,6 +90,7 @@ function PostPreview({ subredditName, subredditIcon, poster, title, upVotes, tim
           <img src={downIcon} alt="" />
         </IconLink>
       </div>
+
       <div className="top-area-post">
         <a>
           <SubredditIcon icon={subredditIcon} small />
@@ -95,9 +103,11 @@ function PostPreview({ subredditName, subredditIcon, poster, title, upVotes, tim
           {formatDistanceToNow(new Date(timePosted))} ago
         </p>
       </div>
+
       <div className="main-area-post">
         <h1>{title}</h1>
       </div>
+
       <div className="bottom-area-post">
         <IconLink>
           <img src={commentsIcon} alt="" className="icon" />
@@ -120,9 +130,14 @@ function PostPreview({ subredditName, subredditIcon, poster, title, upVotes, tim
   );
 }
 
+PostPreview.defaultProps = {
+  subredditIcon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=4b92a9a0-3b37-4058-bdca-627d706dd7d6',
+  comments: [],
+};
+
 PostPreview.propTypes = {
   subredditName: string.isRequired,
-  subredditIcon: string.isRequired,
+  subredditIcon: string,
   poster: string.isRequired,
   title: string.isRequired,
   upVotes: number.isRequired,
