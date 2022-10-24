@@ -19,7 +19,7 @@ describe('Post previews', () => {
     // get values from mockPost
     const {
       subredditName,
-      subredditIcon, 
+      subredditIcon,
       poster,
       title,
       upVotes,

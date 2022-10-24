@@ -1,5 +1,7 @@
-main{
+body {
   background-color: var(--background-color);
+}
+main{
   min-height: 100vh;
   display: grid;
   grid-template-columns: clamp(550px, 60vw, 700px) 300px;
@@ -48,10 +50,18 @@ main{
 }
 }
 
+#left-side {
+  height: auto;
+}
+
 #right-side > button:last-child{
   width: 40%;
   align-self: center;
   position: sticky;
+}
+
+* {
+  line-height: 1.3;
 }
 
 

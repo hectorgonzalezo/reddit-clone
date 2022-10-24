@@ -15,12 +15,17 @@ import styled from 'styled-components';
 const Post = styled.article`
   display: grid;
   gap: 10px;
+  padding-right: 0px;
   grid-template-columns: 40px 1fr;
   grid-template-rows: 20px 1fr 30px;
   grid-template-areas: 
                        "vote sub"
                        "vote main"
                        "vote comm";
+                  
+  & > div{
+    padding-right: 10px;
+  }
 
   em {
     font-weight: bold;
@@ -63,6 +68,25 @@ const Post = styled.article`
 
   & > .main-area-post{
     grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 0px;
+    & > *:not(img) {
+      padding-right: 13px;
+    }
+    img{
+      max-width: 100%;
+    }
+    p{
+      font-size: 0.82rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      max-height: 250px;
+      overflow: hidden;
+    -webkit-mask-image: -webkit-gradient(linear, left 70%, left bottom, 
+    from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    }
   }
 
   & > .bottom-area-post{
@@ -75,9 +99,11 @@ function PostPreview({
   subredditIcon,
   poster,
   title,
+  text,
   upVotes,
   timePosted,
   comments,
+  img,
 }) {
   return (
     <Post className="main-child">
@@ -106,6 +132,11 @@ function PostPreview({
 
       <div className="main-area-post">
         <h1>{title}</h1>
+        {/* display image if any is provided */}
+        {img !== '' ? <img src={img} /> : null}
+        {/* display text if any is provided */}
+        {text !== '' ? <p>{text}</p> : null}
+        {console.log(typeof text)}
       </div>
 
       <div className="bottom-area-post">
@@ -132,7 +163,9 @@ function PostPreview({
 
 PostPreview.defaultProps = {
   subredditIcon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=4b92a9a0-3b37-4058-bdca-627d706dd7d6',
+  text: '',
   comments: [],
+  img: '',
 };
 
 PostPreview.propTypes = {
@@ -140,9 +173,11 @@ PostPreview.propTypes = {
   subredditIcon: string,
   poster: string.isRequired,
   title: string.isRequired,
+  text: string,
   upVotes: number.isRequired,
   timePosted: string.isRequired,
   comments: arrayOf(object),
+  img: string,
 };
 
 export default PostPreview;
