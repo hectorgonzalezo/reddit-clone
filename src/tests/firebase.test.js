@@ -2,12 +2,13 @@
  * @jest-environment node
  */
 import '@testing-library/jest-dom';
-import database from "../firebase/firebase";
+import database from '../firebase/firebase';
 
 describe('Comunication with database', () => {
   test('Gets all subreddit names', async () => {
-    const subreddits = await database.getSubredditNames();
-    expect(subreddits.length).not.toBe(0);
+    const subredditsData = await database.getSubredditsData();
+    expect(typeof subredditsData).toBe('object');
+    expect(subredditsData.length).not.toBe(0);
   });
 
   test('Fetches all posts from subreddit', async () => {

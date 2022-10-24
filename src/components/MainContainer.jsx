@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PopularPostsBar from './PopularPostsBar';
-import PostPreview from './PostPreview';
 import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
+import PostsArea from './PostsArea';
+import database from '../firebase/firebase';
 import '../styles/mainStyle.scss';
 
 function MainContainer() {
+  const [subredditsData, setSubredditsData] = useState({});
+  useEffect(() => {
+    async function getNames() {
+      let data;
+      try {
+        data = await database.getSubredditsData();
+      } catch {
+        console.log("Couldn't get subreddit data");
+        data = [];
+      }
+      setSubredditsData(data);
+    }
+    getNames();
+  }, []);
+
   return (
     <main>
       <div id="left-side">
         <PopularPostsBar />
-        <div id="posts">
-          <PostPreview />
-        </div>
+        <PostsArea subreddits={subredditsData} />
       </div>
       <div id="right-side">
         <TopCommunitiesBar />

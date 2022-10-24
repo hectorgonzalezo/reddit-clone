@@ -2,11 +2,14 @@ import React from 'react';
 import upIcon from '../assets/upvote_icon.svg';
 import downIcon from '../assets/downvote_icon.svg';
 import commentsIcon from '../assets/comments_icon.svg';
-import awardIcon from '../assets/award_icon.svg';
 import shareIcon from '../assets/share_icon.svg';
 import saveIcon from '../assets/save_icon.svg';
 import hideIcon from '../assets/hide_icon.svg';
 import IconLink from './IconLink';
+import SubredditIcon from './SubredditIcon';
+import formatUpVotes from '../utils/formatUpVotes';
+import { formatDistanceToNow } from 'date-fns';
+import { string, number, arrayOf, object } from 'prop-types';
 import styled from 'styled-components';
 
 const Post = styled.article`
@@ -37,13 +40,24 @@ const Post = styled.article`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    gap: 5px;
+    img{
+      width: 20px;
+    }
   }
 
   & > .top-area-post{
     grid-area: sub;
-    p{
+    gap: 3px;
+    a:hover{
+      text-decoration: underline;
+    }
+    a,p{
       font-size: 0.8rem;
       color: grey;
+      display: flex;
+      align-items: center;
+      gap: 3px;
     }
   }
 
@@ -56,34 +70,38 @@ const Post = styled.article`
   }
 `;
 
-function PostPreview() {
+function PostPreview({ subredditName, subredditIcon, poster, title, upVotes, timePosted, comments }) {
+  console.log(comments)
   return (
     <Post className="main-child">
       <div className="vote-area-post">
         <IconLink fill="orange">
           <img src={upIcon} alt="" />
         </IconLink>
-        <p>19</p>
+        <p>{formatUpVotes(upVotes)}</p>
         <IconLink fill="blue">
           <img src={downIcon} alt="" />
         </IconLink>
       </div>
       <div className="top-area-post">
-        <p><em>r/AskReddit</em></p>
+        <a>
+          <SubredditIcon icon={subredditIcon} small />
+          <em>r/{subredditName}</em>
+        </a>
         <p>&nbsp;•&nbsp;</p>
-        <p> Posted by u/Hector 5 hours ago</p>
+        <p>
+          {" "}
+          Posted by <a href="">u/{poster}</a>{" "}
+          {formatDistanceToNow(new Date(timePosted))} ago
+        </p>
       </div>
       <div className="main-area-post">
-        <h1>What 90s Song will always be a banger?</h1>
+        <h1>{title}</h1>
       </div>
       <div className="bottom-area-post">
         <IconLink>
           <img src={commentsIcon} alt="" className="icon" />
-          <p>73 Comments</p>
-        </IconLink>
-        <IconLink>
-          <img src={awardIcon} alt="" className="icon" />
-          <p>Award</p>
+          <p>{formatUpVotes(comments.length)} Comments</p>
         </IconLink>
         <IconLink>
           <img src={shareIcon} alt="" className="icon" />
@@ -101,5 +119,15 @@ function PostPreview() {
     </Post>
   );
 }
+
+PostPreview.propTypes = {
+  subredditName: string.isRequired,
+  subredditIcon: string.isRequired,
+  poster: string.isRequired,
+  title: string.isRequired,
+  upVotes: number.isRequired,
+  timePosted: string.isRequired,
+  comments: arrayOf(object),
+};
 
 export default PostPreview;
