@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Styled button works After filling form correctly, button gets enabled 1`] = `undefined`;
+
+exports[`Styled button works Button doesnt get enabled if mail is missing @ 1`] = `undefined`;
+
+exports[`Styled button works Button doesnt get enabled if passwords are different 1`] = `undefined`;
+
+exports[`Styled button works Button gets disabled when passwords are changed and dont match 1`] = `undefined`;
+
+exports[`Styled button works Renders with sign up button disabled 1`] = `undefined`;

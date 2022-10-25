@@ -16,13 +16,13 @@
   width: 250px;
   background-color: white;
   border-radius: 1rem;
-  padding: 80px 50px 80px 50px;
+  padding: 50px;
   box-shadow: 5px 5px 15px grey;
   display: grid;
   grid-template-rows: auto auto 1fr ;
   position: relative;
-  gap: 15px;
   font-family: sans-serif;
+  gap: 15px;
 
   .close-button{
     position: absolute;
@@ -37,7 +37,7 @@
   div, form{
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 17px;
   }
   
   a {
@@ -62,6 +62,8 @@
   }
 
   form {
+    position: relative;
+
     .input-wrap{
       position: relative;
 
@@ -73,8 +75,6 @@
         transition: 1s all;
       }
 
-      
-
       & > input:not(:placeholder-show){
         background-color: red;
         ~ label{
@@ -83,11 +83,33 @@
         }
       }
     }
+
+    span {
+      position: absolute;
+      height: 10px;
+      width: 120%;
+      bottom: -12px;
+      color: red;
+      font-size: 0.8rem;
+    }
     input{
       border: none;
       background-color: rgb(232, 231, 231);
       border-radius: 1rem;
-      padding: 10px 10px 5px 10px;
+      padding: 14px 10px 5px 15px;
+      font-size: 1rem;
+
+      &:invalid:not(:placeholder-shown){
+        outline: 1px solid red;
+        &::before{
+          content: 'fix item';
+        }
+
+      &:valid{
+        outline: 1px solid var(--reddit-blue-light);
+        background-color: red;
+      }
+      }
 
       &::placeholder{
         font-size: 0rem;
@@ -109,6 +131,11 @@
           font-size: 0.6rem;
         }
       }
+    }
+
+    button {
+      background-color: rgb(255, 106, 0);
+      padding: 8px;
     }
   }
 
