@@ -64,7 +64,15 @@ const database = (() => {
     return posts;
   }
 
-  return { getSubredditsData, getAllPostsInSubreddit, getTopPostsInSubreddit };
+  // Links user authorization with user name
+  async function addUser(email, username) {
+    const docRef = await addDoc(collection(db, 'users'), {
+      email,
+      username,
+    });
+  }
+
+  return { getSubredditsData, getAllPostsInSubreddit, getTopPostsInSubreddit, addUser };
 })();
 
 // Used for user sign in and sign up
@@ -87,21 +95,15 @@ const authorization = (() => {
     }
   };
 
-  const createAccount = async (loginEmail, loginPassword) => {
-    try {
-      console.log({ auth });
-      console.log({ loginEmail, loginPassword });
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        loginEmail,
-        loginPassword
-      );
-      console.log(userCredential);
-      return userCredential.user;
-    } catch (error) {
-      console.log('error');
-      return error;
-    }
+  const createAccount = async (loginEmail, loginPassword, username) => {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      loginEmail,
+      loginPassword
+    );
+    // If sucessfully created account, link it with username in database
+    database.addUser(userCredential.user.email, username);
+    return userCredential.user;
   };
 
   const logInPopup = async () => {
