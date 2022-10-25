@@ -3,7 +3,7 @@ import PopularPostsBar from './PopularPostsBar';
 import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './PostsArea';
-import database from '../firebase/firebase';
+import { database } from '../firebase/firebase';
 import '../styles/mainStyle.scss';
 
 function MainContainer() {

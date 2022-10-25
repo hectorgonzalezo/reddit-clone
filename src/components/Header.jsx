@@ -6,6 +6,7 @@ import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import userIcon from '../assets/user_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
+import { authorization } from '../firebase/firebase';
 import '../styles/headerStyle.scss';
 
 function Header() {
@@ -26,8 +27,8 @@ function Header() {
       </div>
       <SearchBar />
       <div id="user-area">
-        <Button text="Sign Up" light />
-        <Button text="Log In" />
+        <Button text="Sign Up" light onClick={() => console.log('asd')}/>
+        <Button text="Log In" onClick={authorization.logIn} />
         <button type="button">
           <img src={userIcon} alt="" className="icon" />
           <img src={arrowDownIcon} alt="" className="icon" />

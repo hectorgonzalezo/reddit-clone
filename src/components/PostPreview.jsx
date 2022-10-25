@@ -136,7 +136,6 @@ function PostPreview({
         {img !== '' ? <img src={img} /> : null}
         {/* display text if any is provided */}
         {text !== '' ? <p>{text}</p> : null}
-        {console.log(typeof text)}
       </div>
 
       <div className="bottom-area-post">

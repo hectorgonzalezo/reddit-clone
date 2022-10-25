@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import '@testing-library/jest-dom';
-import database from '../firebase/firebase';
+import { database, authorization } from '../firebase/firebase';
 
 describe('Comunication with database', () => {
   test('Gets all subreddit names', async () => {
@@ -15,5 +15,16 @@ describe('Comunication with database', () => {
     const posts = await database.getAllPostsInSubreddit('aww');
     expect(posts.length).not.toBe(0);
     expect(typeof (posts[0])).toBe('object');
+  });
+});
+
+describe('User authorization', () => {
+  test('Connects to an existing user', async () => {
+    const existingUserLogin = await authorization.loginEmailPassword('mock_email@mock.com', 'mockpassword');
+    expect(existingUserLogin.email).toBe('mock_email@mock.com');
+  });
+  test('Trows an error when trying to find fake user', async () => {
+    const fakeUserLogin = await authorization.loginEmailPassword('mock_email@mock.comq', 'mockpasswordq');
+    expect(fakeUserLogin.email).not.toBe('mock_email@mock.comq');
   });
 });

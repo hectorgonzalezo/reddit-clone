@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { arrayOf, objectOf, string } from 'prop-types';
-import database from '../firebase/firebase';
+import { database } from '../firebase/firebase';
 import PostPreview from './PostPreview';
 import styled from 'styled-components';
 

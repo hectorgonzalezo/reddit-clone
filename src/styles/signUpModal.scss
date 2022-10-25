@@ -1,0 +1,144 @@
+#signUp-outer{
+  position: absolute;
+  top: 100px;
+  left: 0;
+  height: 90%;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+#signUp-inner{
+  position: sticky;
+  top: 0vh;
+  height: auto;
+  width: 250px;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 80px 50px 80px 50px;
+  box-shadow: 5px 5px 15px grey;
+  display: grid;
+  grid-template-rows: auto auto 1fr ;
+  position: relative;
+  gap: 15px;
+  font-family: sans-serif;
+
+  .close-button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background-color: inherit;
+    font-size: 1.2rem;
+    color: grey;
+  }
+
+  div, form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  a {
+    color: var(--reddit-blue);
+  }
+
+  h1{
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+
+  h3{
+    color: grey;
+  }
+
+  hr{
+    border: 1px solid lightgray;
+  }
+
+  p{
+    font-size: 0.75rem;
+  }
+
+  form {
+    .input-wrap{
+      position: relative;
+
+      label{
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        color: grey;
+        transition: 1s all;
+      }
+
+      
+
+      & > input:not(:placeholder-show){
+        background-color: red;
+        ~ label{
+          top: 3px;
+          font-size: 0.6rem;
+        }
+      }
+    }
+    input{
+      border: none;
+      background-color: rgb(232, 231, 231);
+      border-radius: 1rem;
+      padding: 10px 10px 5px 10px;
+
+      &::placeholder{
+        font-size: 0rem;
+      }
+
+      &:not(:placeholder-shown){
+        + label{
+          top: 3px;
+          font-size: 0.6rem;
+        }
+        }
+
+      &:hover {
+        cursor:text;
+        outline: 1px solid grey;
+
+        + label{
+          top: 3px;
+          font-size: 0.6rem;
+        }
+      }
+    }
+  }
+
+  .division{
+    flex-direction: row;
+    hr{
+      width: 40%; 
+    }
+  }
+}
+
+.google-button{
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: center;
+  justify-items: center;
+  border-radius: 1rem;
+  padding: 8px;
+  background-color: white;
+  border: 1px solid lightgray;
+  font-weight: 500;
+  &:hover{
+    background-color: rgb(242, 248, 251);
+
+  }
+  img{
+    width: 16px;
+  }
+}
+
+* {
+  // outline: 2px dashed red;
+}

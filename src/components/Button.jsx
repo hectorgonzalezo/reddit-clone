@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, bool } from 'prop-types';
+import { string, bool, func } from 'prop-types';
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
@@ -17,18 +17,20 @@ const StyledButton = styled.button`
   }
 `;
 
-function Button({ text, light }) {
-  return <StyledButton type="button" light={light} className="default-button" >{text}</StyledButton>
+function Button({ text, light, onClick }) {
+  return <StyledButton type="button" onClick={onClick} light={light} className="default-button">{text}</StyledButton>;
 }
 
 Button.defaultProps = {
   text: '',
   light: false,
+  onClick: () => {},
 };
 
 Button.propTypes = {
   text: string,
   light: bool,
+  onClick: func,
 };
 
 export default Button;

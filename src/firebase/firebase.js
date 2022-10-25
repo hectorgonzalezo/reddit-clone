@@ -11,6 +11,18 @@ import {
   orderBy,
   limit,
 } from 'firebase/firestore';
+import {
+  getAuth,
+  onAuthStateChanged,
+  connectAuthEmulator,
+  GoogleAuthProvider,
+  EmailAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirebaseConfig } from './firebase-config';
 
@@ -18,34 +30,78 @@ const firebaseApp = initializeApp(getFirebaseConfig());
 
 const db = getFirestore(firebaseApp);
 
-async function getSubredditsData() {
-  const names = [];
-  const subreddits = await getDocs(query(collection(db, 'subreddits')));
+const database = (
+  () => {
+    async function getSubredditsData() {
+      const names = [];
+      const subreddits = await getDocs(query(collection(db, "subreddits")));
 
-  subreddits.forEach((subreddit) => names.push(
-    { name: subreddit.data().name, icon: subreddit.data().icon }
-  ));
+      subreddits.forEach((subreddit) =>
+        names.push({ name: subreddit.data().name, icon: subreddit.data().icon })
+      );
 
-  return names;
-}
+      return names;
+    }
 
-async function getAllPostsInSubreddit(subredditName) {
-  const posts = [];
-  const postsQuery = query(collection(db, `subreddits/${subredditName}/posts`), orderBy('timePosted', 'desc'), limit(10));
-  const postsInSubreddit = await getDocs(postsQuery);
-  postsInSubreddit.forEach((post) => posts.push(post.data()));
+    async function getAllPostsInSubreddit(subredditName) {
+      const posts = [];
+      const postsQuery = query(
+        collection(db, `subreddits/${subredditName}/posts`),
+        orderBy('timePosted', 'desc'),
+        limit(10)
+      );
+      const postsInSubreddit = await getDocs(postsQuery);
+      postsInSubreddit.forEach((post) => posts.push(post.data()));
 
-  return posts;
-}
+      return posts;
+    }
 
-async function getTopPostsInSubreddit(subredditName) {
-  const posts = [];
-  const postsInSubreddit = await getDocs(query(collection(db, `subreddits/${subredditName}/posts`)));
-  postsInSubreddit.forEach((post) => posts.push(post.data()));
+    async function getTopPostsInSubreddit(subredditName) {
+      const posts = [];
+      const postsInSubreddit = await getDocs(
+        query(collection(db, `subreddits/${subredditName}/posts`))
+      );
+      postsInSubreddit.forEach((post) => posts.push(post.data()));
 
-  return posts;
-}
+      return posts;
+    }
 
-const database = { getSubredditsData, getAllPostsInSubreddit, getTopPostsInSubreddit };
+    return { getSubredditsData, getAllPostsInSubreddit, getTopPostsInSubreddit };
+  }
+)();
 
-export default database;
+const authorization = (() => {
+  const auth = getAuth(firebaseApp);
+  const user = auth.currentUser;
+  // const emulator = connectAuthEmulator(auth, 'http://localhost:9099');
+  let emulator;
+
+  const loginEmailPassword = async (loginEmail, loginPassword) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      return userCredential.user;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const createAccount = async (loginEmail, loginPassword) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, loginEmail, loginPassword);
+      return userCredential.user;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const logInPopup = async () => {
+    // Sign in Firebase using popup auth and Google as the identity provider.
+    const provider = new GoogleAuthProvider();
+    // const provider = new EmailAuthProvider();
+    await signInWithPopup(getAuth(), provider);
+  };
+
+  return { auth, user, emulator, logInPopup, loginEmailPassword, createAccount };
+})();
+
+export { database, authorization };
