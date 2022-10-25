@@ -101,14 +101,9 @@
 
       &:invalid:not(:placeholder-shown){
         outline: 1px solid red;
-        &::before{
-          content: 'fix item';
-        }
-
-      &:valid{
-        outline: 1px solid var(--reddit-blue-light);
-        background-color: red;
       }
+      &:valid:not(:focus){
+        outline: 2px solid green;
       }
 
       &::placeholder{

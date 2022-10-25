@@ -50,6 +50,23 @@ describe('Styled button works', () => {
 
     expect(container).toMatchSnapshot();
   });
+  test('Button doesnt get enabled if mail is missing top-level domain name', () => {
+    render(<SignUpModal />);
+    const textInputs = screen.queryAllByRole('textbox');
+    const passwordInputs = screen.queryAllByLabelText(/password/i);
+
+    // Fill in form
+    userEvent.type(textInputs[0], 'mockUser');
+    userEvent.type(textInputs[1], 'mock@user');
+    passwordInputs.forEach((input) => userEvent.type(input, 'password'));
+
+    // Button should be enabled
+    const button = screen.getByRole('button', { name: 'Sign Up' });
+    expect(button).toHaveStyle('opacity: 0.5');
+    expect(button).toHaveProperty('disabled', true);
+
+    expect(container).toMatchSnapshot();
+  });
 
   test('Button doesnt get enabled if passwords are different', () => {
     render(<SignUpModal />);

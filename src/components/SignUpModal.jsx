@@ -6,6 +6,8 @@ import { authorization } from '../firebase/firebase';
 
 function SignUpModal() {
   const formRef = useRef();
+  const userNameRef = useRef();
+  const emailRef = useRef();
   const password1Ref = useRef();
   const password2Ref = useRef();
   const [disableButton, setDisableButton] = useState(true);
@@ -22,8 +24,13 @@ function SignUpModal() {
         e.target.parentNode.firstChild.innerText = 'Please write a valid email';
         break;
       case elementValidity.patternMismatch:
-        e.target.setCustomValidity('Only letters allowed in username');
-        e.target.parentNode.firstChild.innerText = 'Only letters allowed in username';
+        if (e.target === userNameRef.current) {
+          e.target.setCustomValidity('Only letters allowed in username');
+          e.target.parentNode.firstChild.innerText = 'Only letters allowed in username';
+        } else {
+          e.target.setCustomValidity('Please write a valid email');
+          e.target.parentNode.firstChild.innerText = 'Please write a valid email';
+        }
         break;
       case elementValidity.tooShort:
         e.target.setCustomValidity('Password must be at least 6 characters long');
@@ -61,7 +68,9 @@ function SignUpModal() {
 
   function submitSignUp(e) {
     e.preventDefault();
-    console.log('signup')
+    const email = emailRef.current.value;
+    const password = password1Ref.current.value;
+    authorization.createAccount(email, password);
   }
 
   return (
@@ -102,6 +111,7 @@ function SignUpModal() {
               placeholder="0"
               name="username"
               id="username"
+              ref={userNameRef}
               onChange={validate}
               pattern="[A-Za-z0-9]*"
               maxLength={25}
@@ -115,6 +125,8 @@ function SignUpModal() {
               type="email"
               placeholder="0"
               name="email"
+              ref={emailRef}
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
               id="email"
               onChange={validate}
               required
