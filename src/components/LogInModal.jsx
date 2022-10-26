@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../store/userSlice';
 import Button from './Button';
 import googleIcon from '../assets/google.png';
 import loadingIcon from '../assets/loading.gif';
@@ -11,6 +13,7 @@ function LogInModal({ closeFunc }) {
   const passwordRef = useRef();
   const [usernameDoesntExist, setUsernameDoesntExist] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const dispatch = useDispatch();
 
   async function submitLogIn(e) {
     e.preventDefault();
@@ -20,7 +23,11 @@ function LogInModal({ closeFunc }) {
       // add loading animation to button
       setLoadingData(true);
       const account = await authorization.logIn(username, password);
+
       setUsernameDoesntExist(false);
+      const { email } = account;
+      // update redux store
+      dispatch(addUser({ username, email }));
       closeFunc();
     } catch (error) {
       setLoadingData(false);

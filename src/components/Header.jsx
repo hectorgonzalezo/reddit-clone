@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import logo from '../assets/Reddit_Mark_OnWhite.png';
 import logotype from '../assets/Reddit_Logotype_OnWhite.png';
 import homeIcon from '../assets/home_icon.svg';
@@ -6,18 +7,18 @@ import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import userIcon from '../assets/user_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
+import AccountDropDown from './AccountDropDown';
 import { func, bool } from 'prop-types';
-import { authorization } from '../firebase/firebase';
-import { useSelector } from 'react-redux';
 import { selectUser } from '../store/userSlice';
 import '../styles/headerStyle.scss';
 
 function Header({ signUpFunc, logInFunc, opaque }) {
   // gets user from redux store
   const user = useSelector(selectUser);
+  console.log({user})
 
   return (
-    <header className={opaque ? 'opaque' : ''}>
+    <header className={opaque ? "opaque" : ""}>
       <div id="logos">
         <a>
           <img src={logo} alt="reddit logo" />
@@ -33,12 +34,22 @@ function Header({ signUpFunc, logInFunc, opaque }) {
       </div>
       <SearchBar />
       <div id="user-area">
-        <Button text="Sign Up" light onClick={signUpFunc} />
-        <Button text="Log In" onClick={logInFunc} />
-        <button type="button">
-          <img src={userIcon} alt="" className="icon" />
-          <img src={arrowDownIcon} alt="" className="icon" />
-        </button>
+        {/* show sign up and log in button if theres no user logged in */}
+        {user.username === undefined ? (
+          <>
+            <Button text="Sign Up" light onClick={signUpFunc} />
+            <Button text="Log In" onClick={logInFunc} />
+          </>
+        ) : (
+          <>
+            <button type="button">
+              <img src={userIcon} alt="" className="icon" />
+              <p>{user.username}</p>
+              <img src={arrowDownIcon} alt="" className="icon" />
+            </button>
+            <AccountDropDown />
+          </>
+        )}
       </div>
     </header>
   );

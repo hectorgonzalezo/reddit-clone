@@ -8,18 +8,19 @@ const initialState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    add: (state) => {
-      state.username = 'juan';
+    addUser: (state, action) => {
+      state.username = action.payload.username;
+      state.email = action.payload.username;
     },
-    remove: (state) => {
-     state.username = undefined;
-    }
+    removeUser: (state, action) => {
+      state.username = undefined;
+      state.email = undefined;
+    },
   }
 });
 
-export const { add, remove } = userSlice.actions;
+export const { addUser, removeUser } = userSlice.actions;
 
 export const selectUser = (state) => state.user;
 

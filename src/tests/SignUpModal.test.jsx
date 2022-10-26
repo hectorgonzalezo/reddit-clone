@@ -3,11 +3,15 @@ import { render, screen, container, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import SignUpModal from '../components/SignUpModal';
+import { Provider } from 'react-redux';
+import store from '../store/store';
 jest.mock('../firebase/firebase');
 
 describe('Styled button works', () => {
   test('Renders with sign up button disabled', () => {
-    render(<SignUpModal />);
+    render(<Provider store={store}>
+      <SignUpModal />
+     </Provider>);
     const button = screen.getByRole('button', { name: 'Sign Up' });
     expect(button).toHaveStyle('opacity: 0.5');
     expect(button).toHaveProperty('disabled', true);
@@ -16,7 +20,9 @@ describe('Styled button works', () => {
   });
 
   test('After filling form correctly, button gets enabled', () => {
-    render(<SignUpModal />);
+    render(<Provider store={store}>
+      <SignUpModal />
+     </Provider>);
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
@@ -34,7 +40,9 @@ describe('Styled button works', () => {
   });
 
   test('Button doesnt get enabled if mail is missing @', () => {
-    render(<SignUpModal />);
+    render(<Provider store={store}>
+      <SignUpModal />
+     </Provider>);
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
@@ -51,7 +59,9 @@ describe('Styled button works', () => {
     expect(container).toMatchSnapshot();
   });
   test('Button doesnt get enabled if mail is missing top-level domain name', () => {
-    render(<SignUpModal />);
+    render(<Provider store={store}>
+      <SignUpModal />
+     </Provider>);
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
@@ -69,7 +79,9 @@ describe('Styled button works', () => {
   });
 
   test('Button doesnt get enabled if passwords are different', () => {
-    render(<SignUpModal />);
+    render(<Provider store={store}>
+      <SignUpModal />
+     </Provider>);
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
@@ -87,7 +99,9 @@ describe('Styled button works', () => {
   });
 
   test('Button gets disabled when passwords are changed and dont match', () => {
-    render(<SignUpModal />);
+    render(<Provider store={store}>
+      <SignUpModal />
+     </Provider>);
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
@@ -107,7 +121,9 @@ describe('Styled button works', () => {
 
   test('Filling the form correctly and pressing the button calls close function', async () => {
     const mockCloseFunc = jest.fn('asdfasd');
-    render(<SignUpModal closeFunc={mockCloseFunc} />);
+    render(<Provider store={store}>
+            <SignUpModal closeFunc={mockCloseFunc} />
+          </Provider>);
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
@@ -125,7 +141,11 @@ describe('Styled button works', () => {
   });
 
   test('Pressing sign up button shows loading gif', async () => {
-    render(<SignUpModal />);
+    render(
+      <Provider store={store}>
+        <SignUpModal />
+      </Provider>
+    );
     const textInputs = screen.queryAllByRole('textbox');
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 

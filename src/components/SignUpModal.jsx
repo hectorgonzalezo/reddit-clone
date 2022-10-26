@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Button from './Button';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../store/userSlice';
 import googleIcon from '../assets/google.png';
 import loadingIcon from '../assets/loading.gif';
 import { func } from 'prop-types';
@@ -15,6 +17,7 @@ function SignUpModal({ closeFunc }) {
   const [disableButton, setDisableButton] = useState(true);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const dispatch = useDispatch();
 
   // This function gets called on every input value change
   // If the whole form is valid, it activates the continue button
@@ -79,6 +82,8 @@ function SignUpModal({ closeFunc }) {
       setLoadingData(true);
       const account = await authorization.createAccount(email, password, username);
       setEmailAlreadyExists(false);
+      // update redux store
+      dispatch(addUser({ username, email }));
       closeFunc();
     } catch (error) {
       // If email already exists
