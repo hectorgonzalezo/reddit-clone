@@ -8,7 +8,6 @@ import { database } from '../firebase/firebase';
 import '../styles/mainStyle.scss';
 
 function MainContainer({ opaque }) {
-  console.log({opaque})
   const [subredditsData, setSubredditsData] = useState([]);
   useEffect(() => {
     async function getNames() {

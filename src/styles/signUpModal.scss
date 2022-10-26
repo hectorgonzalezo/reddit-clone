@@ -1,4 +1,5 @@
-#signUp-outer{
+#signUp-outer,
+#logIn-outer{
   position: absolute;
   top: 100px;
   left: 0;
@@ -9,7 +10,8 @@
   justify-content: center;
 }
 
-#signUp-inner{
+#signUp-inner,
+#logIn-inner{
   position: sticky;
   top: 0vh;
   height: auto;
@@ -100,10 +102,11 @@
       padding: 14px 10px 5px 15px;
       font-size: 1rem;
 
-      &:invalid:not(:placeholder-shown){
+      &:invalid:not(:placeholder-shown),
+      &.invalid {
         outline: 1px solid red;
       }
-      &:valid:not(:focus){
+      &:valid:not(:focus):not(.invalid){
         outline: 2px solid green;
       }
 
@@ -132,6 +135,10 @@
     button {
       background-color: rgb(255, 106, 0);
       padding: 8px;
+
+      img{
+        width: 18px;
+      }
     }
   }
 

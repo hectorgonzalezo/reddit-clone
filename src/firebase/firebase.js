@@ -72,7 +72,22 @@ const database = (() => {
     });
   }
 
-  return { getSubredditsData, getAllPostsInSubreddit, getTopPostsInSubreddit, addUser };
+  async function getUser(username) {
+    const user = [];
+    console.log(username)
+    const userQuery = query(collection(db, 'users'), where('username', '==', username));
+    const userDoc = await getDocs(userQuery);
+    userDoc.forEach((data) => user.push(data.data()));
+    return user[0];
+  }
+
+  return {
+    getSubredditsData,
+    getAllPostsInSubreddit,
+    getTopPostsInSubreddit,
+    addUser,
+    getUser,
+  };
 })();
 
 // Used for user sign in and sign up
@@ -106,6 +121,18 @@ const authorization = (() => {
     return userCredential.user;
   };
 
+  const logIn = async (username, loginPassword) => {
+    const login = await database.getUser(username);
+    console.log({login})
+    const loginEmail = login.email;
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      loginEmail,
+      loginPassword,
+    );
+    return userCredential.user;
+  };
+
   const logInPopup = async () => {
     // Sign in Firebase using popup auth and Google as the identity provider.
     const provider = new GoogleAuthProvider();
@@ -118,6 +145,7 @@ const authorization = (() => {
     user,
     emulator,
     logInPopup,
+    logIn,
     loginEmailPassword,
     createAccount,
   };

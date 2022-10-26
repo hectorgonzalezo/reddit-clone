@@ -16,6 +16,13 @@ describe('Comunication with database', () => {
     expect(posts.length).not.toBe(0);
     expect(typeof (posts[0])).toBe('object');
   });
+
+  test('Correctly gets user email', async () => {
+    const user = await database.getUser('mock');
+    expect(user.length).not.toBe(0);
+    expect(user.length).not.toBe(2);
+    expect(user.email).toEqual('mock@mocko.com');
+  });
 });
 
 describe('User authorization', () => {
@@ -27,4 +34,5 @@ describe('User authorization', () => {
     const fakeUserLogin = await authorization.loginEmailPassword('mock_email@mock.comq', 'mockpasswordq');
     expect(fakeUserLogin.email).not.toBe('mock_email@mock.comq');
   });
+  
 });

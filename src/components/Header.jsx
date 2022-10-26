@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../store/userSlice';
 import '../styles/headerStyle.scss';
 
-function Header({ signUpFunc, opaque }) {
+function Header({ signUpFunc, logInFunc, opaque }) {
   // gets user from redux store
   const user = useSelector(selectUser);
 
@@ -34,7 +34,7 @@ function Header({ signUpFunc, opaque }) {
       <SearchBar />
       <div id="user-area">
         <Button text="Sign Up" light onClick={signUpFunc} />
-        <Button text="Log In" onClick={authorization.logIn} />
+        <Button text="Log In" onClick={logInFunc} />
         <button type="button">
           <img src={userIcon} alt="" className="icon" />
           <img src={arrowDownIcon} alt="" className="icon" />
@@ -46,11 +46,13 @@ function Header({ signUpFunc, opaque }) {
 
 Header.defaultProps = {
   signUpFunc: () => {},
+  logInFunc: () => {},
   opaque: false,
 };
 
 Header.propTypes = {
   signUpFunc: func,
+  logInFunc: func,
   opaque: bool,
 };
 

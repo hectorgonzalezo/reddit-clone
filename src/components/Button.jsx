@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, bool, func } from 'prop-types';
+import { string, bool, func, arrayOf, oneOfType, element} from 'prop-types';
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
@@ -21,7 +21,7 @@ const StyledButton = styled.button`
   }
 `;
 
-function Button({ text, light, onClick, type, disabled }) {
+function Button({ text, light, onClick, type, disabled, children }) {
   return (
     <StyledButton
       type={type}
@@ -31,6 +31,7 @@ function Button({ text, light, onClick, type, disabled }) {
       disabled={disabled}
     >
       {text}
+      {children}
     </StyledButton>
   );
 }
@@ -41,6 +42,7 @@ Button.defaultProps = {
   onClick: () => {},
   type: 'button',
   disabled: false,
+  children: [],
 };
 
 Button.propTypes = {
@@ -49,6 +51,7 @@ Button.propTypes = {
   onClick: func,
   type: string,
   disabled: bool,
+  children: arrayOf(oneOfType([string, element])),
 };
 
 export default Button;
