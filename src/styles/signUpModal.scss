@@ -23,6 +23,7 @@
   position: relative;
   font-family: sans-serif;
   gap: 18px;
+  animation: 1s fadeIn;
 
   .close-button{
     position: absolute;
@@ -158,6 +159,15 @@
   }
   img{
     width: 16px;
+  }
+}
+
+@keyframes fadeIn{
+  0%{
+    opacity: 0%;
+  }
+  100% {
+    opacity: 100%;
   }
 }
 

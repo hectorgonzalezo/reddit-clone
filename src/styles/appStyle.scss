@@ -31,6 +31,15 @@ a {
   color: inherit;
 }
 
+.opaque{
+  opacity: 0.5;
+}
+
+header,
+main {
+  transition: 1s opacity;
+}
+
 // * {
 //   outline: 2px dashed red;
 // }

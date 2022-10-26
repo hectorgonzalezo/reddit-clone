@@ -6,12 +6,13 @@ import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import userIcon from '../assets/user_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
+import { func, bool } from 'prop-types';
 import { authorization } from '../firebase/firebase';
 import '../styles/headerStyle.scss';
 
-function Header() {
+function Header({ signUpFunc, opaque }) {
   return (
-    <header>
+    <header className={opaque ? 'opaque' : ''}>
       <div id="logos">
         <a>
           <img src={logo} alt="reddit logo" />
@@ -27,7 +28,7 @@ function Header() {
       </div>
       <SearchBar />
       <div id="user-area">
-        <Button text="Sign Up" light onClick={() => console.log('asd')}/>
+        <Button text="Sign Up" light onClick={signUpFunc} />
         <Button text="Log In" onClick={authorization.logIn} />
         <button type="button">
           <img src={userIcon} alt="" className="icon" />
@@ -37,5 +38,15 @@ function Header() {
     </header>
   );
 }
+
+Header.defaultProps = {
+  signUpFunc: () => {},
+  opaque: false,
+};
+
+Header.propTypes = {
+  signUpFunc: func,
+  opaque: bool,
+};
 
 export default Header;

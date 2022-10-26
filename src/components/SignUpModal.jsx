@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import Button from './Button';
 import googleIcon from '../assets/google.png';
+import { func } from 'prop-types';
 import '../styles/signUpModal.scss';
 import { authorization } from '../firebase/firebase';
 
-function SignUpModal() {
+function SignUpModal({ closeFunc }) {
   const formRef = useRef();
   const userNameRef = useRef();
   const emailRef = useRef();
@@ -85,7 +86,7 @@ function SignUpModal() {
     <div id="signUp-outer">
       <div id="signUp-inner">
         <div>
-          <button type="button" className="close-button">
+          <button type="button" className="close-button" onClick={closeFunc}>
             x
           </button>
           <h1>Sign Up</h1>
@@ -179,5 +180,13 @@ function SignUpModal() {
     </div>
   );
 }
+
+SignUpModal.defaultProps = {
+  closeFunc: () => {},
+};
+
+SignUpModal.propTypes = {
+  closeFunc: func,
+};
 
 export default SignUpModal;

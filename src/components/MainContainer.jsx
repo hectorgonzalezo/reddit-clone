@@ -3,10 +3,12 @@ import PopularPostsBar from './PopularPostsBar';
 import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './PostsArea';
+import { bool } from 'prop-types';
 import { database } from '../firebase/firebase';
 import '../styles/mainStyle.scss';
 
-function MainContainer() {
+function MainContainer({ opaque }) {
+  console.log({opaque})
   const [subredditsData, setSubredditsData] = useState([]);
   useEffect(() => {
     async function getNames() {
@@ -23,7 +25,7 @@ function MainContainer() {
   }, []);
 
   return (
-    <main>
+    <main className={opaque ? 'opaque' : ''}>
       <div id="left-side">
         <PopularPostsBar />
         <PostsArea subreddits={subredditsData} />
@@ -45,5 +47,13 @@ function MainContainer() {
     </main>
   );
 }
+
+MainContainer.defaultProps = {
+  opaque: false,
+};
+
+MainContainer.propTypes = {
+  opaque: bool,
+};
 
 export default MainContainer;
