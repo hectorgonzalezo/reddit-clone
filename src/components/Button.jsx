@@ -51,7 +51,7 @@ Button.propTypes = {
   onClick: func,
   type: string,
   disabled: bool,
-  children: arrayOf(oneOfType([string, element])),
+  children: oneOfType([arrayOf(string), string, element]),
 };
 
 export default Button;

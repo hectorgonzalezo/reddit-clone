@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Styled button works Filling in with fake data shows error message 1`] = `undefined`;
+
+exports[`Styled button works Pressing log in button shows loading gif 1`] = `undefined`;

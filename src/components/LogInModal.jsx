@@ -21,11 +21,9 @@ function LogInModal({ closeFunc }) {
       setLoadingData(true);
       const account = await authorization.logIn(username, password);
       setUsernameDoesntExist(false);
-      console.log('si');
       closeFunc();
     } catch (error) {
       setLoadingData(false);
-      console.log('no');
       // If email already exists
       setUsernameDoesntExist(true);
     }
@@ -96,13 +94,14 @@ function LogInModal({ closeFunc }) {
               id="password"
               ref={passwordRef}
               minLength={6}
+              autoComplete="on"
               required
             />
             <label htmlFor="password">Password</label>
           </div>
           {usernameDoesntExist ? <span>Incorrect username or password</span> : null}
           <Button text="" type="submit" onClick={submitLogIn} >
-          {loadingData ? <img src={loadingIcon} alt="" /> : ['Log In']}
+          {loadingData ? <img src={loadingIcon} alt="loading" data-testid="loading-icon" /> : ['Log In']}
           </Button>
         </form>
         <p>

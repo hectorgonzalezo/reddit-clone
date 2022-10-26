@@ -10,4 +10,6 @@ exports[`Styled button works Button doesnt get enabled if passwords are differen
 
 exports[`Styled button works Button gets disabled when passwords are changed and dont match 1`] = `undefined`;
 
+exports[`Styled button works Pressing sign up button shows loading gif 1`] = `undefined`;
+
 exports[`Styled button works Renders with sign up button disabled 1`] = `undefined`;

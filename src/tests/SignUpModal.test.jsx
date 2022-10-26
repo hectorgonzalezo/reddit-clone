@@ -1,9 +1,9 @@
-
 import React from 'react';
-import { render, screen, container } from '@testing-library/react';
+import { render, screen, container, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import SignUpModal from '../components/SignUpModal';
+jest.mock('../firebase/firebase');
 
 describe('Styled button works', () => {
   test('Renders with sign up button disabled', () => {
@@ -101,6 +101,44 @@ describe('Styled button works', () => {
     const button = screen.getByRole('button', { name: 'Sign Up' });
     expect(button).toHaveStyle('opacity: 0.5');
     expect(button).toHaveProperty('disabled', true);
+
+    expect(container).toMatchSnapshot();
+  });
+
+  test('Filling the form correctly and pressing the button calls close function', async () => {
+    const mockCloseFunc = jest.fn('asdfasd');
+    render(<SignUpModal closeFunc={mockCloseFunc} />);
+    const textInputs = screen.queryAllByRole('textbox');
+    const passwordInputs = screen.queryAllByLabelText(/password/i);
+
+    // Fill in form
+    userEvent.type(textInputs[0], 'mockUser');
+    userEvent.type(textInputs[1], 'mock@mock.com');
+    passwordInputs.forEach((input) => userEvent.type(input, 'password'));
+    // Press button
+    const button = screen.getByRole('button', { name: 'Sign Up' });
+    await act(async () => {
+      userEvent.click(button)
+    });
+
+    expect(mockCloseFunc).toBeCalled();
+  });
+
+  test('Pressing sign up button shows loading gif', async () => {
+    render(<SignUpModal />);
+    const textInputs = screen.queryAllByRole('textbox');
+    const passwordInputs = screen.queryAllByLabelText(/password/i);
+
+    // Fill in form
+    userEvent.type(textInputs[0], 'mockUser');
+    userEvent.type(textInputs[1], 'mock@mock.com');
+    passwordInputs.forEach((input) => userEvent.type(input, 'password'));
+
+    const button = screen.getByRole('button', { name: 'Sign Up' });
+
+    await act(async () => userEvent.click(button));
+
+    expect(screen.getByTestId('loading-icon')).toBeInTheDocument();
 
     expect(container).toMatchSnapshot();
   });

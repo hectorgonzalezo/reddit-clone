@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Button from './Button';
 import googleIcon from '../assets/google.png';
+import loadingIcon from '../assets/loading.gif';
 import { func } from 'prop-types';
 import '../styles/signUpModal.scss';
 import { authorization } from '../firebase/firebase';
@@ -13,6 +14,7 @@ function SignUpModal({ closeFunc }) {
   const password2Ref = useRef();
   const [disableButton, setDisableButton] = useState(true);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   // This function gets called on every input value change
   // If the whole form is valid, it activates the continue button
@@ -43,7 +45,6 @@ function SignUpModal({ closeFunc }) {
         e.target.parentNode.firstChild.innerText = '';
     }
 
-    // console.log(elementValidity);
 
     // if element is password, check that both passwords equal each other
     if ((e.target === password2Ref.current || e.target === password1Ref.current)) {
@@ -74,11 +75,15 @@ function SignUpModal({ closeFunc }) {
     const email = emailRef.current.value;
     const password = password1Ref.current.value;
     try {
+      // add loading animation
+      setLoadingData(true);
       const account = await authorization.createAccount(email, password, username);
       setEmailAlreadyExists(false);
+      closeFunc();
     } catch (error) {
       // If email already exists
       setEmailAlreadyExists(true);
+      setLoadingData(false);
     }
   }
 
@@ -152,6 +157,7 @@ function SignUpModal({ closeFunc }) {
               ref={password1Ref}
               onChange={validate}
               minLength={6}
+              autoComplete="on"
               required
             />
             <label htmlFor="password">Password</label>
@@ -166,12 +172,15 @@ function SignUpModal({ closeFunc }) {
               ref={password2Ref}
               onChange={validate}
               minLength={6}
+              autoComplete="on"
               required
             />
             <label htmlFor="repeatPassword">Repeat Password</label>
           </div>
           {emailAlreadyExists ? <span>Email is already registered</span> : null}
-          <Button text="Sign Up" type="submit" disabled={disableButton} onClick={submitSignUp} />
+          <Button text="" type="submit" disabled={disableButton} onClick={submitSignUp} >
+            {loadingData ? <img src={loadingIcon} alt="loading" data-testid="loading-icon" /> : ['Sign Up']}
+          </Button>
         </form>
         <p>
           Already a redditor? <a href="">Sign In</a>

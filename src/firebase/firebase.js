@@ -74,7 +74,6 @@ const database = (() => {
 
   async function getUser(username) {
     const user = [];
-    console.log(username)
     const userQuery = query(collection(db, 'users'), where('username', '==', username));
     const userDoc = await getDocs(userQuery);
     userDoc.forEach((data) => user.push(data.data()));
@@ -123,7 +122,6 @@ const authorization = (() => {
 
   const logIn = async (username, loginPassword) => {
     const login = await database.getUser(username);
-    console.log({login})
     const loginEmail = login.email;
     const userCredential = await signInWithEmailAndPassword(
       auth,
