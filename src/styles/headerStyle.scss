@@ -62,13 +62,9 @@
 
 #search-bar {
   flex: 2 0 200px;
-  background-color: rgb(242, 241, 241);
   border-radius: 1rem;
-  padding: 6px 10px 6px 10px;
 
   &:hover{
-    outline: 1px solid var(--reddit-blue);
-    background-color: white;
     > button{
       display: block
     }

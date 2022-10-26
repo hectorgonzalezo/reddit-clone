@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import CreatePostPreview from './CreatePostPreview';
 import PopularPostsBar from './PopularPostsBar';
 import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './PostsArea';
 import { bool } from 'prop-types';
 import { database } from '../firebase/firebase';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/userSlice';
 import '../styles/mainStyle.scss';
 
 function MainContainer({ opaque }) {
+  const user = useSelector(selectUser);
   const [subredditsData, setSubredditsData] = useState([]);
+  console.log(user)
+
   useEffect(() => {
     async function getNames() {
       let data;
@@ -26,6 +32,7 @@ function MainContainer({ opaque }) {
   return (
     <main className={opaque ? 'opaque' : ''}>
       <div id="left-side">
+        {user.username !== undefined ? <CreatePostPreview /> : null}
         <PopularPostsBar />
         <PostsArea subreddits={subredditsData} />
       </div>

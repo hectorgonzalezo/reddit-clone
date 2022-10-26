@@ -63,6 +63,28 @@ main {
   line-height: 1.3;
 }
 
+#post-preview {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 15px;
+
+  & > * {
+
+    border-radius: 0.4rem;
+  }
+  input{
+    padding-left: 20px;
+    font-size: 1rem;
+  }
+  img{
+    padding: 5px 5px 0px 5px;
+    filter: opacity(75%);
+  }
+  a:hover{
+    background-color: rgb(233, 229, 229);
+  }
+}
+
 
 @media  screen and (max-width: 900px) {
   main{

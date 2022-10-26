@@ -4,7 +4,7 @@
 :root{
   --reddit-blue: #0079d3;
   --reddit-blue-light: #4491cd;
-  --reddit-blue-super-light: #eef3f7;
+  --reddit-blue-super-light: #dce5ed;
   --background-color: #dde5ed;
   --grey-dark: #878a8c;
   font-family: "Noto Sans" Arial sans-serif;
@@ -39,6 +39,18 @@ a {
 header,
 main {
   transition: 1s opacity;
+}
+
+.main-input{
+    background-color: rgb(242, 241, 241);
+    padding: 6px 10px 6px 10px;
+    border: none;
+    outline: 1px solid var(--reddit-blue-super-light);
+  
+    &:hover{
+      outline: 1px solid var(--reddit-blue);
+      background-color: white;
+    }
 }
 
 // * {

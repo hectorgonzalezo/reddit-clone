@@ -11,7 +11,7 @@ function SearchBar() {
   }
 
   return (
-    <div id="search-bar">
+    <div id="search-bar" className="main-input">
       <img src={searchIcon} alt="" className="icon" />
       <input
         type="text"
