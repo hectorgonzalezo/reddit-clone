@@ -8,6 +8,7 @@
   padding: 2px 15px 2px 15px;
   gap: 10px;
   z-index: 10;
+  border-bottom: 1px solid var(--background-color);
 
   position: sticky;
   top: 0px;
@@ -15,14 +16,13 @@
     cursor: pointer;
   }
 
-
-
-  & * {
+  & button, & div {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 5px;
   }
+  
   button:not(.default-button){
     border: none;
     background-color: inherit;

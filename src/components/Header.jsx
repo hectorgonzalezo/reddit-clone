@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import logo from '../assets/Reddit_Mark_OnWhite.png';
 import logotype from '../assets/Reddit_Logotype_OnWhite.png';
@@ -7,7 +7,7 @@ import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import userIcon from '../assets/user_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
-import AccountDropDown from './AccountDropDown';
+import DropDown from './DropDown';
 import { func, bool } from 'prop-types';
 import { selectUser } from '../store/userSlice';
 import '../styles/headerStyle.scss';
@@ -15,7 +15,7 @@ import '../styles/headerStyle.scss';
 function Header({ signUpFunc, logInFunc, opaque }) {
   // gets user from redux store
   const user = useSelector(selectUser);
-  console.log({user})
+  const [userDropdownVisible, setUserDropdownVisible] = useState(false);
 
   return (
     <header className={opaque ? "opaque" : ""}>
@@ -42,12 +42,18 @@ function Header({ signUpFunc, logInFunc, opaque }) {
           </>
         ) : (
           <>
-            <button type="button">
+            <button
+              type="button"
+              onClick={() => setUserDropdownVisible((prev) => !prev)}
+            >
               <img src={userIcon} alt="" className="icon" />
               <p>{user.username}</p>
               <img src={arrowDownIcon} alt="" className="icon" />
             </button>
-            <AccountDropDown />
+            <DropDown
+              visible={userDropdownVisible}
+              onClickLogout={() => setUserDropdownVisible((prev) => !prev)}
+            />
           </>
         )}
       </div>
