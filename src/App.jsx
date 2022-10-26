@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
+import store from './store/store';
+import { Provider } from 'react-redux';
 import './styles/appStyle.scss';
 
 function App() {
@@ -12,11 +14,13 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Header signUpFunc={toggleSignUpModal} opaque={signUpVisible} />
-      <MainContainer opaque={signUpVisible} />
-      {signUpVisible ? <SignUpModal closeFunc={toggleSignUpModal} /> : null}
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <Header signUpFunc={toggleSignUpModal} opaque={signUpVisible} />
+        <MainContainer opaque={signUpVisible} />
+        {signUpVisible ? <SignUpModal closeFunc={toggleSignUpModal} /> : null}
+      </div>
+    </Provider>
   );
 }
 

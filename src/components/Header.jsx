@@ -8,9 +8,14 @@ import Button from './Button';
 import SearchBar from './SearchBar';
 import { func, bool } from 'prop-types';
 import { authorization } from '../firebase/firebase';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/userSlice';
 import '../styles/headerStyle.scss';
 
 function Header({ signUpFunc, opaque }) {
+  // gets user from redux store
+  const user = useSelector(selectUser);
+
   return (
     <header className={opaque ? 'opaque' : ''}>
       <div id="logos">
