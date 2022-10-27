@@ -1,5 +1,4 @@
-#signUp-outer,
-#logIn-outer{
+.modal-outer {
   position: absolute;
   top: 100px;
   left: 0;
@@ -10,8 +9,7 @@
   justify-content: center;
 }
 
-#signUp-inner,
-#logIn-inner{
+.modal-inner {
   position: sticky;
   top: 0vh;
   height: auto;
@@ -166,6 +164,21 @@
   }
   img{
     width: 16px;
+  }
+}
+
+
+#uploadIcon-inner{
+  top: 80px;
+  display: grid;
+  form {
+    align-items: center;
+    justify-content: center;
+    input{
+      width: 90%{
+
+      }
+    }
   }
 }
 

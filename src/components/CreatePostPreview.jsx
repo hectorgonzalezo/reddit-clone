@@ -1,12 +1,15 @@
 import React from 'react';
-import userIcon from '../assets/user_icon.svg';
 import linkIcon from '../assets/link_icon.svg';
 import imageIcon from '../assets/image_icon.svg';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/userSlice';
 
 function CreatePostPreview() {
+  const user = useSelector(selectUser);
+
   return (
     <div id="post-preview" className="main-child">
-      <img src={userIcon} alt="" />
+      <img src={user.icon} alt="" className="user-icon" />
       <input type="text" placeholder="Create Post" className="main-input" />
       <a href="">
         <img src={imageIcon} className="icon" alt="" />

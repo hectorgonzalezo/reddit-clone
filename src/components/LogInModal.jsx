@@ -5,7 +5,7 @@ import Button from './Button';
 import googleIcon from '../assets/google.png';
 import loadingIcon from '../assets/loading.gif';
 import { func } from 'prop-types';
-import { authorization } from '../firebase/firebase';
+import { database, authorization } from '../firebase/firebase';
 
 function LogInModal({ closeFunc }) {
   const formRef = useRef();
@@ -19,6 +19,7 @@ function LogInModal({ closeFunc }) {
     e.preventDefault();
     const username = userNameRef.current.value;
     const password = passwordRef.current.value;
+    const { icon } = await database.getUser(username);
     try {
       // add loading animation to button
       setLoadingData(true);
@@ -27,7 +28,7 @@ function LogInModal({ closeFunc }) {
       setUsernameDoesntExist(false);
       const { email } = account;
       // update redux store
-      dispatch(addUser({ username, email }));
+      dispatch(addUser({ username, email, icon }));
       closeFunc();
     } catch (error) {
       setLoadingData(false);
@@ -48,8 +49,8 @@ function LogInModal({ closeFunc }) {
   }, [usernameDoesntExist]);
 
   return (
-    <div id="logIn-outer">
-      <div id="logIn-inner">
+    <div id="logIn-outer" className="modal-outer">
+      <div id="logIn-inner" className="modal-inner">
         <div>
           <button type="button" className="close-button" onClick={closeFunc}>
             x
@@ -106,9 +107,15 @@ function LogInModal({ closeFunc }) {
             />
             <label htmlFor="password">Password</label>
           </div>
-          {usernameDoesntExist ? <span>Incorrect username or password</span> : null}
-          <Button text="" type="submit" onClick={submitLogIn} >
-          {loadingData ? <img src={loadingIcon} alt="loading" data-testid="loading-icon" /> : ['Log In']}
+          {usernameDoesntExist ? (
+            <span>Incorrect username or password</span>
+          ) : null}
+          <Button text="" type="submit" onClick={submitLogIn}>
+            {loadingData ? (
+              <img src={loadingIcon} alt="loading" data-testid="loading-icon" />
+            ) : (
+              ["Log In"]
+            )}
           </Button>
         </form>
         <p>

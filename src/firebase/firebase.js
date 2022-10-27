@@ -7,7 +7,9 @@ import {
   getDocs,
   getDoc,
   doc,
+  updateDoc,
   addDoc,
+  setDoc,
   orderBy,
   limit,
 } from 'firebase/firestore';
@@ -23,6 +25,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
 import { getFirebaseConfig } from './firebase-config';
 
@@ -66,9 +69,10 @@ const database = (() => {
 
   // Links user authorization with user name
   async function addUser(email, username) {
-    const docRef = await addDoc(collection(db, 'users'), {
+    const docRef = await setDoc(doc(db, 'users', username), {
       email,
       username,
+      icon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1',
     });
   }
 
@@ -80,12 +84,32 @@ const database = (() => {
     return user[0];
   }
 
+  async function saveUserIcon(file, username) {
+    try {
+      // Upload the image to Cloud Storage.
+      const filePath = `${username}/icon/${file.name}`;
+      const newImageRef = ref(getStorage(), filePath);
+      const fileSnapshot = await uploadBytesResumable(newImageRef, file);
+      // Generate a public URL for the file.
+      const publicImageUrl = await getDownloadURL(newImageRef);
+      // update user's icon
+      const userDoc = doc(db, 'users', username);
+      await updateDoc(userDoc, {
+        icon: publicImageUrl,
+      });
+      return publicImageUrl;
+    } catch (error) {
+      console.error('There was an error uploading a file to Cloud Storage:', error);
+    }
+  }
+
   return {
     getSubredditsData,
     getAllPostsInSubreddit,
     getTopPostsInSubreddit,
     addUser,
     getUser,
+    saveUserIcon,
   };
 })();
 

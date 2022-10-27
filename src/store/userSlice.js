@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   username: undefined,
   email: undefined,
+  icon: undefined,
 };
 
 export const userSlice = createSlice({
@@ -11,16 +12,21 @@ export const userSlice = createSlice({
   reducers: {
     addUser: (state, action) => {
       state.username = action.payload.username;
-      state.email = action.payload.username;
+      state.email = action.payload.email;
+      state.icon = action.payload.icon;
+    },
+    updateIcon: (state, action) => {
+      state.icon = action.payload;
     },
     removeUser: (state, action) => {
       state.username = undefined;
       state.email = undefined;
+      state.icon = undefined;
     },
   }
 });
 
-export const { addUser, removeUser } = userSlice.actions;
+export const { addUser, updateIcon, removeUser } = userSlice.actions;
 
 export const selectUser = (state) => state.user;
 

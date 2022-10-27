@@ -13,7 +13,6 @@ import '../styles/mainStyle.scss';
 function MainContainer({ opaque }) {
   const user = useSelector(selectUser);
   const [subredditsData, setSubredditsData] = useState([]);
-  console.log(user)
 
   useEffect(() => {
     async function getNames() {

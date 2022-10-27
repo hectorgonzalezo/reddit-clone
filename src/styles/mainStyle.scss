@@ -68,7 +68,7 @@ main {
   grid-template-columns: auto 1fr auto auto;
   gap: 15px;
 
-  & > * {
+  & > *:not(img) {
 
     border-radius: 0.4rem;
   }

@@ -5,7 +5,6 @@ import { addUser } from '../store/userSlice';
 import googleIcon from '../assets/google.png';
 import loadingIcon from '../assets/loading.gif';
 import { func } from 'prop-types';
-import '../styles/signUpModal.scss';
 import { authorization } from '../firebase/firebase';
 
 function SignUpModal({ closeFunc }) {
@@ -77,13 +76,14 @@ function SignUpModal({ closeFunc }) {
     const username = userNameRef.current.value;
     const email = emailRef.current.value;
     const password = password1Ref.current.value;
+    const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
     try {
       // add loading animation
       setLoadingData(true);
       const account = await authorization.createAccount(email, password, username);
       setEmailAlreadyExists(false);
       // update redux store
-      dispatch(addUser({ username, email }));
+      dispatch(addUser({ username, email, icon }));
       closeFunc();
     } catch (error) {
       // If email already exists
@@ -93,8 +93,8 @@ function SignUpModal({ closeFunc }) {
   }
 
   return (
-    <div id="signUp-outer">
-      <div id="signUp-inner">
+    <div id="signUp-outer" className='modal-outer'>
+      <div id="signUp-inner" className='modal-inner'>
         <div>
           <button type="button" className="close-button" onClick={closeFunc}>
             x

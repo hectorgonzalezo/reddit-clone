@@ -6,6 +6,7 @@ import LogInModal from './components/LogInModal';
 import store from './store/store';
 import { Provider } from 'react-redux';
 import './styles/appStyle.scss';
+import './styles/modals.scss';
 
 function App() {
   const [signUpVisible, setSignUpVisible] = useState(false);
