@@ -1,7 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import linkIcon from '../assets/link_icon.svg';
 import imageIcon from '../assets/image_icon.svg';
-import { useSelector } from 'react-redux';
 import { selectUser } from '../store/userSlice';
 
 function CreatePostPreview() {
@@ -10,7 +11,9 @@ function CreatePostPreview() {
   return (
     <div id="post-preview" className="main-child">
       <img src={user.icon} alt="" className="user-icon" />
-      <input type="text" placeholder="Create Post" className="main-input" />
+      <Link to="create-post">
+        <input type="text" placeholder="Create Post" className="main-input" />
+      </Link>
       <a href="">
         <img src={imageIcon} className="icon" alt="" />
       </a>

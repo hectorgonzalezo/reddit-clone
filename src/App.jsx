@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
 import LogInModal from './components/LogInModal';
 import { addSubreddit } from './store/subredditsSlice';
 import { database } from './firebase/firebase';
-import {  useDispatch } from 'react-redux';
 import './styles/appStyle.scss';
 import './styles/modals.scss';
 
@@ -38,6 +39,7 @@ function App() {
 
 
   return (
+    <BrowserRouter>
       <div className="App">
         <Header
           signUpFunc={toggleSignUpModal}
@@ -52,6 +54,7 @@ function App() {
           <LogInModal closeFunc={toggleLogInModal} />
         ) : null}
       </div>
+    </BrowserRouter>
   );
 }
 

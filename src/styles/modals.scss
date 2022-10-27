@@ -13,12 +13,13 @@
   position: sticky;
   top: 0vh;
   height: auto;
-  width: 250px;
+  width: 350px;
   background-color: white;
   border-radius: 1rem;
   padding: 50px;
   box-shadow: 5px 5px 15px grey;
   display: grid;
+  justify-content: center;
   grid-template-rows: auto auto 1fr ;
   position: relative;
   font-family: sans-serif;

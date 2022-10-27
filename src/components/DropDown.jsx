@@ -19,11 +19,10 @@ const DropDown = styled.aside`
     border: 1px solid var(--background-color);
   }
 
-
-  a {
+  & > a {
     display: grid;
     align-items: center;
-    gap: 3px;
+    gap: 10px;
     grid-template-columns: 20px 1fr;
     padding: 10px;
     width: 100%;
@@ -31,7 +30,7 @@ const DropDown = styled.aside`
       background-color: var(--background-color);
     }
     img{
-      width: 18px;
+      width: 32px;
     }
     p{
       grid-column: 2 /3 ;

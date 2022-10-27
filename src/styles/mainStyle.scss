@@ -64,20 +64,24 @@ main {
 }
 
 #post-preview {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  display: flex;
+  align-items: center;
   gap: 15px;
 
-  & > *:not(img) {
+  a:nth-child(2){
+    flex: 0 1 100%;
+  }
 
+  & > *:not(img) {
     border-radius: 0.4rem;
   }
   input{
     padding-left: 20px;
     font-size: 1rem;
+    width: 100%;
   }
   img{
-    padding: 5px 5px 0px 5px;
+    margin: 5px;
     filter: opacity(75%);
   }
   a:hover{
