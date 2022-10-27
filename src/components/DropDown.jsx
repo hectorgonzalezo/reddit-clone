@@ -55,13 +55,13 @@ function AccountDropDown({ visible, closeFunc, onClickLogout, userIcon }) {
 
   return (
     <>
-      <DropDown className="main-child" visible={visible} onClick={closeFunc}>
+      <DropDown className="main-child" visible={visible} onClick={closeFunc} data-testid="user-dropdown">
         <a onClick={toggleIconModal}>
           <img src={userIcon} alt="" className="user-icon" />
           <p>Change icon</p>
         </a>
         <hr />
-        <a onClick={logOut}>
+        <a onClick={logOut} data-testid="logout-link">
           <img src={logoutIcon} alt="" />
           <p>Log out</p>
         </a>

@@ -27,13 +27,13 @@ function Header({ signUpFunc, logInFunc, opaque }) {
       </div>
       <div id="go-to">
         <button type="button">
-          <img src={homeIcon} alt="" className="icon" />
+          <img src={homeIcon} alt="home icon" className="icon" />
           <h1>Home</h1>
           <img src={arrowDownIcon} alt="" className="icon" />
         </button>
       </div>
       <SearchBar />
-      <div id="user-area">
+      <div id="user-area" data-testid="user-area">
         {/* show sign up and log in button if theres no user logged in */}
         {user.username === undefined ? (
           <>
@@ -46,7 +46,7 @@ function Header({ signUpFunc, logInFunc, opaque }) {
               type="button"
               onClick={() => setUserDropdownVisible((prev) => !prev)}
             >
-              <img src={user.icon} alt="" className="icon user-icon" />
+              <img src={user.icon} alt="user icon" className="icon user-icon" />
               <p>{user.username}</p>
               <img src={arrowDownIcon} alt="" className="icon" />
             </button>

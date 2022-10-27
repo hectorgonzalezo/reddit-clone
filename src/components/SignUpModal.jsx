@@ -111,7 +111,7 @@ function SignUpModal({ closeFunc }) {
             </a>
             .
           </p>
-          <button onClick={authorization.logInPopup} className="google-button">
+          <button type="button" onClick={authorization.logInPopup} className="google-button">
             <img src={googleIcon} alt="" />
             Continue with Google
           </button>
