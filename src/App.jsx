@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
 import LogInModal from './components/LogInModal';
-import store from './store/store';
-import { Provider } from 'react-redux';
+import { addSubreddit } from './store/subredditsSlice';
+import { database } from './firebase/firebase';
+import {  useDispatch } from 'react-redux';
 import './styles/appStyle.scss';
 import './styles/modals.scss';
 
 function App() {
   const [signUpVisible, setSignUpVisible] = useState(false);
   const [logInVisible, setLogInVisible] = useState(false);
+  const dispatch = useDispatch();
 
   function toggleSignUpModal() {
     setSignUpVisible((prevVisibility) => !prevVisibility);
@@ -20,8 +22,22 @@ function App() {
     setLogInVisible((prevVisibility) => !prevVisibility);
   }
 
+  useEffect(() => {
+    async function getNames() {
+      let data;
+      try {
+        data = await database.getSubredditsData();
+      } catch {
+        console.log("Couldn't get subreddit data");
+        data = [];
+      }
+      dispatch(addSubreddit(data))
+    }
+    getNames();
+  }, []);
+
+
   return (
-    <Provider store={store}>
       <div className="App">
         <Header
           signUpFunc={toggleSignUpModal}
@@ -36,7 +52,6 @@ function App() {
           <LogInModal closeFunc={toggleLogInModal} />
         ) : null}
       </div>
-    </Provider>
   );
 }
 
