@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import store from '../store/store';
 jest.mock('../firebase/firebase');
 
-describe('Styled button works', () => {
+describe('Sign up modal', () => {
   test('Renders with sign up button disabled', () => {
     render(<Provider store={store}>
       <SignUpModal />
@@ -120,7 +120,7 @@ describe('Styled button works', () => {
   });
 
   test('Filling the form correctly and pressing the button calls close function', async () => {
-    const mockCloseFunc = jest.fn('asdfasd');
+    const mockCloseFunc = jest.fn();
     render(<Provider store={store}>
             <SignUpModal closeFunc={mockCloseFunc} />
           </Provider>);

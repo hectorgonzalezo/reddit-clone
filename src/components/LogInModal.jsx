@@ -19,8 +19,8 @@ function LogInModal({ closeFunc }) {
     e.preventDefault();
     const username = userNameRef.current.value;
     const password = passwordRef.current.value;
-    const { icon } = await database.getUser(username);
     try {
+      const { icon } = await database.getUser(username);
       // add loading animation to button
       setLoadingData(true);
       const account = await authorization.logIn(username, password);
@@ -67,7 +67,7 @@ function LogInModal({ closeFunc }) {
             </a>
             .
           </p>
-          <button onClick={authorization.logInPopup} className="google-button">
+          <button type="button" onClick={authorization.logInPopup} className="google-button">
             <img src={googleIcon} alt="" />
             Continue with Google
           </button>
