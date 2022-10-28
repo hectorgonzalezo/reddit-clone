@@ -103,6 +103,22 @@ const database = (() => {
     }
   }
 
+  // adds a post in the specified subreddit
+  async function addTextPost(username, title, subreddit, text) {
+    console.log(typeof subreddit)
+    console.log({username, title, subreddit, text})
+    const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
+      originalPoster: username,
+      title,
+      text,
+      comments: [],
+      upVotes: 0,
+      timePosted: new Date().toString(),
+    });
+  }
+
+
+
   return {
     getSubredditsData,
     getAllPostsInSubreddit,
@@ -110,6 +126,7 @@ const database = (() => {
     addUser,
     getUser,
     saveUserIcon,
+    addTextPost,
   };
 })();
 

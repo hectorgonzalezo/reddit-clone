@@ -9,7 +9,6 @@ import DropDown from './DropDown';
 function CommunityChooser({ onChoosing }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const subreddits = useSelector(selectSubreddits);
-  const user = useSelector(selectUser);
 
   const [chosenSubreddit, setChosenSubreddit] = useState(null);
 

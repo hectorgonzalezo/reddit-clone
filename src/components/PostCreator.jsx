@@ -1,21 +1,50 @@
 import React, { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/userSlice';
 import CommunityChooser from './CommunityChooser';
 import PostingRules from './PostingRules';
 import ImageUpload from './ImageUpload';
 import Button from './Button';
+import { database } from '../firebase/firebase';
 import postIcon from '../assets/post_icon.svg';
 import imagesIcon from '../assets/images_icon.svg';
 import linkIcon from '../assets/link_icon.svg';
 import '../styles/postCreatorStyle.scss';
 
 function PostCreator() {
+  const user = useSelector(selectUser);
   const selectedButton = useRef();
+  const titleRef = useRef();
+  const [textContent, setTextContent] = useState('');
   const [selectedSubreddit, setSelectedSubreddit] = useState(null);
   const [fileToUpload, setFileToUpload] = useState(null);
 
-  const [mediaType, setMediaType] = useState(<textarea name="" id="" cols="30" rows="10" placeholder="Text (optional)" />);
-  const textArea = <textarea id="text-area" cols="30" rows="10" placeholder="Text (optional)" />;
-  const urlArea = <textarea id="url-area" cols="30" rows="2" placeholder="Url" required />;
+  const textArea = (
+    <textarea
+      id="text-area"
+      cols="30"
+      rows="10"
+      placeholder="Text (optional)"
+      onChange={updateTextContent}
+    />
+  );
+  const urlArea = (
+    <textarea
+      id="url-area"
+      cols="30"
+      rows="2"
+      placeholder="Url"
+      onChange={updateTextContent}
+      required
+    />
+  );
+  const [mediaType, setMediaType] = useState(textArea);
+
+  // used by both text areas onChange
+  function updateTextContent(e) {
+    const content = e.target.value;
+    setTextContent(content);
+  }
 
   // switches between text, images and link inputs
   function addMediaType() {
@@ -42,6 +71,15 @@ function PostCreator() {
     selectedButton.current = e.target;
     
     addMediaType();
+  }
+
+  // adds a post to database
+  function submitPost() {
+    const { username } = user;
+    const title = titleRef.current.value;
+    const subreddit = selectedSubreddit;
+    const text = textContent;
+    database.addTextPost(username, title, subreddit, text);
   }
 
   return (
@@ -71,9 +109,9 @@ function PostCreator() {
             </button>
           </div>
           <form action="" id="post-form" aria-label="Submit Form">
-            <input type="text" placeholder="Title" />
+            <input type="text" placeholder="Title" ref={titleRef} />
             {mediaType}
-            <Button text="Post" disabled={selectedSubreddit === null ? true : false} />
+            <Button text="Post" onClick={submitPost} disabled={selectedSubreddit === null ? true : false} />
           </form>
         </div>
       </div>
