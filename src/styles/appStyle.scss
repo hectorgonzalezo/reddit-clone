@@ -3,7 +3,7 @@
 
 :root{
   --reddit-blue: #0079d3;
-  --reddit-blue-light: #c5dff4;
+  --reddit-blue-light: #579dd6;
   --reddit-blue-super-light: #ebf1f7;
   --background-color: #dde5ed;
   --grey-dark: #878a8c;
@@ -70,6 +70,7 @@ main {
 .button-show-drop-down{
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 5px;
   border: none;
   background-color: inherit;

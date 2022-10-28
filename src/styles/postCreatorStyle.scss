@@ -1,6 +1,8 @@
 #post-creator {
   padding: 0px;
-
+  hr{
+    width: 50vw;
+  }
   form{
     padding: 20px;
     display: grid;
@@ -10,6 +12,7 @@
       border-radius: 0.3rem;
       padding: 10px 15px 10px 15px;
       resize: none;
+      font-family: "Noto Sans";
       &:not(#url-area){
         resize: vertical;
       }
@@ -72,12 +75,22 @@
   }
 }
 
+#create-post-title{
+  border-bottom: 1px solid white;
+  padding: 25px 0px 15px 0px;
+}
+
 #community-chooser{
   position: relative;
   width: 250px;
+  padding: 3px 0px 3px 0px;
   button{
+    padding: 5px;
     width: 100%;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    img:first-child[src=""]{
+      outline: 1px dashed grey;
+    }
   }
 
   aside h1{

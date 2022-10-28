@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import SignUpModal from '../components/SignUpModal';
 import { Provider } from 'react-redux';
 import store from '../store/store';
+
 jest.mock('../firebase/firebase');
 
 describe('Sign up modal', () => {

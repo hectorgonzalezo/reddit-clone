@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, func, string, arrayOf, element } from 'prop-types';
+import { bool, func, string, arrayOf, element, oneOfType } from 'prop-types';
 import styled from 'styled-components';
 
 const Aside = styled.aside`
@@ -60,7 +60,7 @@ DropDown.propTypes = {
   visible: bool.isRequired,
   closeFunc: func.isRequired,
   testid: string,
-  children: arrayOf(element).isRequired,
+  children: arrayOf(oneOfType([element, arrayOf(element)])).isRequired,
 };
 
 export default DropDown;

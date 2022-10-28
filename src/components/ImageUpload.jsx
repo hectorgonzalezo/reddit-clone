@@ -38,7 +38,8 @@ function ImageUpload({ onChange }) {
         id="file"
         className="inputfile"
         onChange={onChange}
-        accept="image/png, image/jpeg"
+        accept="image/png, image/jpeg image/gif"
+        required
       />
       <label htmlFor="file" className='image-input'>Choose a file</label>
     </UploadArea>
@@ -47,6 +48,6 @@ function ImageUpload({ onChange }) {
 
 ImageUpload.propTypes = {
   onChange: func.isRequired,
-}
+};
 
 export default ImageUpload;

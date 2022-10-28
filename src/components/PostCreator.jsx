@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import CommunityChooser from './CommunityChooser';
 import PostingRules from './PostingRules';
 import ImageUpload from './ImageUpload';
@@ -11,27 +10,29 @@ import '../styles/postCreatorStyle.scss';
 
 function PostCreator() {
   const selectedButton = useRef();
+  const [selectedSubreddit, setSelectedSubreddit] = useState(null);
+  const [fileToUpload, setFileToUpload] = useState(null);
 
-  const [mediaType, setMediaType] = useState(<textarea name="" id="" cols="30" rows="10" placeholder="Text (optional)" />)
+  const [mediaType, setMediaType] = useState(<textarea name="" id="" cols="30" rows="10" placeholder="Text (optional)" />);
   const textArea = <textarea id="text-area" cols="30" rows="10" placeholder="Text (optional)" />;
-  const urlArea = <textarea id="url-area" cols="30" rows="2" placeholder="Url" required /> ;
+  const urlArea = <textarea id="url-area" cols="30" rows="2" placeholder="Url" required />;
 
-   // switches between text, images and link inputs
-   function addMediaType() {
+  // switches between text, images and link inputs
+  function addMediaType() {
     const type = selectedButton.current.getAttribute('data');
     switch (type) {
       case 'post':
-        setMediaType(textArea)
+        setMediaType(textArea);
         break;
       case 'image':
-        setMediaType(<ImageUpload />);
+        setMediaType(<ImageUpload onChange={setFileToUpload} />);
         break;
       case 'link':
-        setMediaType(urlArea)
+        setMediaType(urlArea);
         break;
       default:
         break;
-    };
+    }
   }
 
   // Selects a type of media button
@@ -43,14 +44,11 @@ function PostCreator() {
     addMediaType();
   }
 
- 
-
   return (
     <>
       <div id="left-side">
-        <h1>Create a post</h1>
-        <hr />
-        <CommunityChooser />
+        <h1 id="create-post-title">Create a post</h1>
+        <CommunityChooser onChoosing={setSelectedSubreddit} />
         <div id="post-creator" className="main-child">
           <div id="buttons-div" data-testid="buttons-div">
             <button
@@ -75,12 +73,12 @@ function PostCreator() {
           <form action="" id="post-form" aria-label="Submit Form">
             <input type="text" placeholder="Title" />
             {mediaType}
-            <Button text="Post" />
+            <Button text="Post" disabled={selectedSubreddit === null ? true : false} />
           </form>
         </div>
       </div>
       <div id="right-side">
-       <PostingRules /> 
+        <PostingRules />
       </div>
     </>
   );
