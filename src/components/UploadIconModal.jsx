@@ -1,10 +1,11 @@
 import React, { useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { func } from 'prop-types';
 import { addUser, updateIcon } from '../store/userSlice';
+import ImageUpload from './ImageUpload';
 import Button from './Button';
 import loadingIcon from '../assets/loading.gif';
-import { func } from 'prop-types';
 import { database } from '../firebase/firebase';
-import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../store/userSlice';
 
 function UploadIconModal({ closeFunc }) {
@@ -40,11 +41,7 @@ function UploadIconModal({ closeFunc }) {
           x
         </button>
         <form action="">
-          <input
-            type="file"
-            accept="image/png, image/jpeg"
-            onChange={addIcon}
-          />
+          <ImageUpload onChange={addIcon} />
           <Button
             text=""
             type="submit"

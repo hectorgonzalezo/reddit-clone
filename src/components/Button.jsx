@@ -12,12 +12,12 @@ const StyledButton = styled.button`
   font-family: inherit;
   font-weight: bold;
   font-size: 0.8rem;
-  &:hover{
+  &:hover:not(:disabled){
     background-color: ${(props) => props.light ? 'var(--reddit-blue-super-light)' : 'var(--reddit-blue-light)'};
   }
 
   &:disabled{
-    opacity: 0.5
+    opacity: 0.5;
   }
 `;
 

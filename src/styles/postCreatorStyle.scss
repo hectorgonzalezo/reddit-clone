@@ -1,0 +1,73 @@
+#post-creator {
+  padding: 0px;
+
+  form{
+    padding: 20px;
+    display: grid;
+    gap: 15px;
+    input, textarea{
+      border:  1px solid var(--background-color);
+      border-radius: 0.3rem;
+      padding: 10px 15px 10px 15px;
+      resize: none;
+      &:not(#url-area){
+        resize: vertical;
+      }
+
+      &:focus{
+        outline: 1px solid black;
+      }
+
+      &::placeholder{
+        font-family: "Noto Sans";
+        color: rgb(177, 177, 177);
+      }
+    }
+
+    button{
+      justify-self: end;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+}
+
+#buttons-div{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid var(--background-color);
+
+  button{
+    flex: 1 0 150px;
+    background-color: inherit;
+    border: none;
+    border-right: 1px solid var(--background-color);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: grey;
+
+    &.selected {
+      border-bottom: 2px solid var(--reddit-blue);
+      color: var(--reddit-blue);
+      background-color: var(--reddit-blue-super-light);
+      img {
+        filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(180deg) brightness(50%) contrast(119%);
+      }
+    }
+
+    &:hover{
+      background-color: var(--reddit-blue-super-light);
+    }
+
+    img{
+      width: 32px;
+      filter:opacity(0.5)
+    }
+  }
+}

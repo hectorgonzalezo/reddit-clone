@@ -1,0 +1,67 @@
+import React from 'react';
+import { render, screen, container, getByRole, queryAllByRole } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
+import PostPreview from '../components/PostPreview';
+import PostCreator from '../components/PostCreator';
+
+describe('Post creator page', () => {
+  test('Post starts highlighted', () => {
+    render(<PostCreator />);
+    const buttonsArea = screen.getByTestId('buttons-div');;
+    const postButton = getByRole(buttonsArea, 'button', { name: 'Post' });
+    
+    expect(postButton).toHaveClass('selected');
+
+    expect(container).toMatchSnapshot();
+  });
+
+  test('Pressing on media button highlights it and deselects the rest', () => {
+    render(<PostCreator />);
+    const buttonsArea = screen.getByTestId('buttons-div');;
+    const postButton = getByRole(buttonsArea, 'button', { name: 'Post' });
+    const imagesButton = getByRole(buttonsArea, 'button', { name: 'Images & Video' });
+    const linkButton = getByRole(buttonsArea, 'button', { name: 'Link' });
+
+    userEvent.click(linkButton);
+    
+    expect(postButton).not.toHaveClass('selected');
+    expect(imagesButton).not.toHaveClass('selected');
+    expect(linkButton).toHaveClass('selected');
+  });
+
+  test('By default shows text area with text placeholder', () => {
+    render(<PostCreator />);
+    const form = screen.getByRole('form');
+    const textArea = queryAllByRole(form, 'textbox');
+    
+    expect(textArea[1]).toBeInTheDocument();
+    expect(textArea[1].placeholder).toEqual('Text (optional)');
+  });
+
+  test('Pressing on images button shows file input', () => {
+    render(<PostCreator />);
+    const form = screen.getByRole('form');
+    const buttonsArea = screen.getByTestId('buttons-div');;
+    const imagesButton = getByRole(buttonsArea, 'button', { name: 'Images & Video' });
+
+    userEvent.click(imagesButton);
+    const imageInput = screen.getByText('Choose a file');
+    
+    expect(imageInput).toBeInTheDocument();
+  });
+
+  test('Pressing on link button shows link textarea', () => {
+    render(<PostCreator />);
+    const form = screen.getByRole('form');
+    const buttonsArea = screen.getByTestId('buttons-div');;
+    const linkButton = getByRole(buttonsArea, 'button', { name: 'Link' });
+
+    userEvent.click(linkButton);
+    const textArea = queryAllByRole(form, 'textbox');
+    
+    expect(textArea[1]).toBeInTheDocument();
+    expect(textArea[1].placeholder).toEqual('Url');
+    expect(textArea[1]).toHaveProperty('required', true);
+  });
+})
