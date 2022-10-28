@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, container, act, getByRole, queryByRole } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
@@ -11,7 +12,9 @@ jest.mock('../firebase/firebase');
 describe('Sign up modal', () => {
   test('User area should display log in and sign up buttons by default', () => {
     render(<Provider store={store}>
-      <Header />
+      <BrowserRouter>
+        <Header />
+      </BrowserRouter>
      </Provider>);
 
     const userArea = screen.queryByTestId('user-area');
@@ -30,7 +33,9 @@ describe('Sign up modal', () => {
     const mockSignUpFunc = jest.fn();
     render(
       <Provider store={store}>
-        <Header logInFunc={mockLogInFunc} signUpFunc={mockSignUpFunc} />
+        <BrowserRouter>
+          <Header logInFunc={mockLogInFunc} signUpFunc={mockSignUpFunc} />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -48,7 +53,9 @@ describe('Sign up modal', () => {
     const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
     render(
       <Provider store={store}>
-        <Header />
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -68,7 +75,9 @@ describe('Sign up modal', () => {
     const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
     render(
       <Provider store={store}>
-        <Header />
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -91,7 +100,9 @@ describe('Sign up modal', () => {
     const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
     render(
       <Provider store={store}>
-        <Header />
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -119,7 +130,9 @@ describe('Sign up modal', () => {
     const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
     render(
       <Provider store={store}>
-        <Header />
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
       </Provider>
     );
 
