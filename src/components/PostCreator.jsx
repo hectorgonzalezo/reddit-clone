@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import CommunityChooser from './CommunityChooser';
 import PostingRules from './PostingRules';
 import ImageUpload from './ImageUpload';
@@ -10,6 +11,7 @@ import '../styles/postCreatorStyle.scss';
 
 function PostCreator() {
   const selectedButton = useRef();
+
   const [mediaType, setMediaType] = useState(<textarea name="" id="" cols="30" rows="10" placeholder="Text (optional)" />)
   const textArea = <textarea id="text-area" cols="30" rows="10" placeholder="Text (optional)" />;
   const urlArea = <textarea id="url-area" cols="30" rows="2" placeholder="Url" required /> ;

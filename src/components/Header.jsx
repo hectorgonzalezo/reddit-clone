@@ -7,7 +7,7 @@ import homeIcon from '../assets/home_icon.svg';
 import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
-import DropDown from './DropDown';
+import AccountDropDown from './AccountDropDown';
 import { func, bool } from 'prop-types';
 import { selectUser } from '../store/userSlice';
 
@@ -27,7 +27,7 @@ function Header({ signUpFunc, logInFunc, opaque }) {
         </Link>
       </div>
       <div id="go-to">
-        <button type="button">
+        <button type="button" className="button-show-drop-down">
           <img src={homeIcon} alt="home icon" className="icon" />
           <h1>Home</h1>
           <img src={arrowDownIcon} alt="" className="icon" />
@@ -45,13 +45,14 @@ function Header({ signUpFunc, logInFunc, opaque }) {
           <>
             <button
               type="button"
+              className="button-show-drop-down"
               onClick={() => setUserDropdownVisible((prev) => !prev)}
             >
               <img src={user.icon} alt="user icon" className="icon user-icon" />
               <p>{user.username}</p>
               <img src={arrowDownIcon} alt="" className="icon" />
             </button>
-            <DropDown
+            <AccountDropDown
               userIcon={user.icon}
               visible={userDropdownVisible}
               closeFunc={() => setUserDropdownVisible((prev) => !prev)}

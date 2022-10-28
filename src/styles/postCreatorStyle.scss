@@ -71,3 +71,17 @@
     }
   }
 }
+
+#community-chooser{
+  position: relative;
+  width: 250px;
+  button{
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  aside h1{
+    padding-left: 15px;
+    color: grey;
+  }
+}

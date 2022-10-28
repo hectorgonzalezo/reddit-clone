@@ -22,18 +22,7 @@
     gap: 5px;
   }
   
-  button:not(.default-button){
-    border: none;
-    background-color: inherit;
-    border-radius: 0.2rem;
-    padding: 3px 8px 3px 8px;
-    h1{
-      text-align: left;
-    }
-    &:hover:not(#x-circle){
-      outline: 1px solid lightgray;
-    }
-  }
+ 
 }
 
 #logos {

@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
-import { bool, func, string } from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { removeUser } from '../store/userSlice';
-import logoutIcon from '../assets/logout_icon.png';
-import UploadIconModal from './UploadIconModal';
+import React from 'react';
+import { bool, func, string, arrayOf, element } from 'prop-types';
 import styled from 'styled-components';
 
-const DropDown = styled.aside`
+const Aside = styled.aside`
   position: absolute;
   top: 45px;
   right: 5px;
@@ -14,69 +10,57 @@ const DropDown = styled.aside`
   flex-direction: column;
   font-size: 0.8rem;
   padding-left: 0px;
+  padding-right: 0px;
+  z-index: 10;
+  max-height: 300px;
+  overflow: scroll;
   hr {
-    width: 100%;
+    width: 90%;
     border: 1px solid var(--background-color);
   }
 
-  & > a {
+  .App & > a {
     display: grid;
     align-items: center;
     gap: 10px;
-    grid-template-columns: 20px 1fr;
+    grid-template-columns: 32px 1fr;
     padding: 10px;
     width: 100%;
     &:hover{
       background-color: var(--background-color);
+      cursor: pointer;
     }
     img{
       width: 32px;
+
     }
     p{
       grid-column: 2 /3 ;
     }
   }
 `;
-
-function AccountDropDown({ visible, closeFunc, onClickLogout, userIcon }) {
-  const dispatch = useDispatch();
-  const [iconModalVisible, setIconModalVisible] = useState(false);
-
-  function toggleIconModal() {
-    setIconModalVisible((prev) => !prev);
-  }
-
-  // Log out current user
-  function logOut() {
-    dispatch(removeUser());
-    onClickLogout();
-  };
-
+function DropDown({ visible, closeFunc, testid, children }) {
   return (
-    <>
-      <DropDown className="main-child" visible={visible} onClick={closeFunc} data-testid="user-dropdown">
-        <a onClick={toggleIconModal}>
-          <img src={userIcon} alt="" className="user-icon" />
-          <p>Change icon</p>
-        </a>
-        <hr />
-        <a onClick={logOut} data-testid="logout-link">
-          <img src={logoutIcon} alt="" />
-          <p>Log out</p>
-        </a>
-      </DropDown>
-      {iconModalVisible ? (
-        <UploadIconModal closeFunc={toggleIconModal} />
-      ) : null}
-    </>
+    <Aside
+      className="main-child"
+      visible={visible}
+      onClick={closeFunc}
+      data-testid={testid}
+    >
+      {children}
+    </Aside>
   );
 }
 
-AccountDropDown.propTypes = {
-  visible: bool.isRequired,
-  onClickLogout: func.isRequired,
-  closeFunc: func.isRequired,
-  userIcon: string.isRequired,
+DropDown.defaultProps = {
+  testid: '',
 };
 
-export default AccountDropDown;
+DropDown.propTypes = {
+  visible: bool.isRequired,
+  closeFunc: func.isRequired,
+  testid: string,
+  children: arrayOf(element).isRequired,
+};
+
+export default DropDown;
