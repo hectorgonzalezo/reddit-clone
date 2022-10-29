@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { authorization } from '../firebase/firebase';
 import { bool } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectSubreddits } from '../store/subredditsSlice';
@@ -10,13 +11,24 @@ import '../styles/mainStyle.scss';
 
 function MainContainer({ opaque }) {
   const subredditsData = useSelector(selectSubreddits);
+  const homepage = <HomePage subredditsData={subredditsData} />;
 
   return (
     <main className={opaque ? "opaque" : ""}>
-        <Routes>
-          <Route path="/" element={<HomePage subredditsData={subredditsData} />} />
-          <Route path="/create-post" element={<PostCreator />} />
-        </Routes>
+      <Routes>
+        <Route
+          path="/"
+          element={homepage}
+        />
+        <Route
+          path="/create-post"
+          element={
+            authorization.user !== null ? (
+              <PostCreator />
+            ) : homepage
+          }
+        />
+      </Routes>
     </main>
   );
 }

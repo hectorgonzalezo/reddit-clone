@@ -101,6 +101,14 @@ const database = (() => {
     return user[0];
   }
 
+  async function getUserByEmail(email) {
+    const user = [];
+    const userQuery = query(collection(db, 'users'), where('email', '==', email));
+    const userDoc = await getDocs(userQuery);
+    userDoc.forEach((data) => user.push(data.data()));
+    return user[0];
+  }
+
   async function saveUserIcon(file, username) {
     try {
       const publicImageUrl = uploadImage(file, `users/${username}/icon`);
@@ -158,6 +166,7 @@ const database = (() => {
     getTopPostsInSubreddit,
     addUser,
     getUser,
+    getUserByEmail,
     saveUserIcon,
     addTextPost,
     addImagePost,

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { database, authorization } from '../firebase/firebase';
 import logo from '../assets/Reddit_Mark_OnWhite.png';
 import logotype from '../assets/Reddit_Logotype_OnWhite.png';
 import homeIcon from '../assets/home_icon.svg';
@@ -9,7 +10,7 @@ import Button from './Button';
 import SearchBar from './SearchBar';
 import AccountDropDown from './AccountDropDown';
 import { func, bool } from 'prop-types';
-import { selectUser } from '../store/userSlice';
+import { selectUser, addUser } from '../store/userSlice';
 
 import '../styles/headerStyle.scss';
 
@@ -17,6 +18,7 @@ function Header({ signUpFunc, logInFunc, opaque }) {
   // gets user from redux store
   const user = useSelector(selectUser);
   const [userDropdownVisible, setUserDropdownVisible] = useState(false);
+
 
   return (
     <header className={opaque ? "opaque" : ""}>

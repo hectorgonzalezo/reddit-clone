@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { addUser } from './store/userSlice';
 import { BrowserRouter } from 'react-router-dom';
+import { authorization } from './firebase/firebase';
 import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
@@ -23,6 +25,19 @@ function App() {
     setLogInVisible((prevVisibility) => !prevVisibility);
   }
 
+  // If theres a user logged in, add it to redux store
+  useEffect(() => {
+    const authorizedUser = authorization.auth.currentUser;
+    if (authorizedUser !== null) {
+      database
+        .getUserByEmail(authorizedUser.email)
+        .then((fetchedUser) => {
+          const { username, email, icon } = fetchedUser;
+          dispatch(addUser({ username, email, icon }));
+        });
+    }
+  }, []);
+
   useEffect(() => {
     async function getNames() {
       let data;
@@ -32,11 +47,10 @@ function App() {
         console.log("Couldn't get subreddit data");
         data = [];
       }
-      dispatch(addSubreddit(data))
+      dispatch(addSubreddit(data));
     }
     getNames();
   }, []);
-
 
   return (
     <BrowserRouter>
@@ -47,12 +61,8 @@ function App() {
           opaque={signUpVisible || logInVisible}
         />
         <MainContainer opaque={signUpVisible || logInVisible} />
-        {signUpVisible ? (
-          <SignUpModal closeFunc={toggleSignUpModal} />
-        ) : null}
-        {logInVisible ? (
-          <LogInModal closeFunc={toggleLogInModal} />
-        ) : null}
+        {signUpVisible ? <SignUpModal closeFunc={toggleSignUpModal} /> : null}
+        {logInVisible ? <LogInModal closeFunc={toggleLogInModal} /> : null}
       </div>
     </BrowserRouter>
   );

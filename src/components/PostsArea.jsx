@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { arrayOf, objectOf, string } from 'prop-types';
+import uniqid from 'uniqid';
 import { database } from '../firebase/firebase';
 import PostPreview from './PostPreview';
 import styled from 'styled-components';
@@ -26,6 +27,15 @@ function PostsArea({ subreddits }) {
     setPosts((prevPosts) => [...prevPosts, ...topPosts]);
   }
 
+  function isPostUrlImage(url) {
+    if (url !== undefined) {
+      const extension = url.split('.').pop();
+      const possibleImageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
+      return possibleImageExtensions.includes(extension);
+    }
+    return false;
+  }
+
   // gets top posts of every subreddit
   useEffect(() => {
     // prevent double render
@@ -41,20 +51,23 @@ function PostsArea({ subreddits }) {
 
   return (
     <PostsDiv id="posts">
-      {posts.map((post) => (
-        <PostPreview
-          key={post.title}
-          subredditName={post.subredditName}
-          subredditIcon={post.subredditIcon}
-          poster={post.originalPoster}
-          timePosted={post.timePosted}
-          text={post.text}
-          title={post.title}
-          img={post.imageUrl}
-          upVotes={post.upVotes}
-          comments={post.comments}
-        />
-      ))}
+      {posts.map((post) => {
+        const imageUrl = isPostUrlImage(post.url) ? post.url : post.imageUrl;
+        return (
+          <PostPreview
+            key={post.title + uniqid()}
+            subredditName={post.subredditName}
+            subredditIcon={post.subredditIcon}
+            poster={post.originalPoster}
+            timePosted={post.timePosted}
+            text={post.text}
+            title={post.title}
+            img={imageUrl}
+            upVotes={post.upVotes}
+            comments={post.comments}
+          />
+        );
+      })}
     </PostsDiv>
   );
 }
