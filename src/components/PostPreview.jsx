@@ -131,7 +131,7 @@ function PostPreview({
   // updates number of upvotes in post
   function updateVotes(e) {
     // Only allow vote if user is authorized
-    if (authorization.getUser() !== null) {
+    if (user.username !== undefined) {
       // if(authorization.user)
       // can be 'upVote' or 'downVote'
       const newVoteType = e.target.getAttribute('data');
@@ -156,14 +156,14 @@ function PostPreview({
           );
           break;
         // downVote => downVote
-        case newVoteType === "downVote" && previousVote === "downVote":
-          setPreviousVote("");
+        case newVoteType === 'downVote' && previousVote === 'downVote':
+          setPreviousVote('');
           setVotes((prevVotes) => prevVotes + 1);
-          database.updateVotes(user.username, subredditName, postId, 1, "");
+          database.updateVotes(user.username, subredditName, postId, 1, '');
           break;
         // none => downVote
-        case newVoteType === "downVote" && previousVote === "":
-          setPreviousVote("downVote");
+        case newVoteType === 'downVote' && previousVote === '':
+          setPreviousVote('downVote');
           setVotes((prevVotes) => prevVotes - 1);
           database.updateVotes(
             user.username,
@@ -174,8 +174,8 @@ function PostPreview({
           );
           break;
         // downvote => upvote
-        case newVoteType === "downVote" && previousVote === "upVote":
-          setPreviousVote("downVote");
+        case newVoteType === 'downVote' && previousVote === 'upVote':
+          setPreviousVote('downVote');
           setVotes((prevVotes) => prevVotes - 2);
           database.updateVotes(
             user.username,
@@ -186,8 +186,8 @@ function PostPreview({
           );
           break;
         // upvote => downvote
-        case newVoteType === "upVote" && previousVote === "downVote":
-          setPreviousVote("upVote");
+        case newVoteType === 'upVote' && previousVote === 'downVote':
+          setPreviousVote('upVote');
           setVotes((prevVotes) => prevVotes + 2);
           database.updateVotes(
             user.username,
@@ -200,8 +200,6 @@ function PostPreview({
         default:
           break;
       }
-    } else {
-      openLogInModal();
     }
   }
 
@@ -209,11 +207,11 @@ function PostPreview({
     <Post className="main-child" voteType={previousVote}>
       <div className="vote-area-post">
         <IconLink fill="orange" onClick={updateVotes} data="upVote" colored={previousVote === 'upVote'}>
-          <img src={upIcon} alt="" data="upVote"/>
+          <img src={upIcon} alt="" data="upVote" data-testid="up-vote-img" />
         </IconLink>
-        <p>{formatUpVotes(votes)}</p>
+        <p data-testid="votes-display">{formatUpVotes(votes)}</p>
         <IconLink fill="blue" onClick={updateVotes} data="downVote" colored={previousVote === 'downVote'}>
-          <img src={downIcon} alt="" data="downVote"/>
+          <img src={downIcon} alt="" data="downVote" data-testid="down-vote-img" />
         </IconLink>
       </div>
 

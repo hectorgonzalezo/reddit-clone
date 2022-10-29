@@ -21,7 +21,7 @@ describe('Comunication with database', () => {
     const user = await database.getUser('mock');
     expect(user.length).not.toBe(0);
     expect(user.length).not.toBe(2);
-    expect(user.email).toEqual('mock@mocko.com');
+    expect(user.email).toEqual('mock@mock.com');
   });
 });
 

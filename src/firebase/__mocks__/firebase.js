@@ -33,7 +33,9 @@ const authorization = (() => {
     return userCredential.user;
   };
 
-  return { logIn, getUser, createAccount };
+  const logOut = () => true;
+
+  return { logIn, logOut, getUser, createAccount };
 })();
 
 export { database, authorization };
