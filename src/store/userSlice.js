@@ -14,6 +14,7 @@ export const userSlice = createSlice({
       state.username = action.payload.username;
       state.email = action.payload.email;
       state.icon = action.payload.icon;
+      state.votes = action.payload.votes;
     },
     updateIcon: (state, action) => {
       state.icon = action.payload;

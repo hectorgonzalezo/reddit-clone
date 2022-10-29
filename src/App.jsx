@@ -27,17 +27,17 @@ function App() {
 
   // If theres a user logged in, add it to redux store
   useEffect(() => {
-    const authorizedUser = authorization.auth.currentUser;
-    if (authorizedUser !== null) {
+    if (authorization.getUser() !== null) {
       database
         .getUserByEmail(authorizedUser.email)
         .then((fetchedUser) => {
-          const { username, email, icon } = fetchedUser;
-          dispatch(addUser({ username, email, icon }));
+          const { username, email, icon, votes } = fetchedUser;
+          dispatch(addUser({ username, email, icon, votes }));
         });
     }
   }, []);
 
+  // Populate subreddits redux store
   useEffect(() => {
     async function getNames() {
       let data;

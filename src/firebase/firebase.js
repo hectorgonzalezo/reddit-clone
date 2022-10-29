@@ -6,6 +6,8 @@ import {
   where,
   getDocs,
   getDoc,
+  increment,
+  decrement,
   doc,
   updateDoc,
   addDoc,
@@ -24,6 +26,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateCurrentUser,
 } from 'firebase/auth';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
@@ -66,7 +69,7 @@ const database = (() => {
     const postsQuery = query(
       collection(db, `subreddits/${subredditName}/posts`),
       orderBy('timePosted', 'desc'),
-      limit(10)
+      limit(10),
     );
     const postsInSubreddit = await getDocs(postsQuery);
     postsInSubreddit.forEach((post) => posts.push(post.data()));
@@ -76,10 +79,14 @@ const database = (() => {
 
   async function getTopPostsInSubreddit(subredditName) {
     const posts = [];
-    const postsInSubreddit = await getDocs(
-      query(collection(db, `subreddits/${subredditName}/posts`))
-    );
-    postsInSubreddit.forEach((post) => posts.push(post.data()));
+    const postsQuery = query(collection(db, `subreddits/${subredditName}/posts`));
+    const postsInSubreddit = await getDocs(postsQuery);
+    postsInSubreddit.forEach((post) => {
+      const postData = post.data();
+      // Add id of post to object
+      const { id } = post;
+      posts.push({ ...postData, id })
+    });
 
     return posts;
   }
@@ -90,15 +97,13 @@ const database = (() => {
       email,
       username,
       icon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1',
+      votes: [],
     });
   }
 
   async function getUser(username) {
-    const user = [];
-    const userQuery = query(collection(db, 'users'), where('username', '==', username));
-    const userDoc = await getDocs(userQuery);
-    userDoc.forEach((data) => user.push(data.data()));
-    return user[0];
+    const userDoc = await getDoc(doc(db, 'users', username));
+    return userDoc.data();
   }
 
   async function getUserByEmail(email) {
@@ -159,6 +164,21 @@ const database = (() => {
     });
   }
 
+  async function updateVotes(username, subreddit, postId, incrementQuantity, voteType) {
+    const postDoc = doc(db, `subreddits/${subreddit}/posts/`, postId);
+    const userDoc = doc(db, 'users', username);
+    let updatedVoteType;
+
+    // update upVotes in original document
+    await updateDoc(postDoc, {
+      upVotes: increment(incrementQuantity),
+    });
+
+    // updates votes
+    await updateDoc(userDoc, {
+      [`votes.${postId}`]: voteType,
+    });
+  }
 
   return {
     getSubredditsData,
@@ -171,13 +191,14 @@ const database = (() => {
     addTextPost,
     addImagePost,
     addUrlPost,
+    updateVotes,
   };
 })();
 
 // Used for user sign in and sign up
 const authorization = (() => {
   const auth = getAuth(firebaseApp);
-  const user = auth.currentUser;
+  const getUser = () => auth.currentUser;
   // const emulator = connectAuthEmulator(auth, 'http://localhost:9099');
   let emulator;
 
@@ -186,7 +207,7 @@ const authorization = (() => {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         loginEmail,
-        loginPassword
+        loginPassword,
       );
       return userCredential.user;
     } catch (error) {
@@ -216,6 +237,10 @@ const authorization = (() => {
     return userCredential.user;
   };
 
+  const logOut = async () => {
+    signOut(auth);
+  };
+
   const logInPopup = async () => {
     // Sign in Firebase using popup auth and Google as the identity provider.
     const provider = new GoogleAuthProvider();
@@ -225,10 +250,11 @@ const authorization = (() => {
 
   return {
     auth,
-    user,
+    getUser,
     emulator,
     logInPopup,
     logIn,
+    logOut,
     loginEmailPassword,
     createAccount,
   };

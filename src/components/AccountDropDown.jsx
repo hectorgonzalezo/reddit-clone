@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { bool, func, string } from 'prop-types';
-import { useNavigate, userNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../store/userSlice';
+import { authorization } from '../firebase/firebase';
 import logoutIcon from '../assets/logout_icon.png';
 import UploadIconModal from './UploadIconModal';
 import DropDown from './DropDown';
@@ -20,6 +21,7 @@ function AccountDropDown({ visible, closeFunc, userIcon }) {
   function logOut() {
     dispatch(removeUser());
     closeFunc();
+    authorization.logOut();
     // On log out, go to homepage
     navigate('/');
   }

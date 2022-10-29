@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 import { arrayOf, objectOf, string } from 'prop-types';
 import uniqid from 'uniqid';
 import { database } from '../firebase/firebase';
 import PostPreview from './PostPreview';
-import styled from 'styled-components';
+import { selectUser } from '../store/userSlice';
 
 const defaultIconUrl = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=4b92a9a0-3b37-4058-bdca-627d706dd7d6';
 
@@ -15,6 +17,7 @@ const PostsDiv = styled.div`
 
 function PostsArea({ subreddits }) {
   const [posts, setPosts] = useState([]);
+  const user = useSelector(selectUser);
   let rendered = false;
   async function getTop(subredditName, subredditIcon) {
     let topPosts = await database.getTopPostsInSubreddit(subredditName);
@@ -56,10 +59,12 @@ function PostsArea({ subreddits }) {
         return (
           <PostPreview
             key={post.title + uniqid()}
+            postId={post.id}
             subredditName={post.subredditName}
             subredditIcon={post.subredditIcon}
             poster={post.originalPoster}
             timePosted={post.timePosted}
+            voteType={user.username !== undefined && user.votes[post.id] !== undefined ? user.votes[post.id] : ''}
             text={post.text}
             title={post.title}
             img={imageUrl}

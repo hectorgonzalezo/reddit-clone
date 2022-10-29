@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 import { authorization } from '../firebase/firebase';
 import { bool } from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -23,9 +23,9 @@ function MainContainer({ opaque }) {
         <Route
           path="/create-post"
           element={
-            authorization.user !== null ? (
+            authorization.auth.currentUser !== null ? (
               <PostCreator />
-            ) : homepage
+            ) : <Navigate to="/" />
           }
         />
       </Routes>

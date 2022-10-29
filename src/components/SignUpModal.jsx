@@ -77,13 +77,14 @@ function SignUpModal({ closeFunc }) {
     const email = emailRef.current.value;
     const password = password1Ref.current.value;
     const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
+    const votes = {};
     try {
       // add loading animation
       setLoadingData(true);
       const account = await authorization.createAccount(email, password, username);
       setEmailAlreadyExists(false);
       // update redux store
-      dispatch(addUser({ username, email, icon }));
+      dispatch(addUser({ username, email, icon, votes }));
       closeFunc();
     } catch (error) {
       // If email already exists
