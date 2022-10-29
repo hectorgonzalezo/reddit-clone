@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 
 const UploadArea = styled.div`
   & > .inputfile {
@@ -29,13 +29,13 @@ const UploadArea = styled.div`
   }
 `;
 
-function ImageUpload({ onChange }) {
+function ImageUpload({ onChange, id }) {
   return (
     <UploadArea>
       <input
         type="file"
         name="file"
-        id="file"
+        id={id}
         className="inputfile"
         onChange={onChange}
         accept="image/png, image/jpeg image/gif"
@@ -46,8 +46,13 @@ function ImageUpload({ onChange }) {
   );
 }
 
+ImageUpload.defaultProps = {
+  id: 'file',
+};
+
 ImageUpload.propTypes = {
   onChange: func.isRequired,
+  id: string,
 };
 
 export default ImageUpload;

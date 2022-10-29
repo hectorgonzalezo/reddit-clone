@@ -33,6 +33,23 @@ const firebaseApp = initializeApp(getFirebaseConfig());
 
 const database = (() => {
   const db = getFirestore(firebaseApp);
+
+  // uploads an image to firestore
+  // arguments are the file to upload and the path to upload it to
+  async function uploadImage(file, path) {
+    try {
+      // Upload the image to Cloud Storage.
+      const filePath = `${path}${file.name}`;
+      const newImageRef = ref(getStorage(), filePath);
+      const fileSnapshot = await uploadBytesResumable(newImageRef, file);
+      // Generate a public URL for the file.
+      const publicImageUrl = await getDownloadURL(newImageRef);
+      return publicImageUrl;
+    } catch (error) {
+      console.log(`couldn't upload ${file.name}`);
+      return error;
+    }
+  }
   async function getSubredditsData() {
     const names = [];
     const subreddits = await getDocs(query(collection(db, 'subreddits')));
@@ -86,12 +103,7 @@ const database = (() => {
 
   async function saveUserIcon(file, username) {
     try {
-      // Upload the image to Cloud Storage.
-      const filePath = `${username}/icon/${file.name}`;
-      const newImageRef = ref(getStorage(), filePath);
-      const fileSnapshot = await uploadBytesResumable(newImageRef, file);
-      // Generate a public URL for the file.
-      const publicImageUrl = await getDownloadURL(newImageRef);
+      const publicImageUrl = uploadImage(file, `users/${username}/icon`);
       // update user's icon
       const userDoc = doc(db, 'users', username);
       await updateDoc(userDoc, {
@@ -100,13 +112,12 @@ const database = (() => {
       return publicImageUrl;
     } catch (error) {
       console.error('There was an error uploading a file to Cloud Storage:', error);
+      return error;
     }
   }
 
   // adds a post in the specified subreddit
   async function addTextPost(username, title, subreddit, text) {
-    console.log(typeof subreddit)
-    console.log({username, title, subreddit, text})
     const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
       originalPoster: username,
       title,
@@ -117,6 +128,28 @@ const database = (() => {
     });
   }
 
+  async function addImagePost(username, title, subreddit, image) {
+    const imageUrl = await uploadImage(image, `postImages/${username}/images`)
+    const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
+      originalPoster: username,
+      title,
+      imageUrl,
+      comments: [],
+      upVotes: 0,
+      timePosted: new Date().toString(),
+    });
+  }
+
+  async function addUrlPost(username, title, subreddit, url) {
+    const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
+      originalPoster: username,
+      title,
+      url,
+      comments: [],
+      upVotes: 0,
+      timePosted: new Date().toString(),
+    });
+  }
 
 
   return {
@@ -127,6 +160,8 @@ const database = (() => {
     getUser,
     saveUserIcon,
     addTextPost,
+    addImagePost,
+    addUrlPost,
   };
 })();
 

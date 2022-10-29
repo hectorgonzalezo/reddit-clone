@@ -38,12 +38,20 @@ function PostCreator() {
       required
     />
   );
+  const imgArea = <ImageUpload id="img-area" onChange={updateFileToUpload} />;
+
   const [mediaType, setMediaType] = useState(textArea);
 
   // used by both text areas onChange
   function updateTextContent(e) {
     const content = e.target.value;
     setTextContent(content);
+  }
+
+  // used by imgArea
+  function updateFileToUpload(e) {
+    const newFile = e.target.files[0];
+    setFileToUpload(newFile);
   }
 
   // switches between text, images and link inputs
@@ -54,7 +62,7 @@ function PostCreator() {
         setMediaType(textArea);
         break;
       case 'image':
-        setMediaType(<ImageUpload onChange={setFileToUpload} />);
+        setMediaType(imgArea);
         break;
       case 'link':
         setMediaType(urlArea);
@@ -69,7 +77,6 @@ function PostCreator() {
     selectedButton.current.classList.remove('selected');
     e.target.classList.add('selected');
     selectedButton.current = e.target;
-    
     addMediaType();
   }
 
@@ -79,7 +86,22 @@ function PostCreator() {
     const title = titleRef.current.value;
     const subreddit = selectedSubreddit;
     const text = textContent;
-    database.addTextPost(username, title, subreddit, text);
+    const image = fileToUpload;
+    // depending on the type of media to be upload, choose an appropriate database method
+    // extract the id of the element to identify the type
+    switch (mediaType.props.id) {
+      case 'text-area':
+        database.addTextPost(username, title, subreddit, text);
+        break;
+      case 'img-area':
+        database.addImagePost(username, title, subreddit, image);
+        break;
+      case 'url-area':
+        database.addUrlPost(username, title, subreddit, text);
+        break;
+      default:
+        break;
+    }
   }
 
   return (
