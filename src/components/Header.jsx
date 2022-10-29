@@ -57,8 +57,7 @@ function Header({ signUpFunc, logInFunc, opaque }) {
             <AccountDropDown
               userIcon={user.icon}
               visible={userDropdownVisible}
-              closeFunc={() => setUserDropdownVisible((prev) => !prev)}
-              onClickLogout={() => setUserDropdownVisible((prev) => !prev)}
+              closeFunc={() => {setUserDropdownVisible(false)}}
             />
           </>
         )}

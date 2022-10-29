@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { bool, func, string } from 'prop-types';
+import { useNavigate, userNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../store/userSlice';
 import logoutIcon from '../assets/logout_icon.png';
 import UploadIconModal from './UploadIconModal';
 import DropDown from './DropDown';
 
-function AccountDropDown({ visible, closeFunc, onClickLogout, userIcon }) {
+function AccountDropDown({ visible, closeFunc, userIcon }) {
   const dispatch = useDispatch();
   const [iconModalVisible, setIconModalVisible] = useState(false);
+  const navigate = useNavigate();
 
   function toggleIconModal() {
     setIconModalVisible((prev) => !prev);
@@ -17,8 +19,10 @@ function AccountDropDown({ visible, closeFunc, onClickLogout, userIcon }) {
   // Log out current user
   function logOut() {
     dispatch(removeUser());
-    onClickLogout();
-  };
+    closeFunc();
+    // On log out, go to homepage
+    navigate('/');
+  }
 
   return (
     <>
@@ -42,7 +46,6 @@ function AccountDropDown({ visible, closeFunc, onClickLogout, userIcon }) {
 
 AccountDropDown.propTypes = {
   visible: bool.isRequired,
-  onClickLogout: func.isRequired,
   closeFunc: func.isRequired,
   userIcon: string.isRequired,
 };
