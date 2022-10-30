@@ -1,45 +1,45 @@
 import React from 'react';
 import { render, screen, container, act } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import PostPreview from '../components/PostPreview';
-import { Provider } from 'react-redux';
+import Post from '../components/Post';
 import store from '../store/store';
+
+const mockPost = {
+  subredditName: 'aww',
+  subredditIcon: undefined,
+  poster: 'yo',
+  title: 'Title',
+  text: 'Hey!',
+  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/postImages%2Fbar%2Fimages58b82c35dcf6e61433da9494.png?alt=media&token=c77db72a-07d3-4c61-9a2c-cfc86e8e4bb1',
+  postId: '0',
+  upVotes: 10,
+  timePosted: (new Date()).toString(),
+  comments: [{}],
+};
+
+const {
+  subredditName,
+  subredditIcon,
+  poster,
+  title,
+  text,
+  imageUrl,
+  upVotes,
+  timePosted,
+  comments,
+  postId,
+} = mockPost;
 
 const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
 describe('Post previews', () => {
-  const mockPost = {
-    subredditName: 'aww',
-    subredditIcon: undefined,
-    poster: 'yo',
-    title: 'Title',
-    text: 'Hey!',
-    imageUrl: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/postImages%2Fbar%2Fimages58b82c35dcf6e61433da9494.png?alt=media&token=c77db72a-07d3-4c61-9a2c-cfc86e8e4bb1',
-    postId: '0',
-    upVotes: 10,
-    timePosted: (new Date()).toString(),
-    comments: [{}],
-  };
-
-  const {
-    subredditName,
-    subredditIcon,
-    poster,
-    title,
-    text,
-    imageUrl,
-    upVotes,
-    timePosted,
-    comments,
-    postId,
-  } = mockPost;
-
   test('Render title and basic info', () => {
-
     // render mock post preview
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -61,6 +61,11 @@ describe('Post previews', () => {
     expect(screen.getByText(`u/${poster}`)).toBeInTheDocument();
     expect(screen.getByText('1 Comments')).toBeInTheDocument();
 
+    // dont render comments display
+    expect(screen.queryByTestId('comments-display')).not.toBeInTheDocument();
+
+
+    // post should be preview
     expect(container).toMatchSnapshot();
   });
 
@@ -68,7 +73,8 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -88,6 +94,7 @@ describe('Post previews', () => {
     const textContent = screen.getByText('Hey!');
     expect(textContent).toBeInTheDocument();
 
+
     expect(container).toMatchSnapshot();
   });
 
@@ -95,7 +102,8 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -123,7 +131,8 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -160,7 +169,8 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -194,7 +204,8 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -228,7 +239,8 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -263,7 +275,8 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -298,7 +311,8 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <PostPreview
+        <Post
+          preview
           key={title}
           subredditName={subredditName}
           subredditIcon={subredditIcon}
@@ -329,3 +343,32 @@ describe('Post previews', () => {
     expect(downVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg)');
   });
 });
+
+describe('Post with comments', () => {
+  test('Post isnt preview by default', () => {
+    // render mock post preview
+    render(
+      <Provider store={store}>
+        <Post
+          key={title}
+          subredditName={subredditName}
+          subredditIcon={subredditIcon}
+          poster={poster}
+          timePosted={timePosted}
+          title={title}
+          postId={postId}
+          upVotes={upVotes}
+          comments={comments}
+        />
+      </Provider>
+    );
+
+
+    // post should be preview
+    expect(screen.getByTestId('post-container')).not.toHaveProperty('preview', true);
+    // there should be a comments area
+    expect(screen.getByTestId('comments-display')).toBeInTheDocument();
+
+    expect(container).toMatchSnapshot();
+  });
+})

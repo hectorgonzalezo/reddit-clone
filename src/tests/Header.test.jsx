@@ -87,9 +87,7 @@ describe('Sign up modal', () => {
         payload: { username: "juan", email: "mock@mock.com", icon },
       });
     });
-
     
-
     // User name and icon should be displayed
     expect(screen.getByText('juan')).toBeInTheDocument();
     expect(screen.getByAltText('user icon')).toBeInTheDocument();

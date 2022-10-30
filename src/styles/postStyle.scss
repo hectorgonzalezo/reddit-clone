@@ -1,0 +1,81 @@
+article.post{
+  display: grid;
+  gap: 10px;
+  padding-right: 0px;
+  grid-template-columns: 40px 1fr;
+  grid-template-rows: 20px 1fr 30px;
+  grid-template-areas:
+    "vote sub"
+    "vote main"
+    "vote comm";
+
+  & > div {
+    padding-right: 10px;
+  }
+
+  em {
+    font-weight: bold;
+    color: black;
+  }
+
+  div {
+    display: flex;
+  }
+  &:hover {
+    outline: 1px solid grey;
+    cursor: pointer;
+  }
+
+  & > .vote-area-post {
+    grid-area: vote;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    img {
+      width: 20px;
+    }
+    p {
+      font-weight: bold;
+    }
+
+  & > .top-area-post {
+    grid-area: sub;
+    gap: 3px;
+    a:hover {
+      text-decoration: underline;
+    }
+    a,
+    p {
+      font-size: 0.8rem;
+      color: grey;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    }
+  }
+
+  & > .main-area-post {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 0px;
+    & > *:not(img) {
+      padding-right: 13px;
+    }
+    img {
+      max-width: 100%;
+    }
+    p {
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+  }
+
+  & > .bottom-area-post {
+    grid-area: comm;
+  
+}
+  }

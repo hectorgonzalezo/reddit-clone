@@ -5,3 +5,5 @@ exports[`Post previews Given an imageUrl display it 1`] = `undefined`;
 exports[`Post previews Render text if given one 1`] = `undefined`;
 
 exports[`Post previews Render title and basic info 1`] = `undefined`;
+
+exports[`Post with comments Post isnt preview by default 1`] = `undefined`;

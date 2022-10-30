@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { arrayOf, objectOf, string } from 'prop-types';
 import uniqid from 'uniqid';
 import { database } from '../firebase/firebase';
-import PostPreview from './PostPreview';
+import Post from './Post';
 import { selectUser } from '../store/userSlice';
 
 const defaultIconUrl = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=4b92a9a0-3b37-4058-bdca-627d706dd7d6';
@@ -57,7 +57,8 @@ function PostsArea({ subreddits }) {
       {posts.map((post) => {
         const imageUrl = isPostUrlImage(post.url) ? post.url : post.imageUrl;
         return (
-          <PostPreview
+          <Post
+            preview
             key={post.title + uniqid()}
             postId={post.id}
             subredditName={post.subredditName}
