@@ -1,6 +1,8 @@
 import React from 'react';
 import { objectOf, string, number, oneOfType } from 'prop-types';
 import { format } from 'date-fns';
+import cakeIcon from '../../assets/cake_icon.svg';
+import formatUpvotes from '../../utils/formatUpVotes';
 
 function SubredditAbout({ subreddit }) {
   return (
@@ -9,15 +11,17 @@ function SubredditAbout({ subreddit }) {
         <h1>About community</h1>
       </div>
       <div>
-        <p>{subreddit.description}</p>
+        <h1>{subreddit.description}</h1>
+        <img src={cakeIcon} alt="" className="icon" />
         <p>
           Created on
           {'  '}
           {format(new Date(subreddit.dateCreated), 'dd MMM yyyy')}
         </p>
       </div>
-      <div>
-        <h1>{subreddit.members}</h1>
+      <hr />
+      <div id="members-div">
+        <h1>{formatUpvotes(subreddit.members)}</h1>
         <p>Members</p>
       </div>
     </div>

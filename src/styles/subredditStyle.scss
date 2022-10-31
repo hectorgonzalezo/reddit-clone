@@ -1,16 +1,68 @@
 #top-side{
+  background-color: white;
+  height: 80px;
+  margin-top: -20px;
   + div {
     // position: absolute;
-    // top: 120px
+    top: 120px
   }
 }
 
 #subreddit-banner {
-  padding: 20px;
-  display: flex;
+  background-color: white;
+  border: none;
+  padding: 5px 20px 0px 20px;
+  display: grid;
+  grid-template-columns: 70px auto 1fr;
+  column-gap: 15px;
+  grid-template-rows: 1fr 20px;
+  align-items: center;
+  justify-items: left;
+  grid-template-areas: 
+                      "icon subtitle button"
+                      "icon subName ....";
+  h1{
+    grid-area: subtitle;
+    font-weight: bold;
+  }
+
   img{
     max-height: 60px;
-    border-radius: 100%;
+      border-radius: 100%;
+      grid-area: icon;
+  }
+
+  button {
+    grid-area: button;
   }
 }
 
+#subreddit-about{
+  padding: 0px;
+  & > div {
+    padding: 10px;
+  }
+  & > div:first-child{
+    background-color: var(--reddit-blue);
+    color: white;
+  }
+
+  & > div:nth-child(2){
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 30px 1fr;
+
+    h1{
+      font-size: 0.9rem;
+      grid-column: 1 / -1;
+    }
+  }
+  hr {
+    width: 95%;
+    border: 1px solid var(--reddit-blue-super-light)
+  }
+  p {
+    font-size: 0.8rem;
+    color: grey;
+  }
+}

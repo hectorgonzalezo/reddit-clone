@@ -164,7 +164,7 @@ function Post({
       </div>
 
       <div className="top-area-post">
-        <Link to={`r/${subredditName}`}>
+        <Link to={`/r/${subredditName}`}>
           <SubredditIcon icon={subredditIcon} small />
           <em>r/{subredditName}</em>
         </Link>

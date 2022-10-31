@@ -7,7 +7,7 @@ function SubredditBanner({ subreddit }) {
     <div id="subreddit-banner" className="main-child">
       <img src={subreddit.icon} alt="" />
       <h1>{subreddit.subtitle}</h1>
-      <h2>{subreddit.name}</h2>
+      <p>{`r/${subreddit.name}`}</p>
       <Button text="Join" />
     </div>
   );
