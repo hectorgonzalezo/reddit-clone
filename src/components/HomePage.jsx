@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { selectSubreddits } from '../store/subredditsSlice';
 import CreatePostPreview from './CreatePostPreview';
 import PopularPostsBar from './PopularPostsBar';
 import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './PostsArea';
-import { useSelector } from 'react-redux';
 import { selectUser } from '../store/userSlice';
-import { arrayOf, objectOf, string } from 'prop-types';
 
-function HomePage({ subredditsData }) {
+function HomePage() {
   const user = useSelector(selectUser);
+  const subredditsData = useSelector(selectSubreddits);
   const [chosenSubreddits, setChosenSubreddits] = useState([]);
 
   // update subreddits for posts area every time they change
@@ -49,13 +50,5 @@ function HomePage({ subredditsData }) {
     </>
   );
 }
-
-HomePage.defaultProps = {
-  subredditsData: [],
-};
-
-HomePage.propTypes = {
-  subredditsData: objectOf(objectOf(string)),
-};
 
 export default HomePage;

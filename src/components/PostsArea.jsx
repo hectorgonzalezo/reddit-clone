@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { arrayOf, objectOf, string } from 'prop-types';
+import { arrayOf, objectOf, string, number, oneOfType } from 'prop-types';
 import uniqid from 'uniqid';
 import { database } from '../firebase/firebase';
 import Post from './Post';
@@ -51,7 +51,6 @@ function PostsArea({ subreddits }) {
     rendered = true;
   }, [subreddits]);
 
-
   return (
     <PostsDiv id="posts">
       {posts.map((post) => {
@@ -79,7 +78,7 @@ function PostsArea({ subreddits }) {
 }
 
 PostsArea.propTypes = {
-  subreddits: arrayOf(objectOf(string)).isRequired,
+  subreddits: arrayOf(objectOf(oneOfType([number, string]))).isRequired,
 };
 
 export default PostsArea;

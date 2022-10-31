@@ -57,8 +57,10 @@ const database = (() => {
     const names = [];
     const subreddits = await getDocs(query(collection(db, 'subreddits')));
 
-    subreddits.forEach((subreddit) =>
-      names.push({ name: subreddit.data().name, icon: subreddit.data().icon })
+    subreddits.forEach(async (subreddit) => {
+      const { name, icon, postQuantity } = subreddit.data();
+      names.push({ name, icon, postQuantity });
+    }
     );
 
     return names;
@@ -99,6 +101,7 @@ const database = (() => {
       icon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1',
       votes: [],
     });
+    return docRef;
   }
 
   async function getUser(username) {
@@ -129,6 +132,16 @@ const database = (() => {
     }
   }
 
+  // This is used to keep track of which subreddits have more posts
+  async function incrementNumberOfPosts(subreddit) {
+    const postDoc = doc(db, 'subreddits', subreddit);
+
+    // update upVotes in original document
+    await updateDoc(postDoc, {
+      postQuantity: increment(1),
+    });
+  }
+
   // adds a post in the specified subreddit
   async function addTextPost(username, title, subreddit, text) {
     const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
@@ -139,6 +152,7 @@ const database = (() => {
       upVotes: 0,
       timePosted: new Date().toString(),
     });
+    incrementNumberOfPosts(subreddit);
   }
 
   async function addImagePost(username, title, subreddit, image) {
@@ -151,6 +165,7 @@ const database = (() => {
       upVotes: 0,
       timePosted: new Date().toString(),
     });
+    incrementNumberOfPosts(subreddit);
   }
 
   async function addUrlPost(username, title, subreddit, url) {
@@ -162,12 +177,12 @@ const database = (() => {
       upVotes: 0,
       timePosted: new Date().toString(),
     });
+    incrementNumberOfPosts(subreddit);
   }
 
   async function updateVotes(username, subreddit, postId, incrementQuantity, voteType) {
     const postDoc = doc(db, `subreddits/${subreddit}/posts/`, postId);
     const userDoc = doc(db, 'users', username);
-    let updatedVoteType;
 
     // update upVotes in original document
     await updateDoc(postDoc, {

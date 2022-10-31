@@ -1,9 +1,21 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Button from './Button';
+import { selectSubreddits } from '../store/subredditsSlice';
 import carretUpIcon from '../assets/carret_up_icon.svg';
 import '../styles/topCommunitiesBarStyle.scss';
 
 function TopCommunitiesBar() {
+  const subreddits = useSelector(selectSubreddits);
+
+  // sorts subreddits by number of posts
+  function getTopSubreddits(number = 5) {
+    const sortedSubreddits = Object.values(subreddits).sort(
+      (a, b) => a.postQuantity + b.postQuantity
+    );
+    const firstNumSubreddits = sortedSubreddits.slice(0, number);
+    return firstNumSubreddits;
+  }
   return (
     <aside id="top-communities-bar" className="main-child">
       <div id="title-communities-bar">
@@ -13,46 +25,16 @@ function TopCommunitiesBar() {
       </div>
       <div id="list-communities-bar">
         <ol>
-          <li>
-            <a href="">
-              1
-              <img src={carretUpIcon} alt="" className="icon" />
-              r/mildlyinteresting
-            </a>
-            <Button text="Join" />{" "}
-          </li>
-          <li>
-            <a href="">
-              2
-              <img src={carretUpIcon} alt="" className="icon" />
-              r/funny
-            </a>
-            <Button text="Join" />{" "}
-          </li>
-          <li>
-            <a href="">
-              3
-              <img src={carretUpIcon} alt="" className="icon" />
-              r/space
-            </a>
-            <Button text="Join" />{" "}
-          </li>
-          <li>
-            <a href="">
-              4
-              <img src={carretUpIcon} alt="" className="icon" />
-              r/worldnews
-            </a>
-            <Button text="Join" />{" "}
-          </li>
-          <li>
-            <a href="">
-              5
-              <img src={carretUpIcon} alt="" className="icon" />
-              r/Dammthatsinteresting
-            </a>
-            <Button text="Join" />{" "}
-          </li>
+          {getTopSubreddits(5).map((subreddit, i) => (
+            <li key={`${subreddit.name}-item`}>
+              <a href="" key={`${subreddit.name}-link`}>
+                {i + 1}
+                <img src={carretUpIcon} alt="" className="icon" key={`${subreddit.name}-icon`} />
+                {`r/${subreddit.name}`}
+              </a>
+              <Button text="Join" key={`${subreddit.name}-join-button`}/>
+            </li>
+          ))}
         </ol>
       </div>
       <div id="buttons-communities-bar">
