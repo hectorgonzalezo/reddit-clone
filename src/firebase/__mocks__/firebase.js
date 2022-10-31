@@ -1,6 +1,4 @@
-
 const database = (() => {
-
   const getUser = async (username) => {
     const userCredential = await Promise.resolve({ user: username });
     if (username === 'fakefake') {
@@ -9,8 +7,12 @@ const database = (() => {
     return userCredential.user;
   };
 
-  return { getUser };
+  const updateVotes = async (username, subredditName, postId, increment, voteType) => {
+  };
+
+  return { getUser, updateVotes };
 })();
+
 // Used for user sign in and sign up
 const authorization = (() => {
   const createAccount = async (loginEmail, loginPassword, username) => {

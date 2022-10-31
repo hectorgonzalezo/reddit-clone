@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import store from '../store/store';
 import { addSubreddit } from '../store/subredditsSlice';
-import PostCreator from '../components/PostCreator';
+import PostCreator from '../components/post/PostCreator';
 
 
 describe('Post creator page', () => {

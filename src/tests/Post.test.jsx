@@ -1,10 +1,13 @@
 import React from 'react';
 import { render, screen, container, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import Post from '../components/Post';
+import Post from '../components/post/Post';
 import store from '../store/store';
+
+jest.mock('../firebase/firebase');
 
 const mockPost = {
   subredditName: 'aww',
@@ -38,32 +41,35 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
-    expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
 
-    expect(screen.getByRole('link', { name: `u/${poster}` })).toBeInTheDocument();
-    expect(screen.getByText('10')).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: `u/${poster}` })
+    ).toBeInTheDocument();
+    expect(screen.getByText("10")).toBeInTheDocument();
     expect(screen.getByText(`r/${subredditName}`)).toBeInTheDocument();
     expect(screen.getByText(`u/${poster}`)).toBeInTheDocument();
-    expect(screen.getByText('1 Comments')).toBeInTheDocument();
+    expect(screen.getByText("1 Comments")).toBeInTheDocument();
 
     // dont render comments display
-    expect(screen.queryByTestId('comments-display')).not.toBeInTheDocument();
-
+    expect(screen.queryByTestId("comments-display")).not.toBeInTheDocument();
 
     // post should be preview
     expect(container).toMatchSnapshot();
@@ -73,19 +79,21 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          text={text}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            text={text}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -102,19 +110,21 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          img={imageUrl}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            img={imageUrl}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -131,18 +141,20 @@ describe('Post previews', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -169,18 +181,20 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -204,18 +218,20 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -239,18 +255,20 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -275,18 +293,20 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -311,18 +331,20 @@ describe('Post previews', () => {
 
     render(
       <Provider store={store}>
-        <Post
-          preview
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            preview
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -349,17 +371,19 @@ describe('Post with comments', () => {
     // render mock post preview
     render(
       <Provider store={store}>
-        <Post
-          key={title}
-          subredditName={subredditName}
-          subredditIcon={subredditIcon}
-          poster={poster}
-          timePosted={timePosted}
-          title={title}
-          postId={postId}
-          upVotes={upVotes}
-          comments={comments}
-        />
+        <BrowserRouter>
+          <Post
+            key={title}
+            subredditName={subredditName}
+            subredditIcon={subredditIcon}
+            poster={poster}
+            timePosted={timePosted}
+            title={title}
+            postId={postId}
+            upVotes={upVotes}
+            comments={comments}
+          />
+        </BrowserRouter>
       </Provider>
     );
 
