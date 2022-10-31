@@ -17,6 +17,7 @@ function SubredditDisplay() {
 
   useEffect(() => {
     setChosenSubreddit(subredditsData[subreddit.name]);
+    console.log(subredditsData)
   }, [subredditsData]);
 
   return (

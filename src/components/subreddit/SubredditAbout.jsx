@@ -21,7 +21,7 @@ function SubredditAbout({ subreddit }) {
       </div>
       <hr />
       <div id="members-div">
-        <h1>{formatUpvotes(subreddit.members)}</h1>
+        <h1 data-testid="members-num">{formatUpvotes(subreddit.members)}</h1>
         <p>Members</p>
       </div>
     </div>
