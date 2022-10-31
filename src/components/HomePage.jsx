@@ -17,7 +17,6 @@ function HomePage() {
   // update subreddits for posts area every time they change
   useEffect(() => {
     setChosenSubreddits(Object.values(subredditsData));
-    console.log(Object.values(subredditsData))
   }, [subredditsData]);
 
   return (

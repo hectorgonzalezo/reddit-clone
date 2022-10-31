@@ -17,14 +17,11 @@ function SubredditDisplay() {
 
   useEffect(() => {
     setChosenSubreddit(subredditsData[subreddit.name]);
-    console.log(subredditsData)
   }, [subredditsData]);
 
   return (
     <>
-      <div id="top-side">
-        {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
-      </div>
+      {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
       <div id="left-side">
         <PopularPostsBar />
         {chosenSubreddit !== undefined ? <PostsArea subreddits={[chosenSubreddit]} /> : null}

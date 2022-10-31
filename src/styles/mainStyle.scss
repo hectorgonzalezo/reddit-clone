@@ -1,10 +1,9 @@
-
 main {
   background-color: var(--background-color);
   min-height: 100vh;
   display: grid;
   grid-template-columns: clamp(550px, 60vw, 700px) 300px;
-  grid-template-rows: auto;
+  grid-template-rows: minmax(min-content, 60px) auto;
   justify-content: center;
   gap: 20px;
   padding: 20px;
@@ -16,8 +15,6 @@ main {
     gap: 20px;
   }
 }
-
-
 .icon{
   // height: 22px;
   width: 22px;
@@ -51,10 +48,6 @@ main {
 }
 }
 
-#top-side {
-  grid-row: 1 / 2;
-  grid-column: 1 / -1;
-}
 
 #left-side {
   height: auto;
@@ -64,12 +57,13 @@ main {
 #right-side{
   position: relative;
   grid-column: 2 / -1;
+  height: auto;
 
   & > button:last-child{
   width: 40%;
   align-self: center;
   position: sticky;
-  top: 100px;
+  top: 10vh;
   }
 }
 
