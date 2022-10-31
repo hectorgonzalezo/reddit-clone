@@ -1,9 +1,10 @@
 import React from 'react';
 import { Navigate, Routes, Route } from 'react-router-dom';
-import { authorization } from '../firebase/firebase';
 import { bool } from 'prop-types';
-import PostCreator from './PostCreator';
+import { authorization } from '../firebase/firebase';
+import PostCreator from './post/PostCreator';
 import HomePage from './HomePage';
+import SubredditDisplay from './subreddit/SubredditDisplay';
 
 import '../styles/mainStyle.scss';
 
@@ -20,11 +21,12 @@ function MainContainer({ opaque }) {
         <Route
           path="/create-post"
           element={
-            authorization.auth.currentUser !== null ? (
+            authorization.getUser() !== null ? (
               <PostCreator />
             ) : <Navigate to="/" />
           }
         />
+        <Route path="r/:name" element={<SubredditDisplay />} />
       </Routes>
     </main>
   );

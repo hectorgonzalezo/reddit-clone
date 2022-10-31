@@ -2,21 +2,22 @@ import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { string, number, arrayOf, object, bool } from 'prop-types';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { database } from '../firebase/firebase';
-import upIcon from '../assets/upvote_icon.svg';
-import downIcon from '../assets/downvote_icon.svg';
-import commentsIcon from '../assets/comments_icon.svg';
-import shareIcon from '../assets/share_icon.svg';
-import saveIcon from '../assets/save_icon.svg';
-import hideIcon from '../assets/hide_icon.svg';
-import IconLink from './IconLink';
-import SubredditIcon from './SubredditIcon';
-import formatUpVotes from '../utils/formatUpVotes';
-import CommentsDisplay from './CommentsDisplay';
-import { selectUser } from '../store/userSlice';
-import { toggleLogInModal } from '../store/loginModalSlice';
-import '../styles/postStyle.scss';
+import { database } from '../../firebase/firebase';
+import upIcon from '../../assets/upvote_icon.svg';
+import downIcon from '../../assets/downvote_icon.svg';
+import commentsIcon from '../../assets/comments_icon.svg';
+import shareIcon from '../../assets/share_icon.svg';
+import saveIcon from '../../assets/save_icon.svg';
+import hideIcon from '../../assets/hide_icon.svg';
+import IconLink from '../IconLink';
+import SubredditIcon from '../SubredditIcon';
+import formatUpVotes from '../../utils/formatUpVotes';
+import CommentsDisplay from '../CommentsDisplay';
+import { selectUser } from '../../store/userSlice';
+import { toggleLogInModal } from '../../store/loginModalSlice';
+import '../../styles/postStyle.scss';
 
 const PostContainer = styled.article`
   & > .vote-area-post {
@@ -163,10 +164,10 @@ function Post({
       </div>
 
       <div className="top-area-post">
-        <a>
+        <Link to={`r/${subredditName}`}>
           <SubredditIcon icon={subredditIcon} small />
           <em>r/{subredditName}</em>
-        </a>
+        </Link>
         <p>&nbsp;•&nbsp;</p>
         <p>
           {" "}

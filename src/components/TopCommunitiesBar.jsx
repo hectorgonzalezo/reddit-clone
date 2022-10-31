@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Button from './Button';
 import { selectSubreddits } from '../store/subredditsSlice';
 import carretUpIcon from '../assets/carret_up_icon.svg';
@@ -27,11 +28,11 @@ function TopCommunitiesBar() {
         <ol>
           {getTopSubreddits(5).map((subreddit, i) => (
             <li key={`${subreddit.name}-item`}>
-              <a href="" key={`${subreddit.name}-link`}>
+              <Link to={`r/${subreddit.name}`} key={`${subreddit.name}-link`}>
                 {i + 1}
                 <img src={carretUpIcon} alt="" className="icon" key={`${subreddit.name}-icon`} />
                 {`r/${subreddit.name}`}
-              </a>
+              </Link>
               <Button text="Join" key={`${subreddit.name}-join-button`}/>
             </li>
           ))}

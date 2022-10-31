@@ -55,6 +55,7 @@ img {
     }
   }
 }
+}
 `;
 
 function IconLink({ children, round, fill, onClick, data, colored }) {

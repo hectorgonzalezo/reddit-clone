@@ -1,5 +1,5 @@
 import React from 'react';
-import redditIcon from '../assets/Reddit_Mark_OnWhite.png';
+import redditIcon from '../../assets/Reddit_Mark_OnWhite.png';
 import styled from 'styled-components';
 
 const Container = styled.div`

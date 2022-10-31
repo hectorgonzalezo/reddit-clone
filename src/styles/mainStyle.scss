@@ -4,9 +4,11 @@ main {
   min-height: 100vh;
   display: grid;
   grid-template-columns: clamp(550px, 60vw, 700px) 300px;
+  grid-template-rows: auto;
   justify-content: center;
   gap: 20px;
   padding: 20px;
+  position: relative;
 
   & > div{
     display: flex;
@@ -49,14 +51,26 @@ main {
 }
 }
 
-#left-side {
-  height: auto;
+#top-side {
+  grid-row: 1 / 2;
+  grid-column: 1 / -1;
 }
 
-#right-side > button:last-child{
+#left-side {
+  height: auto;
+  grid-column: 1 / 2;
+}
+
+#right-side{
+  position: relative;
+  grid-column: 2 / -1;
+
+  & > button:last-child{
   width: 40%;
   align-self: center;
   position: sticky;
+  top: 100px;
+  }
 }
 
 * {

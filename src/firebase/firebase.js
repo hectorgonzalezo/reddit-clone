@@ -59,7 +59,7 @@ const database = (() => {
 
     subreddits.forEach(async (subreddit) => {
       const { name, icon, postQuantity } = subreddit.data();
-      names.push({ name, icon, postQuantity });
+      names.push(subreddit.data());
     }
     );
 

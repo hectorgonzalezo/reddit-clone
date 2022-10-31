@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../store/userSlice';
-import CommunityChooser from './CommunityChooser';
+import { selectUser } from '../../store/userSlice';
+import CommunityChooser from '../CommunityChooser';
 import PostingRules from './PostingRules';
-import ImageUpload from './ImageUpload';
-import Button from './Button';
-import { database } from '../firebase/firebase';
-import postIcon from '../assets/post_icon.svg';
-import imagesIcon from '../assets/images_icon.svg';
-import linkIcon from '../assets/link_icon.svg';
-import '../styles/postCreatorStyle.scss';
+import ImageUpload from '../ImageUpload';
+import Button from '../Button';
+import { database } from '../../firebase/firebase';
+import postIcon from '../../assets/post_icon.svg';
+import imagesIcon from '../../assets/images_icon.svg';
+import linkIcon from '../../assets/link_icon.svg';
+import '../../styles/postCreatorStyle.scss';
 
 function PostCreator() {
   const user = useSelector(selectUser);
