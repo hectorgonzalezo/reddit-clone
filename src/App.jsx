@@ -7,7 +7,7 @@ import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
 import LogInModal from './components/LogInModal';
-import { toggleLoginModal, selectLoginModalVisibility } from './store/loginModalSlice';
+import { toggleLogInModal, selectLoginModalVisibility } from './store/loginModalSlice';
 import { addSubreddit } from './store/subredditsSlice';
 import { database } from './firebase/firebase';
 import './styles/appStyle.scss';
@@ -15,16 +15,17 @@ import './styles/modals.scss';
 
 function App() {
   const [signUpVisible, setSignUpVisible] = useState(false);
-  // const logInVisible = useSelector(selectLoginModalVisibility);
-  const [logInVisible, setLogInVisible] = useState(false);
+  const logInVisible = useSelector(selectLoginModalVisibility);
+  // const [logInVisible, setLogInVisible] = useState(false);
   const dispatch = useDispatch();
 
-  function toggleSignUpModal() {
+  function toggleSignUp() {
     setSignUpVisible((prevVisibility) => !prevVisibility);
   }
 
-  function toggleLogInModal() {
-    setLogInVisible((prevVisibility) => !prevVisibility);
+  function toggleLogIn() {
+    // setLogInVisible((prevVisibility) => !prevVisibility);
+    dispatch(toggleLogInModal());
   }
 
   // If theres a user logged in, add it to redux store
@@ -58,13 +59,13 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Header
-          signUpFunc={toggleSignUpModal}
-          logInFunc={toggleLogInModal}
+          signUpFunc={toggleSignUp}
+          logInFunc={toggleLogIn}
           opaque={signUpVisible || logInVisible}
         />
         <MainContainer opaque={signUpVisible || logInVisible} />
-        {signUpVisible ? <SignUpModal closeFunc={toggleSignUpModal} /> : null}
-        {logInVisible ? <LogInModal closeFunc={toggleLogInModal} /> : null}
+        {signUpVisible ? <SignUpModal closeFunc={toggleSignUp} /> : null}
+        {logInVisible ? <LogInModal closeFunc={toggleLogIn} /> : null}
       </div>
     </BrowserRouter>
   );

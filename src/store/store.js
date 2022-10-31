@@ -7,7 +7,7 @@ const store = configureStore({
   reducer: {
     user: userReducer,
     subreddits: subredditsReducer,
-    loginModalVisibile: loginModalReducer,
+    loginModalVisible: loginModalReducer,
   }
 });
 

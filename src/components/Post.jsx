@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { string, number, arrayOf, object, bool } from 'prop-types';
 import styled from 'styled-components';
 import { database } from '../firebase/firebase';
@@ -15,24 +15,28 @@ import SubredditIcon from './SubredditIcon';
 import formatUpVotes from '../utils/formatUpVotes';
 import CommentsDisplay from './CommentsDisplay';
 import { selectUser } from '../store/userSlice';
+import { toggleLogInModal } from '../store/loginModalSlice';
 import '../styles/postStyle.scss';
 
 const PostContainer = styled.article`
   & > .vote-area-post {
     p {
-      color: ${(props) =>
-        props.voteType === "upVote"
-          ? "var(--up-vote-color)"
-          : props.voteType === "downVote"
-          ? "var(--reddit-blue-light)"
-          : "black"};
-    }
+      color: ${(props) => {
+    if (props.voteType === 'upVote') {
+      return 'var(--up-vote-color)';
+    } else if (props.voteType === "downVote") {
+      return 'var(--reddit-blue-light)';
+    } 
+      return 'black';
+    }}
   }
 
 
   & > .main-area-post {
     p {
-      ${(props) => props.preview ? `
+      ${(props) =>
+        props.preview
+          ? `
       white-space: pre-wrap;
       max-height: 250px;
       overflow: hidden;
@@ -43,9 +47,10 @@ const PostContainer = styled.article`
         from(rgba(0, 0, 0, 1)),
         to(rgba(0, 0, 0, 0))
       );`
-      : ''};
+          : ""};
     }
   }
+}
 `;
 
 function Post({
@@ -65,6 +70,8 @@ function Post({
   const [previousVote, setPreviousVote] = useState(voteType);
   const [votes, setVotes] = useState(upVotes);
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+
   // updates number of upvotes in post
   function updateVotes(e) {
     // Only allow vote if user is authorized
@@ -137,6 +144,9 @@ function Post({
         default:
           break;
       }
+    } else {
+      // if theres no user signed in, show log in pop up
+      dispatch(toggleLogInModal());
     }
   }
 
