@@ -94,8 +94,8 @@ function SignUpModal({ closeFunc }) {
   }
 
   return (
-    <div id="signUp-outer" className='modal-outer'>
-      <div id="signUp-inner" className='modal-inner'>
+    <div id="signUp-outer" className="modal-outer">
+      <div id="signUp-inner" className="modal-inner">
         <div>
           <button type="button" className="close-button" onClick={closeFunc}>
             x
@@ -112,7 +112,11 @@ function SignUpModal({ closeFunc }) {
             </a>
             .
           </p>
-          <button type="button" onClick={authorization.logInPopup} className="google-button">
+          <button
+            type="button"
+            onClick={authorization.logInPopup}
+            className="google-button"
+          >
             <img src={googleIcon} alt="" />
             Continue with Google
           </button>
@@ -184,8 +188,17 @@ function SignUpModal({ closeFunc }) {
             <label htmlFor="repeatPassword">Repeat Password</label>
           </div>
           {emailAlreadyExists ? <span>Email is already registered</span> : null}
-          <Button text="" type="submit" disabled={disableButton} onClick={submitSignUp} >
-            {loadingData ? <img src={loadingIcon} alt="loading" data-testid="loading-icon" /> : ['Sign Up']}
+          <Button
+            text=""
+            type="submit"
+            disabled={disableButton}
+            onClick={submitSignUp}
+          >
+            {loadingData ? (
+              <img src={loadingIcon} alt="loading" data-testid="loading-icon" />
+            ) : (
+              ["Sign Up"]
+            )}
           </Button>
         </form>
         <p>
