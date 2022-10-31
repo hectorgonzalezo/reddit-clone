@@ -26,13 +26,15 @@ function Header({ signUpFunc, logInFunc, opaque }) {
           <img src={logotype} alt="reddit logotype" />
         </Link>
       </div>
-      <div id="go-to">
-        <button type="button" className="button-show-drop-down">
-          <img src={homeIcon} alt="home icon" className="icon" />
-          <h1>Home</h1>
-          <img src={arrowDownIcon} alt="" className="icon" />
-        </button>
-      </div>
+      {user.username !== undefined ? (
+        <div id="go-to">
+          <button type="button" className="button-show-drop-down">
+            <img src={homeIcon} alt="home icon" className="icon" />
+            <h1>Home</h1>
+            <img src={arrowDownIcon} alt="" className="icon" />
+          </button>
+        </div>
+      ) : null}
       <SearchBar />
       <div id="user-area" data-testid="user-area">
         {/* show sign up and log in button if theres no user logged in */}
