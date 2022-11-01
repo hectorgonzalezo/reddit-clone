@@ -58,12 +58,16 @@ const database = (() => {
     const subreddits = await getDocs(query(collection(db, 'subreddits')));
 
     subreddits.forEach(async (subreddit) => {
-      const { name, icon, postQuantity } = subreddit.data();
       names.push(subreddit.data());
     }
     );
 
     return names;
+  }
+
+  async function getSubredditData(subredditName) {
+    const userDoc = await getDoc(doc(db, 'subreddits', subredditName));
+    return userDoc.data();
   }
 
   async function getAllPostsInSubreddit(subredditName) {
@@ -202,6 +206,7 @@ const database = (() => {
 
   return {
     getSubredditsData,
+    getSubredditData,
     getAllPostsInSubreddit,
     getTopPostsInSubreddit,
     addUser,

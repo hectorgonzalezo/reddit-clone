@@ -39,9 +39,17 @@
   & > div {
     padding: 10px;
   }
+  
   & > div:first-child{
     background-color: var(--reddit-blue);
     color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      max-height: 40px;
+      border-radius: 100%;
+  }
   }
 
   & > div:nth-child(2){
