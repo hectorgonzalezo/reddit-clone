@@ -1,6 +1,6 @@
 const database = (() => {
   const getUser = async (username) => {
-    const userCredential = await Promise.resolve({ user: username });
+    const userCredential = await Promise.resolve({ user: username, icon: 'icon' });
     if (username === 'fakefake') {
       throw 'Fake username';
     }

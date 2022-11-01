@@ -15,11 +15,19 @@ const mockPost = {
   poster: 'yo',
   title: 'Title',
   text: 'Hey!',
-  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/postImages%2Fbar%2Fimages58b82c35dcf6e61433da9494.png?alt=media&token=c77db72a-07d3-4c61-9a2c-cfc86e8e4bb1',
+  imageUrl:
+    'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/postImages%2Fbar%2Fimages58b82c35dcf6e61433da9494.png?alt=media&token=c77db72a-07d3-4c61-9a2c-cfc86e8e4bb1',
   postId: '0',
   upVotes: 10,
-  timePosted: (new Date()).toString(),
-  comments: [{}],
+  timePosted: new Date().toString(),
+  comments: [
+    {
+      content: 'content',
+      timePosted: (new Date()).toString(),
+      upVotes: 10,
+      user: 'juan',
+    },
+  ],
 };
 
 const {
@@ -367,9 +375,9 @@ describe('Post previews', () => {
 });
 
 describe('Post with comments', () => {
-  test('Post isnt preview by default', () => {
+  test('Post isnt preview by default', async () => {
     // render mock post preview
-    render(
+    await act(async () => {render(
       <Provider store={store}>
         <BrowserRouter>
           <Post
@@ -385,8 +393,8 @@ describe('Post with comments', () => {
           />
         </BrowserRouter>
       </Provider>
-    );
-
+    )
+    });
 
     // post should be preview
     expect(screen.getByTestId('post-container')).not.toHaveProperty('preview', true);

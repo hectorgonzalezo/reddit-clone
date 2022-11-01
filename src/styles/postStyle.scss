@@ -88,3 +88,37 @@ article.post{
   
 }
 }
+
+#comments-display{
+  grid-column: 1 / -1;
+}
+
+.comment{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.7rem;
+  & > div{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  & > div:first-child {
+    a {
+      font-weight: 600;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+    p{
+      color: grey;
+    }
+  }
+
+  & > div:nth-child(2){
+    font-size: 0.9rem;
+    padding-left: 40px;
+  }
+
+}

@@ -5,7 +5,6 @@ import cakeIcon from '../../assets/cake_icon.svg';
 import formatUpvotes from '../../utils/formatUpVotes';
 
 function SubredditAbout({ subreddit, post }) {
-  console.log(subreddit)
   return (
     <div className="main-child" id="subreddit-about">
       <div>
