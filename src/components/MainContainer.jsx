@@ -1,7 +1,8 @@
 import React from 'react';
-import { Navigate, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { bool } from 'prop-types';
 import { authorization } from '../firebase/firebase';
+import PostDisplay from './post/PostDisplay';
 import PostCreator from './post/PostCreator';
 import HomePage from './HomePage';
 import SubredditDisplay from './subreddit/SubredditDisplay';
@@ -22,7 +23,8 @@ function MainContainer({ opaque }) {
           path="/create-post/:initialType"
           element={<PostCreator />}
         />
-        <Route path="r/:name" element={<SubredditDisplay />} />
+        <Route path="r/:name" element={<SubredditDisplay />}/>
+        <Route path="r/:name/:postId" element={<PostDisplay />} />
       </Routes>
     </main>
   );

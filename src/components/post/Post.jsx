@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
-import { string, number, arrayOf, object, bool } from 'prop-types';
+import { string, number, arrayOf, object, bool, func } from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { database } from '../../firebase/firebase';
@@ -20,7 +20,7 @@ import { toggleLogInModal } from '../../store/loginModalSlice';
 import '../../styles/postStyle.scss';
 
 const PostContainer = styled.article`
-  & > .vote-area-post {
+  .vote-area-post {
     p {
       color: ${(props) => {
     if (props.voteType === 'upVote') {
@@ -31,15 +31,20 @@ const PostContainer = styled.article`
       return 'black';
     }}
   }
+  }
+  &:hover {
+    ${(props) => props.preview
+          ? `
+    outline: 1px solid grey;
+    cursor: pointer;
+    `: ""
+  }
 
-
-  & > .main-area-post {
-    p {
-      ${(props) =>
-        props.preview
+  p.post-text {
+      ${(props) => props.preview
           ? `
       white-space: pre-wrap;
-      max-height: 250px;
+      max-height: 200px;
       overflow: hidden;
       -webkit-mask-image: -webkit-gradient(
         linear,
@@ -48,14 +53,15 @@ const PostContainer = styled.article`
         from(rgba(0, 0, 0, 1)),
         to(rgba(0, 0, 0, 0))
       );`
-          : ""};
-    }
+          : ""
+      };
   }
 }
 `;
 
 function Post({
   preview,
+  onClick,
   subredditName,
   subredditIcon,
   postId,
@@ -76,6 +82,7 @@ function Post({
 
   // updates number of upvotes in post
   function updateVotes(e) {
+    e.stopPropagation();
     // Only allow vote if user is authorized
     if (user.username !== undefined) {
       // if(authorization.user)
@@ -153,14 +160,35 @@ function Post({
   }
 
   return (
-    <PostContainer className="main-child post" voteType={previousVote} preview={preview} data-testid="post-container">
+    <PostContainer
+      className="main-child post"
+      onClick={onClick}
+      voteType={previousVote}
+      preview={preview}
+      data-testid="post-container"
+    >
       <div className="vote-area-post">
-        <IconLink fill="orange" onClick={updateVotes} data="upVote" colored={previousVote === 'upVote'}>
+        <IconLink
+          fill="orange"
+          onClick={updateVotes}
+          data="upVote"
+          colored={previousVote === "upVote"}
+        >
           <img src={upIcon} alt="" data="upVote" data-testid="up-vote-img" />
         </IconLink>
         <p data-testid="votes-display">{formatUpVotes(votes)}</p>
-        <IconLink fill="blue" onClick={updateVotes} data="downVote" colored={previousVote === 'downVote'}>
-          <img src={downIcon} alt="" data="downVote" data-testid="down-vote-img" />
+        <IconLink
+          fill="blue"
+          onClick={updateVotes}
+          data="downVote"
+          colored={previousVote === "downVote"}
+        >
+          <img
+            src={downIcon}
+            alt=""
+            data="downVote"
+            data-testid="down-vote-img"
+          />
         </IconLink>
       </div>
 
@@ -173,18 +201,20 @@ function Post({
         <p>
           {" "}
           Posted by <a href="">u/{poster}</a>{" "}
-          {formatDistanceToNow(new Date(timePosted))} 
+          {formatDistanceToNow(new Date(timePosted))}
           ago
         </p>
       </div>
 
       <div className="main-area-post">
         <h1>{title}</h1>
-        {url !== '' ? <a href={url}>{url}</a> : null}
+        {url !== "" ? <a href={url}>{url}</a> : null}
         {/* display image if any is provided */}
-        {img !== '' ? <img src={img} alt="Content image" data-testid="image-content" /> : null}
+        {img !== "" ? (
+          <img src={img} alt="Content image" data-testid="image-content" />
+        ) : null}
         {/* display text if any is provided */}
-        {text !== '' ? <p>{text}</p> : null}
+        {text !== "" ? <p className="post-text">{text}</p> : null}
       </div>
 
       <div className="bottom-area-post">
@@ -212,6 +242,7 @@ function Post({
 
 Post.defaultProps = {
   preview: false,
+  onClick: () => {},
   subredditIcon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=b65c667b-5299-404a-b8d9-5d94c580936d',
   text: '',
   voteType: '',
@@ -222,6 +253,7 @@ Post.defaultProps = {
 
 Post.propTypes = {
   preview: bool,
+  onClick: func,
   subredditName: string.isRequired,
   subredditIcon: string,
   postId: string.isRequired,

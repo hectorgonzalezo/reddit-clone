@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { arrayOf, objectOf, string, number, oneOfType } from 'prop-types';
 import uniqid from 'uniqid';
 import { database } from '../../firebase/firebase';
@@ -18,6 +19,7 @@ const PostsDiv = styled.div`
 function PostsArea({ subreddits }) {
   const [posts, setPosts] = useState([]);
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
   let rendered = false;
   async function getTop(subredditName, subredditIcon) {
     let topPosts = await database.getTopPostsInSubreddit(subredditName);
@@ -39,6 +41,15 @@ function PostsArea({ subreddits }) {
     return false;
   }
 
+  // go to post when clicking on div
+  function gotToPost(e, subredditName, postId) {
+    e.stopPropagation();
+    // Don't navigate to post if pressing on an external link
+    if (e.target.tagName !== 'A' && e.target.tagName !== 'EM') {
+      navigate(`/r/${subredditName}/${postId}`);
+    }
+  }
+
   // gets top posts of every subreddit
   useEffect(() => {
     // prevent double render
@@ -58,13 +69,18 @@ function PostsArea({ subreddits }) {
         return (
           <Post
             preview
+            onClick={(e) => gotToPost(e, post.subredditName, post.id)}
             key={post.title + uniqid()}
             postId={post.id}
             subredditName={post.subredditName}
             subredditIcon={post.subredditIcon}
             poster={post.originalPoster}
             timePosted={post.timePosted}
-            voteType={user.username !== undefined && user.votes[post.id] !== undefined ? user.votes[post.id] : ''}
+            voteType={
+              user.username !== undefined && user.votes[post.id] !== undefined
+                ? user.votes[post.id]
+                : ""
+            }
             text={post.text}
             title={post.title}
             img={imageUrl}

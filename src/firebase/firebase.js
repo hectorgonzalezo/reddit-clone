@@ -87,7 +87,7 @@ const database = (() => {
       const postData = post.data();
       // Add id of post to object
       const { id } = post;
-      posts.push({ ...postData, id })
+      posts.push({ ...postData, id });
     });
 
     return posts;
@@ -106,6 +106,11 @@ const database = (() => {
 
   async function getUser(username) {
     const userDoc = await getDoc(doc(db, 'users', username));
+    return userDoc.data();
+  }
+  
+  async function getPost(subredditName, postId) {
+    const userDoc = await getDoc(doc(db, `subreddits/${subredditName}/posts`, postId));
     return userDoc.data();
   }
 
@@ -200,6 +205,7 @@ const database = (() => {
     getAllPostsInSubreddit,
     getTopPostsInSubreddit,
     addUser,
+    getPost,
     getUser,
     getUserByEmail,
     saveUserIcon,

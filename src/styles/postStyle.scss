@@ -21,10 +21,7 @@ article.post{
   div {
     display: flex;
   }
-  &:hover {
-    outline: 1px solid grey;
-    cursor: pointer;
-  }
+
 
   .vote-area-post {
     grid-area: vote;
@@ -63,10 +60,8 @@ article.post{
     display: flex;
     flex-direction: column;
     gap: 15px;
-    padding-right: 0px;
-    & > *:not(img) {
-      padding-right: 13px;
-    }
+    padding-right: 13px;
+    
     img {
       max-width: 100%;
     }
@@ -92,4 +87,4 @@ article.post{
     grid-area: comm;
   
 }
-  }
+}
