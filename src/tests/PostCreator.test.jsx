@@ -15,7 +15,7 @@ describe('Post creator page', () => {
         <PostCreator />
       </Provider>
     );
-    const buttonsArea = screen.getByTestId('buttons-div');;
+    const buttonsArea = screen.getByTestId('buttons-div');
     const postButton = getByRole(buttonsArea, 'button', { name: 'Post' });
     
     expect(postButton).toHaveClass('selected');

@@ -19,12 +19,8 @@ function MainContainer({ opaque }) {
           element={homepage}
         />
         <Route
-          path="/create-post"
-          element={
-            authorization.isUserSignedIn() ? (
-              <PostCreator />
-            ) : <Navigate to="/" />
-          }
+          path="/create-post/:initialType"
+          element={<PostCreator />}
         />
         <Route path="r/:name" element={<SubredditDisplay />} />
       </Routes>

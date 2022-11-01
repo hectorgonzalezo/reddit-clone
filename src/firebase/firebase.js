@@ -216,7 +216,7 @@ const authorization = (() => {
   const getUser = () => auth.currentUser;
 
   function isUserSignedIn() {
-    return !!getAuth().currentUser;
+    return !!getAuth(firebaseApp).currentUser;
   }
 
   const loginEmailPassword = async (loginEmail, loginPassword) => {

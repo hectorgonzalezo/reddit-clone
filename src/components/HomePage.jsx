@@ -8,6 +8,7 @@ import Button from './Button';
 import PostsArea from './post/PostsArea';
 import Agreements from './Agreements';
 import { selectUser } from '../store/userSlice';
+import { authorization } from '../firebase/firebase';
 
 function HomePage() {
   const user = useSelector(selectUser);
@@ -22,7 +23,7 @@ function HomePage() {
   return (
     <>
       <div id="left-side">
-        {user.username !== undefined ? <CreatePostPreview /> : null}
+        {authorization.isUserSignedIn() ? <CreatePostPreview /> : null}
         <PopularPostsBar />
         <PostsArea subreddits={chosenSubreddits} />
       </div>

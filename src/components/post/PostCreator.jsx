@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect} from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { selectUser } from '../../store/userSlice';
 import CommunityChooser from '../CommunityChooser';
 import PostingRules from './PostingRules';
@@ -18,29 +19,35 @@ function PostCreator() {
   const [textContent, setTextContent] = useState('');
   const [selectedSubreddit, setSelectedSubreddit] = useState(null);
   const [fileToUpload, setFileToUpload] = useState(null);
+  let { initialType } = useParams();
+  // by default should be textArea
+  if (initialType === undefined) {
+    initialType = 'textArea';
+  }
 
-  const textArea = (
-    <textarea
-      id="text-area"
-      cols="30"
-      rows="10"
-      placeholder="Text (optional)"
-      onChange={updateTextContent}
-    />
-  );
-  const urlArea = (
-    <textarea
-      id="url-area"
-      cols="30"
-      rows="2"
-      placeholder="Url"
-      onChange={updateTextContent}
-      required
-    />
-  );
-  const imgArea = <ImageUpload id="img-area" onChange={updateFileToUpload} />;
-
-  const [mediaType, setMediaType] = useState(textArea);
+  const inputs = {
+    textArea: (
+      <textarea
+        id="text-area"
+        cols="30"
+        rows="10"
+        placeholder="Text (optional)"
+        onChange={updateTextContent}
+      />
+    ),
+    urlArea: (
+      <textarea
+        id="url-area"
+        cols="30"
+        rows="2"
+        placeholder="Url"
+        onChange={updateTextContent}
+        required
+      />
+    ),
+    imgArea: <ImageUpload id="img-area" onChange={updateFileToUpload} />,
+  };
+  const [mediaType, setMediaType] = useState(inputs[initialType]);
 
   // used by both text areas onChange
   function updateTextContent(e) {
@@ -59,13 +66,13 @@ function PostCreator() {
     const type = selectedButton.current.getAttribute('data');
     switch (type) {
       case 'post':
-        setMediaType(textArea);
+        setMediaType(inputs.textArea);
         break;
       case 'image':
-        setMediaType(imgArea);
+        setMediaType(inputs.imgArea);
         break;
       case 'link':
-        setMediaType(urlArea);
+        setMediaType(inputs.urlArea);
         break;
       default:
         break;
@@ -113,7 +120,7 @@ function PostCreator() {
           <div id="buttons-div" data-testid="buttons-div">
             <button
               type="button"
-              className="selected"
+              className={initialType === 'textArea' ? "selected" : ''}
               ref={selectedButton}
               onClick={selectMedia}
               data="post"
@@ -121,11 +128,11 @@ function PostCreator() {
               <img src={postIcon} alt="" />
               Post
             </button>
-            <button type="button" onClick={selectMedia} data="image">
+            <button type="button" className={initialType === 'imgArea' ? "selected" : ''} onClick={selectMedia} data="image">
               <img src={imagesIcon} alt="" />
               Images & Video
             </button>
-            <button type="button" onClick={selectMedia} data="link">
+            <button type="button" className={initialType === 'urlArea' ? "selected" : ''} onClick={selectMedia} data="link">
               <img src={linkIcon} alt="" />
               Link
             </button>
