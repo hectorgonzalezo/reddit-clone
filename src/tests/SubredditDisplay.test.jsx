@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-const mockSubreddit ={
+const mockSubreddit = {
   name: 'aww',
   dateCreated: (new Date()).toString(),
   description:

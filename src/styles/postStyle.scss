@@ -91,13 +91,35 @@ article.post{
 
 #comments-display{
   grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment-inside{
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--reddit-blue-light);
+  gap: 15px;
 }
 
 .comment{
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 5px;
   font-size: 0.7rem;
+
+  button{
+    border: none;
+    display: flex;
+    background-color: white;
+    margin-left: 30px;
+    color: grey;
+    &:hover{
+      background-color: var(--background-color)
+    }
+  }
   & > div{
     display: flex;
     align-items: center;
