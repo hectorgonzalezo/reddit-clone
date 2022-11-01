@@ -214,8 +214,10 @@ const database = (() => {
 const authorization = (() => {
   const auth = getAuth(firebaseApp);
   const getUser = () => auth.currentUser;
-  // const emulator = connectAuthEmulator(auth, 'http://localhost:9099');
-  let emulator;
+
+  function isUserSignedIn() {
+    return !!getAuth().currentUser;
+  }
 
   const loginEmailPassword = async (loginEmail, loginPassword) => {
     try {
@@ -266,7 +268,7 @@ const authorization = (() => {
   return {
     auth,
     getUser,
-    emulator,
+    isUserSignedIn,
     logInPopup,
     logIn,
     logOut,

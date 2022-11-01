@@ -21,7 +21,7 @@ function MainContainer({ opaque }) {
         <Route
           path="/create-post"
           element={
-            authorization.getUser() !== null ? (
+            authorization.isUserSignedIn() ? (
               <PostCreator />
             ) : <Navigate to="/" />
           }

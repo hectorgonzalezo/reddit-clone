@@ -68,6 +68,7 @@ function PostsArea({ subreddits }) {
             text={post.text}
             title={post.title}
             img={imageUrl}
+            url={post.url}
             upVotes={post.upVotes}
             comments={post.comments}
           />

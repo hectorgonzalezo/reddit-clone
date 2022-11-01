@@ -63,6 +63,7 @@ function Post({
   poster,
   title,
   text,
+  url,
   upVotes,
   timePosted,
   comments,
@@ -172,12 +173,14 @@ function Post({
         <p>
           {" "}
           Posted by <a href="">u/{poster}</a>{" "}
-          {formatDistanceToNow(new Date(timePosted))} ago
+          {formatDistanceToNow(new Date(timePosted))} 
+          ago
         </p>
       </div>
 
       <div className="main-area-post">
         <h1>{title}</h1>
+        {url !== '' ? <a href={url}>{url}</a> : null}
         {/* display image if any is provided */}
         {img !== '' ? <img src={img} alt="Content image" data-testid="image-content" /> : null}
         {/* display text if any is provided */}
@@ -212,6 +215,7 @@ Post.defaultProps = {
   subredditIcon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=b65c667b-5299-404a-b8d9-5d94c580936d',
   text: '',
   voteType: '',
+  url: '',
   comments: [],
   img: '',
 };
@@ -224,6 +228,7 @@ Post.propTypes = {
   poster: string.isRequired,
   title: string.isRequired,
   text: string,
+  url: string,
   upVotes: number.isRequired,
   voteType: string,
   timePosted: string.isRequired,

@@ -28,7 +28,7 @@ function App() {
   // If theres a user logged in, add it to redux store
   useEffect(() => {
     setTimeout(() => {
-      if (authorization.getUser() !== null) {
+      if (authorization.isUserSignedIn()) {
         database
           .getUserByEmail(authorization.getUser().email)
           .then((fetchedUser) => {
