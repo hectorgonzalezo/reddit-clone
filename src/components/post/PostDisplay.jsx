@@ -61,7 +61,7 @@ function PostDisplay() {
           <SubredditAbout subreddit={chosenSubreddit} post />
         ) : null}
         <Agreements />
-        <Button text="Back to Top" />
+        <Button text="Back to Top" onClick={() => window.scrollTo({ top: 0 })}/>
       </div>
     </>
   );

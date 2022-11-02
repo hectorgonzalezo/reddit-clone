@@ -29,7 +29,7 @@ function SubredditDisplay() {
       <div id="right-side">
         {chosenSubreddit !== undefined ? <SubredditAbout subreddit={chosenSubreddit} /> : null}
         <Agreements />
-        <Button text="Back to Top" />
+        <Button text="Back to Top" onClick={() => window.scrollTo({ top: 0 })}/>
       </div>
     </>
   );

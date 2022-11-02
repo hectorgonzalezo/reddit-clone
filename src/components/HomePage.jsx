@@ -7,11 +7,9 @@ import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './post/PostsArea';
 import Agreements from './Agreements';
-import { selectUser } from '../store/userSlice';
 import { authorization } from '../firebase/firebase';
 
 function HomePage() {
-  const user = useSelector(selectUser);
   const subredditsData = useSelector(selectSubreddits);
   const [chosenSubreddits, setChosenSubreddits] = useState([]);
 
@@ -30,7 +28,7 @@ function HomePage() {
       <div id="right-side">
         <TopCommunitiesBar />
         <Agreements />
-        <Button text="Back to Top" />
+        <Button text="Back to Top" onClick={() => window.scrollTo({ top: 0 })}/>
       </div>
     </>
   );
