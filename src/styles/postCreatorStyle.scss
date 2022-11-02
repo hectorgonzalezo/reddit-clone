@@ -1,4 +1,9 @@
 #post-creator {
+
+}
+
+#postCreator,
+.post{
   padding: 0px;
   hr{
     width: 50vw;
@@ -7,30 +12,30 @@
     padding: 20px;
     display: grid;
     gap: 15px;
-    input, textarea{
-      border:  1px solid var(--background-color);
-      border-radius: 0.3rem;
-      padding: 10px 15px 10px 15px;
-      resize: none;
-      font-family: "Noto Sans";
-      &:not(#url-area){
-        resize: vertical;
-      }
-
-      &:focus{
-        outline: 1px solid black;
-      }
-
-      &::placeholder{
-        font-family: "Noto Sans";
-        color: rgb(177, 177, 177);
-      }
-    }
 
     button{
       justify-self: end;
       padding-left: 20px;
       padding-right: 20px;
+    }
+  }
+  input, textarea{
+    border:  1px solid var(--background-color);
+    border-radius: 0.3rem;
+    padding: 10px 15px 10px 15px;
+    resize: none;
+    font-family: "Noto Sans";
+    &:not(#url-area){
+      resize: vertical;
+    }
+
+    &:focus{
+      outline: 1px solid black;
+    }
+
+    &::placeholder{
+      font-family: "Noto Sans";
+      color: rgb(177, 177, 177);
     }
   }
 }

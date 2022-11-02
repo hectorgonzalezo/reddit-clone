@@ -7,13 +7,13 @@ import {
   getDocs,
   getDoc,
   increment,
-  decrement,
   doc,
   updateDoc,
   addDoc,
   setDoc,
   orderBy,
   limit,
+  arrayUnion,
 } from 'firebase/firestore';
 import {
   getAuth,
@@ -207,6 +207,13 @@ const database = (() => {
     });
   }
 
+  async function addComment(subreddit, postId, comments) {
+    const postDoc = doc(db, `subreddits/${subreddit}/posts/`, postId);
+
+    // updates comments
+    await updateDoc(postDoc, { comments });
+  } 
+
   return {
     getSubredditsData,
     getSubredditData,
@@ -221,6 +228,7 @@ const database = (() => {
     addImagePost,
     addUrlPost,
     updateVotes,
+    addComment,
   };
 })();
 

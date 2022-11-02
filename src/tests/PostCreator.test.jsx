@@ -1,10 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render, screen, container, act, getByRole, queryAllByRole } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import store from '../store/store';
-import { addSubreddit } from '../store/subredditsSlice';
 import PostCreator from '../components/post/PostCreator';
 
 
@@ -12,7 +12,9 @@ describe('Post creator page', () => {
   test('Post starts highlighted', () => {
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
     const buttonsArea = screen.getByTestId('buttons-div');
@@ -26,7 +28,9 @@ describe('Post creator page', () => {
   test('Pressing on media button highlights it and deselects the rest', () => {
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
     const buttonsArea = screen.getByTestId('buttons-div');;
@@ -44,7 +48,9 @@ describe('Post creator page', () => {
   test('By default shows text area with text placeholder', () => {
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
     const form = screen.getByRole('form');
@@ -57,7 +63,9 @@ describe('Post creator page', () => {
   test('Pressing on images button shows file input', () => {
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
     const form = screen.getByRole('form');
@@ -73,7 +81,9 @@ describe('Post creator page', () => {
   test('Pressing on link button shows link textarea', () => {
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
     const form = screen.getByRole('form');
@@ -92,7 +102,9 @@ describe('Post creator page', () => {
 
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
 
@@ -109,7 +121,9 @@ describe('Post creator page', () => {
   test('Choosing a subreddit displays its icon and name', async () => {
     render(
       <Provider store={store}>
-        <PostCreator />
+        <BrowserRouter>
+          <PostCreator />
+        </BrowserRouter>
       </Provider>
     );
 

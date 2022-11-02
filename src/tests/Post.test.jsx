@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, container, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter} from 'react-router-dom';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import Post from '../components/post/Post';
@@ -398,6 +398,8 @@ describe('Post with comments', () => {
 
     // post should be preview
     expect(screen.getByTestId('post-container')).not.toHaveProperty('preview', true);
+    // there should be an area to add a comment
+    expect(screen.getByTestId('create-post-area')).toBeInTheDocument();
     // there should be a comments area
     expect(screen.getByTestId('comments-display')).toBeInTheDocument();
 

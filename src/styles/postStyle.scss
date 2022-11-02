@@ -85,8 +85,36 @@ article.post{
 
   & > .bottom-area-post {
     grid-area: comm;
-  
+  }
+
 }
+
+#create-post-area{
+  grid-column: 1 / -1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 20px;
+  form{
+    background-color: var(--reddit-blue-super-light);
+    padding: 0px;
+    padding-bottom: 5px;
+    gap: 5px;
+    border-radius: 0.4rem;
+    button{
+      margin-right: 5px;
+    }
+  }
+  p{
+    font-size: 0.8rem;
+  }
+  a{
+    color: var(--reddit-blue);
+    &:hover{
+      text-decoration: underline;
+    }
+  }
 }
 
 #comments-display{
@@ -110,7 +138,7 @@ article.post{
   gap: 5px;
   font-size: 0.7rem;
 
-  button{
+  & button:not(.default-button){
     border: none;
     display: flex;
     background-color: white;
@@ -138,9 +166,26 @@ article.post{
     }
   }
 
-  & > div:nth-child(2){
+  & > p{
     font-size: 0.9rem;
     padding-left: 40px;
   }
 
+  & > div:nth-child(3){
+    gap: 0px;
+  }
+
+  #create-post-area{
+    align-items: flex-start;
+    // border-left: 2px solid vr(--reddit-blue-light);
+    margin-left: 15px;
+    form{
+      width: 80%;
+    }
+  }
+
+}
+
+* {
+  // outline: 1px dashed red;
 }

@@ -10,7 +10,8 @@ const database = (() => {
   const updateVotes = async (username, subredditName, postId, increment, voteType) => {
   };
 
-  return { getUser, updateVotes };
+  const addComment = jest.fn();
+  return { getUser, updateVotes, addComment };
 })();
 
 // Used for user sign in and sign up

@@ -15,6 +15,7 @@ import IconLink from '../IconLink';
 import SubredditIcon from '../SubredditIcon';
 import formatUpVotes from '../../utils/formatUpVotes';
 import CommentsDisplay from './CommentsDisplay';
+import CommentCreator from './CommentCreator';
 import { selectUser } from '../../store/userSlice';
 import { toggleLogInModal } from '../../store/loginModalSlice';
 import '../../styles/postStyle.scss';
@@ -202,8 +203,7 @@ function Post({
           {" "}
           Posted by <a href="">u/{poster}</a>{" "}
           {formatDistanceToNow(new Date(timePosted))}
-          &nbsp;
-          ago
+          &nbsp; ago
         </p>
       </div>
 
@@ -236,7 +236,12 @@ function Post({
           <p>Hide</p>
         </IconLink>
       </div>
-      {!preview ? <CommentsDisplay comments={comments} /> : null}
+      {!preview ? (
+        <>
+          <CommentCreator subreddit={subredditName} postId={postId} commentsList={comments} />
+          <CommentsDisplay comments={comments} subreddit={subredditName} postId={postId} />
+        </>
+      ) : null}
     </PostContainer>
   );
 }
