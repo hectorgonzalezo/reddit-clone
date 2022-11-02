@@ -161,7 +161,8 @@ const database = (() => {
       upVotes: 0,
       timePosted: new Date().toString(),
     });
-    incrementNumberOfPosts(subreddit);
+    await incrementNumberOfPosts(subreddit);
+    return docRef.id;
   }
 
   async function addImagePost(username, title, subreddit, image) {
@@ -174,7 +175,8 @@ const database = (() => {
       upVotes: 0,
       timePosted: new Date().toString(),
     });
-    incrementNumberOfPosts(subreddit);
+    await incrementNumberOfPosts(subreddit);
+    return docRef.id;
   }
 
   async function addUrlPost(username, title, subreddit, url) {
@@ -186,7 +188,8 @@ const database = (() => {
       upVotes: 0,
       timePosted: new Date().toString(),
     });
-    incrementNumberOfPosts(subreddit);
+    await incrementNumberOfPosts(subreddit);
+    return docRef.id;
   }
 
   async function updateVotes(username, subreddit, postId, incrementQuantity, voteType) {

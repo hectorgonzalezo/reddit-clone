@@ -195,7 +195,7 @@ function SignUpModal({ closeFunc }) {
             onClick={submitSignUp}
           >
             {loadingData ? (
-              <img src={loadingIcon} alt="loading" data-testid="loading-icon" />
+              <img src={loadingIcon} alt="loading" data-testid="loading-icon" className="loading-icon" />
             ) : (
               ["Sign Up"]
             )}

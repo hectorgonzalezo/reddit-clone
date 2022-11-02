@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect} from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../store/userSlice';
 import CommunityChooser from '../CommunityChooser';
 import PostingRules from './PostingRules';
@@ -10,15 +10,18 @@ import { database } from '../../firebase/firebase';
 import postIcon from '../../assets/post_icon.svg';
 import imagesIcon from '../../assets/images_icon.svg';
 import linkIcon from '../../assets/link_icon.svg';
+import loadingIcon from '../../assets/loading.gif';
 import '../../styles/postCreatorStyle.scss';
 
 function PostCreator() {
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
   const selectedButton = useRef();
   const titleRef = useRef();
   const [textContent, setTextContent] = useState('');
   const [selectedSubreddit, setSelectedSubreddit] = useState(null);
   const [fileToUpload, setFileToUpload] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   let { initialType } = useParams();
   // by default should be textArea
   if (initialType === undefined) {
@@ -88,27 +91,41 @@ function PostCreator() {
   }
 
   // adds a post to database
-  function submitPost() {
+  async function submitPost() {
     const { username } = user;
     const title = titleRef.current.value;
     const subreddit = selectedSubreddit;
     const text = textContent;
     const image = fileToUpload;
+    let id;
+
+    // add loading animation to button
+    setIsLoading(true);
+
     // depending on the type of media to be upload, choose an appropriate database method
     // extract the id of the element to identify the type
     switch (mediaType.props.id) {
       case 'text-area':
-        database.addTextPost(username, title, subreddit, text);
+        id = await database.addTextPost(username, title, subreddit, text);
+        loadPost(id);
         break;
       case 'img-area':
-        database.addImagePost(username, title, subreddit, image);
+        id = await database.addImagePost(username, title, subreddit, image);
+        loadPost(id);
         break;
       case 'url-area':
-        database.addUrlPost(username, title, subreddit, text);
+        id = await database.addUrlPost(username, title, subreddit, text);
+        loadPost(id);
         break;
       default:
+        setIsLoading(false);
         break;
     }
+  }
+
+  function loadPost(id) {
+    setIsLoading(false);
+    navigate(`/r/${selectedSubreddit}/${id}`);
   }
 
   return (
@@ -140,7 +157,9 @@ function PostCreator() {
           <form action="" id="post-form" aria-label="Submit Form">
             <input type="text" placeholder="Title" ref={titleRef} />
             {mediaType}
-            <Button text="Post" onClick={submitPost} disabled={selectedSubreddit === null ? true : false} />
+            <Button onClick={submitPost} disabled={selectedSubreddit === null ? true : false}>
+              {isLoading ? <img src={loadingIcon} alt="loading icon" className="loading-icon" /> : 'Post'}
+            </Button>
           </form>
         </div>
       </div>

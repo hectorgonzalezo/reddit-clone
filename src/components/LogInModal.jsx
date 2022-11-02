@@ -67,7 +67,11 @@ function LogInModal({ closeFunc }) {
             </a>
             .
           </p>
-          <button type="button" onClick={authorization.logInPopup} className="google-button">
+          <button
+            type="button"
+            onClick={authorization.logInPopup}
+            className="google-button"
+          >
             <img src={googleIcon} alt="" />
             Continue with Google
           </button>
@@ -112,7 +116,12 @@ function LogInModal({ closeFunc }) {
           ) : null}
           <Button text="" type="submit" onClick={submitLogIn}>
             {loadingData ? (
-              <img src={loadingIcon} alt="loading" data-testid="loading-icon" />
+              <img
+                src={loadingIcon}
+                alt="loading"
+                data-testid="loading-icon"
+                className="loading-icon"
+              />
             ) : (
               ["Log In"]
             )}
