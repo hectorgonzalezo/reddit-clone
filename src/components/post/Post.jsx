@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
-import { string, number, arrayOf, object, bool, func } from 'prop-types';
+import { string, number, arrayOf, objectOf, array, bool, func, oneOfType } from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { database } from '../../firebase/firebase';
@@ -75,6 +75,7 @@ function Post({
   timePosted,
   comments,
   img,
+  reloadPost,
 }) {
   const [previousVote, setPreviousVote] = useState(voteType);
   const [votes, setVotes] = useState(upVotes);
@@ -238,8 +239,18 @@ function Post({
       </div>
       {!preview ? (
         <>
-          <CommentCreator subreddit={subredditName} postId={postId} commentsList={comments} />
-          <CommentsDisplay comments={comments} subreddit={subredditName} postId={postId} />
+          <CommentCreator
+            subreddit={subredditName}
+            postId={postId}
+            commentsList={comments}
+            reloadPost={reloadPost}
+          />
+          <CommentsDisplay
+            comments={comments}
+            subreddit={subredditName}
+            postId={postId}
+            reloadPost={reloadPost}
+          />
         </>
       ) : null}
     </PostContainer>
@@ -255,6 +266,7 @@ Post.defaultProps = {
   url: '',
   comments: [],
   img: '',
+  reloadPost: () => {},
 };
 
 Post.propTypes = {
@@ -270,8 +282,9 @@ Post.propTypes = {
   upVotes: number.isRequired,
   voteType: string,
   timePosted: string.isRequired,
-  comments: arrayOf(object),
+  comments: arrayOf(objectOf(oneOfType([string, number, array]))),
   img: string,
+  reloadPost: func,
 };
 
 export default Post;

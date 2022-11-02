@@ -23,6 +23,11 @@ function PostDisplay() {
     return false;
   }
 
+  function reloadPost() {
+    database.getPost(name, postId)
+      .then((data) => setPost(data));
+  }
+
   // get post from database on mount
   useEffect(() => {
     database.getSubredditData(name)
@@ -53,6 +58,7 @@ function PostDisplay() {
             url={post.url}
             upVotes={post.upVotes}
             comments={post.comments}
+            reloadPost={reloadPost}
           />
         ) : null}
       </div>

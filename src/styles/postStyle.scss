@@ -129,6 +129,7 @@ article.post{
   flex-direction: column;
   border-left: 2px solid var(--reddit-blue-light);
   gap: 15px;
+  margin-left: 15px; 
 }
 
 .comment{
@@ -137,6 +138,7 @@ article.post{
   align-items: flex-start;
   gap: 5px;
   font-size: 0.7rem;
+
 
   & button:not(.default-button){
     border: none;

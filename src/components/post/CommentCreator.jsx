@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { number, string, arrayOf, objectOf, oneOfType, array, bool } from 'prop-types';
+import { number, string, arrayOf, objectOf, oneOfType, array, bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/userSlice';
 import { database } from '../../firebase/firebase';
+import loadinIcon from '../../assets/loading.gif';
 import Button from '../Button';
 
-function CommentCreator({ commentsList, index, subreddit, postId, value, edit }) {
+function CommentCreator({ commentsList, index, subreddit, postId, value, edit, reloadPost }) {
   const user = useSelector(selectUser);
   const [textContent, setTextContent] = useState(value);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function addComment() {
+    setIsLoading(true);
     const copiedComments = [...commentsList];
     let indexesList;
     if (edit) {
@@ -45,13 +48,14 @@ function CommentCreator({ commentsList, index, subreddit, postId, value, edit })
     }
 
     await database.addComment(subreddit, postId, copiedComments);
-    location.reload();
+    setIsLoading(false);
+    reloadPost();
   }
 
   return (
     <div id="create-post-area" data-testid="create-post-area">
       <p>
-        Comment as <a href="">{user.username}</a>
+        Comment as <a>{user.username}</a>
       </p>
       <form action="">
         <textarea
@@ -61,7 +65,13 @@ function CommentCreator({ commentsList, index, subreddit, postId, value, edit })
           value={textContent}
           onChange={(e) => setTextContent(e.target.value)}
         />
-        <Button disabled={textContent === ''} onClick={addComment} >Comment</Button>
+        <Button disabled={textContent === ''} onClick={addComment}>
+          {isLoading ? (
+            <img src={loadinIcon} alt="" className="loading-icon" />
+          ) : (
+            'Comment'
+          )}
+        </Button>
       </form>
     </div>
   );
@@ -80,6 +90,7 @@ CommentCreator.propTypes = {
   postId: string.isRequired,
   value: string,
   edit: bool,
+  reloadPost: func.isRequired,
 };
 
 export default CommentCreator;
