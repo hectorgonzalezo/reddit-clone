@@ -48,6 +48,7 @@ function PostsArea({ subreddits }) {
     if (e.target.tagName !== 'A' && e.target.tagName !== 'EM') {
       navigate(`/r/${subredditName}/${postId}`);
     }
+    window.scrollTo(0, 0);
   }
 
   // gets top posts of every subreddit

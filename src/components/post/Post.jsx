@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { string, number, arrayOf, objectOf, array, bool, func, oneOfType } from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { database } from '../../firebase/firebase';
 import upIcon from '../../assets/upvote_icon.svg';
@@ -81,6 +81,19 @@ function Post({
   const [votes, setVotes] = useState(upVotes);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // used to display the actual number of comments
+  function countComments(comm) {
+    if (comm !== undefined && comm.length >= 1) {
+      let levelQuantity = comm.length;
+      // recursively count comments
+      comm.forEach((com) => (levelQuantity += countComments(com.responses)));
+      return levelQuantity;
+    }
+    // base case
+    return 0;
+  }
 
   // updates number of upvotes in post
   function updateVotes(e) {
@@ -161,6 +174,11 @@ function Post({
     }
   }
 
+  function goToPostComment(e) {
+    e.stopPropagation();
+    navigate(`/r/${subredditName}/${postId}/#create-post-area`)
+  }
+
   return (
     <PostContainer
       className="main-child post"
@@ -220,9 +238,9 @@ function Post({
       </div>
 
       <div className="bottom-area-post">
-        <IconLink>
+        <IconLink onClick={goToPostComment}>
           <img src={commentsIcon} alt="" className="icon" />
-          <p>{formatUpVotes(comments.length)} Comments</p>
+          <p>{formatUpVotes(countComments(comments))} Comments</p>
         </IconLink>
         <IconLink>
           <img src={shareIcon} alt="" className="icon" />
