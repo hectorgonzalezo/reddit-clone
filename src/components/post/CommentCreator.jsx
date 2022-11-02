@@ -33,7 +33,6 @@ function CommentCreator({ commentsList, index, subreddit, postId, value, edit, r
       copiedComments
     );
 
-
     // if youre editing a previous post, just update its text content
     if (edit) {
       locationToAdd.content = textContent;
@@ -69,7 +68,7 @@ function CommentCreator({ commentsList, index, subreddit, postId, value, edit, r
           {isLoading ? (
             <img src={loadinIcon} alt="" className="loading-icon" />
           ) : (
-            'Comment'
+            'Reply'
           )}
         </Button>
       </form>
@@ -78,13 +77,14 @@ function CommentCreator({ commentsList, index, subreddit, postId, value, edit, r
 }
 
 CommentCreator.defaultProps = {
+  commentsList: [],
   index: [],
   value: '',
   edit: false,
 };
 
 CommentCreator.propTypes = {
-  commentsList: arrayOf(objectOf(oneOfType([string, number, array]))).isRequired,
+  commentsList: arrayOf(objectOf(oneOfType([string, number, array]))),
   index: arrayOf(number),
   subreddit: string.isRequired,
   postId: string.isRequired,

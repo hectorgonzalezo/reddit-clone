@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { func } from 'prop-types';
+import { bool, func } from 'prop-types';
 import { selectSubreddits } from '../store/subredditsSlice';
 import { selectUser } from '../store/userSlice';
 import arrowDownIcon from '../assets/arrow_down_icon.svg';
-import DropDown from './DropDown';
+import SubredditsDropDown from './subreddit/SubredditsDropDown';
 
-function CommunityChooser({ onChoosing }) {
+function CommunityChooser({ onChoosing, header }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const subreddits = useSelector(selectSubreddits);
 
@@ -44,41 +44,18 @@ function CommunityChooser({ onChoosing }) {
         </h1>
         <img src={arrowDownIcon} alt="" className="icon" />
       </button>
-      <DropDown
-        className="main-child"
-        visible={dropdownVisible}
-        closeFunc={toggleDropdown}
-        testid="user-dropdown"
-      >
-        <h1>Your communities</h1>
-        {Object.values(subreddits).map((subreddit) => (
-          <React.Fragment key={`${subreddit.name}-fragment`}>
-            <hr key={`${subreddit.name}-line`} />
-            <a
-              key={`${subreddit.name}-link`}
-              onClick={chooseFromDropdown}
-              data={subreddit.name}
-            >
-              <img
-                key={`${subreddit.name}-icon`}
-                src={subreddit.icon}
-                alt=""
-                data={subreddit.name}
-                className="user-icon"
-              />
-              <p key={`${subreddit.name}-name`} data={subreddit.name}>
-                {subreddit.name}
-              </p>
-            </a>
-          </React.Fragment>
-        ))}
-      </DropDown>
+      <SubredditsDropDown dropdownVisible={dropdownVisible} toggleDropdown={toggleDropdown} chooseFromDropdown={chooseFromDropdown} />
     </div>
   );
 }
 
+CommunityChooser.defaultProps = {
+  header: false,
+}
+
 CommunityChooser.propTypes = {
   onChoosing: func.isRequired,
+  header: bool,
 };
 
 export default CommunityChooser;

@@ -71,6 +71,7 @@ function Comment({
           <button
             type="button"
             onClick={() => setVisibleCreator((prev) => !prev)}
+            data-testid="reply-button"
           >
             <img src={commentIcon} alt="" className="icon" />
             <p>Reply</p>
@@ -79,6 +80,7 @@ function Comment({
             <button
               type="button"
               onClick={() => setVisibleEditor((prev) => !prev)}
+              data-testid="edit-button"
             >
               <p>Edit</p>
             </button>
@@ -90,6 +92,7 @@ function Comment({
             index={commentIndex}
             subreddit={subreddit}
             postId={postId}
+            reloadPost={reloadPost}
           />
         ) : null}
       </div>
@@ -111,10 +114,14 @@ function Comment({
   );
 }
 
+Comment.defaultProps = {
+  commentsList: [],
+  commentIndex: [0],
+};
 
 Comment.propTypes = {
-  commentsList: arrayOf(objectOf(oneOfType([string, number, array]))).isRequired,
-  commentIndex: arrayOf(number).isRequired,
+  commentsList: arrayOf(objectOf(oneOfType([string, number, array]))),
+  commentIndex: arrayOf(number),
   comment: objectOf(oneOfType([string, number, array])).isRequired,
   subreddit: string.isRequired,
   postId: string.isRequired,

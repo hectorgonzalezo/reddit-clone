@@ -21,7 +21,7 @@ describe('CommentCreator', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <CommentCreator subreddit="mockSubreddit" postId="123" />
+          <CommentCreator subreddit="mockSubreddit" postId="123" reloadPost={() => {}} />
         </Provider>
       )
     );
@@ -41,7 +41,7 @@ describe('CommentCreator', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <CommentCreator subreddit="mockSubreddit" postId="123" />
+          <CommentCreator subreddit="mockSubreddit" postId="123" reloadPost={() => {}} />
         </Provider>
       )
     );

@@ -24,6 +24,7 @@ function PostDisplay() {
   }
 
   function reloadPost() {
+    setPost(false);
     database.getPost(name, postId)
       .then((data) => setPost(data));
   }
@@ -44,7 +45,7 @@ function PostDisplay() {
           <Post
             postId={postId}
             subredditName={name}
-            subredditIcon={post.subredditIcon}
+            subredditIcon={chosenSubreddit.icon}
             poster={post.originalPoster}
             timePosted={post.timePosted}
             voteType={

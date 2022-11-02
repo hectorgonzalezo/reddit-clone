@@ -9,6 +9,7 @@ import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
 import AccountDropDown from './AccountDropDown';
+import CommunityChooser from './CommunityChooser';
 import { selectUser } from '../store/userSlice';
 
 import '../styles/headerStyle.scss';
