@@ -32,7 +32,7 @@ const PostContainer = styled.article`
       return 'black';
     }}
   }
-  }
+}
   &:hover {
     ${(props) => props.preview
           ? `
@@ -40,8 +40,9 @@ const PostContainer = styled.article`
     cursor: pointer;
     `: ""
   }
+  }
 
-  p.post-text {
+  .post-text {
       ${(props) => props.preview
           ? `
       white-space: pre-wrap;
