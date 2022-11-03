@@ -32,8 +32,7 @@ function App() {
         database
           .getUserByEmail(authorization.getUser().email)
           .then((fetchedUser) => {
-            const { username, email, icon, votes } = fetchedUser;
-            dispatch(addUser({ username, email, icon, votes }));
+            dispatch(addUser(fetchedUser));
           });
       }
     }, 500);

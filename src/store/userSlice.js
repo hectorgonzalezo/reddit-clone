@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  username: undefined,
-  email: undefined,
-  icon: undefined,
-};
+const initialState = {};
 
 export const userSlice = createSlice({
   name: 'user',
@@ -15,6 +11,7 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.icon = action.payload.icon;
       state.votes = action.payload.votes;
+      state.subreddits = action.payload.subreddits;
     },
     updateIcon: (state, action) => {
       state.icon = action.payload;
@@ -23,6 +20,8 @@ export const userSlice = createSlice({
       state.username = undefined;
       state.email = undefined;
       state.icon = undefined;
+      state.votes = undefined;
+      state.subreddits = undefined;
     },
   }
 });

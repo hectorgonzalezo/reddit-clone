@@ -1,5 +1,5 @@
 import React from 'react';
-import { objectOf, string, number, oneOfType, bool } from 'prop-types';
+import { objectOf, string, number, oneOfType, bool, array } from 'prop-types';
 import { format } from 'date-fns';
 import cakeIcon from '../../assets/cake_icon.svg';
 import formatUpvotes from '../../utils/formatUpVotes';
@@ -40,7 +40,7 @@ SubredditAbout.defaultProps = {
 }
 
 SubredditAbout.propTypes = {
-  subreddit: objectOf(oneOfType([string, number])).isRequired,
+  subreddit: objectOf(oneOfType([string, number, array])).isRequired,
   post: bool,
 };
 

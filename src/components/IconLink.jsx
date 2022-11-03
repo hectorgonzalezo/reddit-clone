@@ -80,6 +80,7 @@ function IconLink({ children, round, fill, onClick, data, colored, className }) 
       colored={colored}
       data={data !== '' ? data : null}
       className={className}
+      data-testid="icon-link"
     >
       {children}
     </Button>

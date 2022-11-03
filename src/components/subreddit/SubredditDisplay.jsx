@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { selectUser } from '../../store/userSlice';
 import { selectSubreddits } from '../../store/subredditsSlice';
 import SubredditBanner from './SubredditBanner';
 import PopularPostsBar from '../PopularPostsBar';
@@ -15,6 +16,7 @@ import '../../styles/subredditStyle.scss';
 
 function SubredditDisplay() {
   const subredditsData = useSelector(selectSubreddits);
+  const user = useSelector(selectUser);
   const { name } = useParams();
   const [chosenSubreddit, setChosenSubreddit] = useState();
   const [postsOrder, setPostsOrder] = useState('hot');
@@ -33,7 +35,7 @@ function SubredditDisplay() {
     <>
       {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
       <div id="left-side">
-        {authorization.isUserSignedIn() ? <CreatePostPreview /> : null}
+        {user.subreddits !== undefined && user.subreddits.includes(chosenSubreddit) ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder}/>
         {chosenSubreddit !== undefined ? <PostsArea subreddits={[chosenSubreddit]} order={postsOrder} /> : null}
       </div>

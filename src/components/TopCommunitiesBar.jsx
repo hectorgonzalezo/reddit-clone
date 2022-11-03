@@ -3,11 +3,14 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import { selectSubreddits } from '../store/subredditsSlice';
+import { selectUser } from '../store/userSlice';
+import JoinButton from './subreddit/Joinbutton';
 import carretUpIcon from '../assets/carret_up_icon.svg';
 import '../styles/topCommunitiesBarStyle.scss';
 
 function TopCommunitiesBar() {
   const subreddits = useSelector(selectSubreddits);
+  const user = useSelector(selectUser);
 
   // sorts subreddits by number of posts
   function getTopSubreddits(number = 5) {
@@ -33,17 +36,13 @@ function TopCommunitiesBar() {
                 <img src={carretUpIcon} alt="" className="icon" key={`${subreddit.name}-icon`} />
                 {`r/${subreddit.name}`}
               </Link>
-              <Button text="Join" key={`${subreddit.name}-join-button`}/>
+              {user !== undefined ? <JoinButton subreddit={subreddit.name} key={`${subreddit.name}-join-button`} /> : null}
             </li>
           ))}
         </ol>
       </div>
       <div id="buttons-communities-bar">
         <Button text="View all" />
-        <Button text="Top" light />
-        <Button text="Sports" light />
-        <Button text="News" light />
-        <Button text="Aww" light />
       </div>
     </aside>
   );

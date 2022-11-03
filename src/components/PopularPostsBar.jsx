@@ -15,7 +15,6 @@ function PopularPostsBar({ changeOrder }) {
     changeOrder(newMode)
   }
 
-
   return (
     <div id="popular-bar" className="main-child">
       <IconLink

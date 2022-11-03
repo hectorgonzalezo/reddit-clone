@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { arrayOf, objectOf, string, number, oneOfType } from 'prop-types';
+import { arrayOf, objectOf, string, number, oneOfType, array } from 'prop-types';
 import { database } from '../../firebase/firebase';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
@@ -108,7 +108,7 @@ PostsArea.defaultProps = {
 };
 
 PostsArea.propTypes = {
-  subreddits: arrayOf(objectOf(oneOfType([number, string]))).isRequired,
+  subreddits: arrayOf(objectOf(oneOfType([number, string, array]))).isRequired,
   order: string,
 };
 

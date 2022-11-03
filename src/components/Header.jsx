@@ -75,6 +75,7 @@ function Header({ signUpFunc, logInFunc, opaque }) {
             dropdownVisible={subredditDropdownVisible}
             toggleDropdown={toggleSubredditDropdown}
             chooseFromDropdown={navigateToSubreddit}
+            header
           />
         </div>
       ) : null}

@@ -14,6 +14,7 @@ import {
   orderBy,
   limit,
   arrayUnion,
+  arrayRemove
 } from 'firebase/firestore';
 import {
   getAuth,
@@ -103,6 +104,7 @@ const database = (() => {
       email,
       username,
       icon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1',
+      subreddits: [],
       votes: [],
     });
     return docRef;
@@ -214,6 +216,26 @@ const database = (() => {
     await updateDoc(postDoc, { comments });
   } 
 
+  async function editSubscription(subreddit, username, callback, userIncrement) {
+    const subredditDoc = doc(db, 'subreddits', subreddit);
+    const userDoc = doc(db, 'users', username);
+
+    await updateDoc(subredditDoc, {
+      members: increment(userIncrement),
+    });
+
+    await updateDoc(userDoc, { subreddits: callback(subreddit) });
+
+  }
+
+  async function subscribeToSubreddit(subreddit, username) {
+    await editSubscription(subreddit, username, arrayUnion, 1);
+  }
+
+  async function unsubscribeFromSubreddit(subreddit, username) {
+    await editSubscription(subreddit, username, arrayRemove, -1);
+  }
+
   return {
     getSubredditsData,
     getSubredditData,
@@ -229,6 +251,8 @@ const database = (() => {
     addUrlPost,
     updateVotes,
     addComment,
+    subscribeToSubreddit,
+    unsubscribeFromSubreddit,
   };
 })();
 

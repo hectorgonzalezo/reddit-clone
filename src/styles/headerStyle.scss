@@ -41,8 +41,9 @@
 #go-to{
   flex: 1 2 50px;
   position: relative;
+  max-width: 300px;
   .drop-down{
-    top: 30px;
+    top: 38px;
     left: 0px;
   }
   button{
@@ -55,7 +56,7 @@
 }
 
 #search-bar {
-  flex: 2 0 200px;
+  flex: 5 0 200px;
   border-radius: 1rem;
   max-width: 600px;
   &:hover{
@@ -82,7 +83,10 @@ button {
 #user-area{
   button:last-child{
     gap: 3px;
-
+  }
+  
+  .drop-down{
+    width: auto;
   }
 }
 
@@ -91,7 +95,7 @@ button {
     display: none;
   }
 
-  #go-to h1 {
+  #go-to > h1 {
     display: none;
   }
 }
