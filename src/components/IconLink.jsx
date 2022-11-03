@@ -14,8 +14,21 @@ color: var(--grey-dark);
 font-size: 0.9rem;
 font-weight: bold;
 
+&> *{
+  pointer-events: none;
+}
+
 &:hover{
   background-color: var(--background-color);
+  color: var(--reddit-blue);
+}
+
+&.selected{
+  background-color: var(--background-color);
+  color: var(--reddit-blue);
+  img{
+    filter: invert(0.3) sepia(1) saturate(5) hue-rotate(175deg);
+  }
 }
 
 ${'' /* change svg color when hovering over area */}
@@ -25,7 +38,7 @@ ${'' /* change svg color when hovering over area */}
     if (props.fill !== '') {
       switch (props.fill) {
         case 'blue':
-          return 'filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg);';
+          return 'filter: invert(0.3) sepia(1) saturate(5) hue-rotate(175deg);';
         case 'orange':
           return 'filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg);';
         default:
@@ -58,7 +71,7 @@ img {
 }
 `;
 
-function IconLink({ children, round, fill, onClick, data, colored }) {
+function IconLink({ children, round, fill, onClick, data, colored, className }) {
   return (
     <Button
       round={round}
@@ -66,6 +79,7 @@ function IconLink({ children, round, fill, onClick, data, colored }) {
       onClick={onClick}
       colored={colored}
       data={data !== '' ? data : null}
+      className={className}
     >
       {children}
     </Button>
@@ -78,6 +92,7 @@ IconLink.defaultProps = {
   data: '',
   fill: '',
   colored: false,
+  className: '',
 };
 
 IconLink.propTypes = {
@@ -87,6 +102,7 @@ IconLink.propTypes = {
   round: bool,
   fill: string,
   colored: bool,
+  className: string,
 };
 
 export default IconLink;

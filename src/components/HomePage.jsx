@@ -13,7 +13,12 @@ import { changeCurrentSubreddit } from '../store/currentSubredditSlice';
 function HomePage() {
   const subredditsData = useSelector(selectSubreddits);
   const [chosenSubreddits, setChosenSubreddits] = useState([]);
+  const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
+
+  function changeOrder(newOrder) {
+    setPostsOrder(newOrder);
+  }
 
   // update subreddits for posts area every time they change
   useEffect(() => {
@@ -25,8 +30,8 @@ function HomePage() {
     <>
       <div id="left-side">
         {authorization.isUserSignedIn() ? <CreatePostPreview /> : null}
-        <PopularPostsBar />
-        <PostsArea subreddits={chosenSubreddits} />
+        <PopularPostsBar changeOrder={changeOrder} />
+        <PostsArea subreddits={chosenSubreddits} order={postsOrder} />
       </div>
       <div id="right-side">
         <TopCommunitiesBar />

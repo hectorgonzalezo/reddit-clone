@@ -18,6 +18,7 @@ import CommentsDisplay from './CommentsDisplay';
 import CommentCreator from './CommentCreator';
 import { selectUser } from '../../store/userSlice';
 import { toggleLogInModal } from '../../store/loginModalSlice';
+import countComments from '../../utils/countComents';
 import '../../styles/postStyle.scss';
 
 const PostContainer = styled.article`
@@ -83,18 +84,6 @@ function Post({
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // used to display the actual number of comments
-  function countComments(comm) {
-    if (comm !== undefined && comm.length >= 1) {
-      let levelQuantity = comm.length;
-      // recursively count comments
-      comm.forEach((com) => (levelQuantity += countComments(com.responses)));
-      return levelQuantity;
-    }
-    // base case
-    return 0;
-  }
 
   // updates number of upvotes in post
   function updateVotes(e) {

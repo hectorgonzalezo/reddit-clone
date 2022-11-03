@@ -12,13 +12,13 @@ function CreatePostPreview() {
   return (
     <div id="post-preview" className="main-child">
       <img src={user.icon} alt="" className="user-icon" />
-      <Link to={authorization.isUserSignedIn() ? 'create-post/textArea' : '/'} >
+      <Link to={authorization.isUserSignedIn() ? '/create-post/textArea' : '/'} >
         <input type="text" placeholder="Create Post" className="main-input" />
       </Link>
-      <Link to={authorization.isUserSignedIn() ? 'create-post/imgArea' : '/'}>
+      <Link to={authorization.isUserSignedIn() ? '/create-post/imgArea' : '/'}>
         <img src={imageIcon} className="icon" alt="" />
       </Link>
-      <Link to={authorization.isUserSignedIn() ? 'create-post/urlArea' : '/'}>
+      <Link to={authorization.isUserSignedIn() ? '/create-post/urlArea' : '/'}>
         <img src={linkIcon} className="icon" alt="" />
       </Link>
     </div>

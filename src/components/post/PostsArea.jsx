@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { arrayOf, objectOf, string, number, oneOfType } from 'prop-types';
-import uniqid from 'uniqid';
 import { database } from '../../firebase/firebase';
 import Post from './Post';
+import reorderPosts from '../../utils/reorderPosts';
 import { selectUser } from '../../store/userSlice';
 
 const defaultIconUrl = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=b65c667b-5299-404a-b8d9-5d94c580936d'
@@ -16,20 +16,23 @@ const PostsDiv = styled.div`
   gap: 10px;
 `;
 
-function PostsArea({ subreddits }) {
+function PostsArea({ subreddits, order }) {
   const [posts, setPosts] = useState([]);
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   let rendered = false;
+
   async function getTop(subredditName, subredditIcon) {
-    let topPosts = await database.getTopPostsInSubreddit(subredditName);
-    // add subreddit name and icon to post
-    topPosts = topPosts.map((post) => ({
-      ...post,
-      subredditName,
-      subredditIcon,
-    }));
-    setPosts((prevPosts) => [...prevPosts, ...topPosts]);
+    if (posts.length === 0) {
+      let topPosts = await database.getTopPostsInSubreddit(subredditName);
+      // add subreddit name and icon to post
+      topPosts = topPosts.map((post) => ({
+        ...post,
+        subredditName,
+        subredditIcon,
+      }));
+      setPosts((prevPosts) => reorderPosts([...prevPosts, ...topPosts], order));
+    }
   }
 
   function isPostUrlImage(url) {
@@ -63,6 +66,11 @@ function PostsArea({ subreddits }) {
     rendered = true;
   }, [subreddits]);
 
+  // reorder posts when fetching new or changing the order
+  useEffect(() => {
+    setPosts(reorderPosts(posts, order));
+  }, [order]);
+
   return (
     <PostsDiv id="posts">
       {posts.map((post) => {
@@ -71,7 +79,7 @@ function PostsArea({ subreddits }) {
           <Post
             preview
             onClick={(e) => gotToPost(e, post.subredditName, post.id)}
-            key={post.title + uniqid()}
+            key={`${post.title}-${post.subredditName}-${post.timePosted}`}
             postId={post.id}
             subredditName={post.subredditName}
             subredditIcon={post.subredditIcon}
@@ -95,8 +103,13 @@ function PostsArea({ subreddits }) {
   );
 }
 
+PostsArea.defaultProps = {
+  order: 'hot',
+};
+
 PostsArea.propTypes = {
   subreddits: arrayOf(objectOf(oneOfType([number, string]))).isRequired,
+  order: string,
 };
 
 export default PostsArea;

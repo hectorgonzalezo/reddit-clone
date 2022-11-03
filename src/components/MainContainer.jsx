@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { bool } from 'prop-types';
-import { authorization } from '../firebase/firebase';
 import PostDisplay from './post/PostDisplay';
 import PostCreator from './post/PostCreator';
 import HomePage from './HomePage';

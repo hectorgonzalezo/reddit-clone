@@ -8,29 +8,34 @@ import PostsArea from '../post/PostsArea';
 import Button from '../Button';
 import SubredditAbout from './SubredditAbout';
 import Agreements from '../Agreements';
+import CreatePostPreview from '../CreatePostPreview';
+import { authorization } from '../../firebase/firebase';
 import { changeCurrentSubreddit } from '../../store/currentSubredditSlice';
 import '../../styles/subredditStyle.scss';
 
 function SubredditDisplay() {
   const subredditsData = useSelector(selectSubreddits);
-  const subreddit = useParams();
-  const [chosenSubreddit, setChosenSubreddit] = useState(subredditsData[subreddit.name]);
+  const { name } = useParams();
+  const [chosenSubreddit, setChosenSubreddit] = useState();
+  const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setChosenSubreddit(subredditsData[subreddit.name]);
-  }, [subredditsData]);
+  function changeOrder(newOrder) {
+    setPostsOrder(newOrder);
+  }
 
   useEffect(() => {
-    dispatch(changeCurrentSubreddit(chosenSubreddit.name));
-  }, [chosenSubreddit]);
+    setChosenSubreddit(subredditsData[name]);
+    dispatch(changeCurrentSubreddit(name));
+  }, [subredditsData]);
 
   return (
     <>
       {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
       <div id="left-side">
-        <PopularPostsBar />
-        {chosenSubreddit !== undefined ? <PostsArea subreddits={[chosenSubreddit]} /> : null}
+        {authorization.isUserSignedIn() ? <CreatePostPreview /> : null}
+        <PopularPostsBar changeOrder={changeOrder}/>
+        {chosenSubreddit !== undefined ? <PostsArea subreddits={[chosenSubreddit]} order={postsOrder} /> : null}
       </div>
       <div id="right-side">
         {chosenSubreddit !== undefined ? <SubredditAbout subreddit={chosenSubreddit} /> : null}
