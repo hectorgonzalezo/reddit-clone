@@ -62,7 +62,7 @@ describe('Sign up modal', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: []},
       });
     });
 
@@ -85,7 +85,7 @@ describe('Sign up modal', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: []},
       });
     });
 
@@ -115,7 +115,7 @@ describe('Sign up modal', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
       });
     });
 
@@ -130,6 +130,7 @@ describe('Sign up modal', () => {
     const logOutLink = screen.getByTestId('logout-link');
 
     await act(async () => userEvent.click(logOutLink));
+
 
     // there should be no user information
     expect(screen.queryByText('juan')).not.toBeInTheDocument();
@@ -152,7 +153,7 @@ describe('Sign up modal', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
       });
     });
 
@@ -175,7 +176,7 @@ describe('Sign up modal', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
       });
     });
 
