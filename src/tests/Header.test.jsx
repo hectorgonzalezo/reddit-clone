@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, container, act, getByRole, queryByRole } from '@testing-library/react';
+import { render, screen, container, act, getByRole } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
@@ -71,28 +71,6 @@ describe('Sign up modal', () => {
     expect(screen.getByAltText('user icon')).toBeInTheDocument();
 
   });
-  test('If given a user, user area should contain a single button with the user info', async () => {
-    const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <Header />
-        </BrowserRouter>
-      </Provider>
-    );
-
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
-      });
-    });
-    
-    // User name and icon should be displayed
-    expect(screen.getByText('juan')).toBeInTheDocument();
-    expect(screen.getByAltText('user icon')).toBeInTheDocument();
-
-  });
 
   test('If given a user, drop down menu should be invisible and shown only when clicking', async () => {
     const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
@@ -156,5 +134,60 @@ describe('Sign up modal', () => {
     // there should be no user information
     expect(screen.queryByText('juan')).not.toBeInTheDocument();
     expect(screen.queryByAltText('user icon')).not.toBeInTheDocument();
+  });
+
+  test('If given a user, there should be a go to bar', async () => {
+    const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
+      </Provider>
+    );
+
+    // It shouldn't be there by default
+    expect(screen.queryByTestId('go-to')).not.toBeInTheDocument()
+
+    await act(async () => {
+      store.dispatch({
+        type: "user/addUser",
+        payload: { username: "juan", email: "mock@mock.com", icon },
+      });
+    });
+
+    expect(screen.queryByTestId('go-to')).toBeInTheDocument()
+
+  });
+
+  test('Pressing on go to button shows subreddits dropdown', async () => {
+    const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
+      </Provider>
+    );
+
+    // It shouldn't be there by default
+
+    await act(async () => {
+      store.dispatch({
+        type: "user/addUser",
+        payload: { username: "juan", email: "mock@mock.com", icon },
+      });
+    });
+
+    const goToArea = screen.getByTestId('go-to')
+    const goToButton = getByRole(goToArea, 'button');
+    const dropDown = screen.getByTestId('subreddits-dropdown');
+
+    expect(dropDown).toHaveStyle('display: none');
+
+    userEvent.click(goToButton);
+
+    expect(dropDown).not.toHaveStyle('display: none');
+
   });
 });

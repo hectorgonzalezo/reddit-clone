@@ -86,6 +86,16 @@ main {
   }
 }
 
+.drop-down{
+  position: absolute;
+  width: clamp(200px, 100%, 400px);
+  overflow-y: hidden;
+  h1{
+    padding-left: 15px;
+    color: grey;
+  }
+}
+
 .loading-icon{
   height: 24px;
 }

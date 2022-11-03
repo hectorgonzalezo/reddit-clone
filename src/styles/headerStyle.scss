@@ -40,7 +40,11 @@
 
 #go-to{
   flex: 1 2 50px;
-
+  position: relative;
+  .drop-down{
+    top: 30px;
+    left: 0px;
+  }
   button{
     width: 100%;
 

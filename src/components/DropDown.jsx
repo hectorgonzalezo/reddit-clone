@@ -12,7 +12,7 @@ const Aside = styled.aside`
   padding-left: 0px;
   padding-right: 0px;
   z-index: 10;
-  max-height: 300px;
+  max-height: 250px;
   overflow: scroll;
   hr {
     width: 90%;
@@ -22,9 +22,9 @@ const Aside = styled.aside`
   .App & > a {
     display: grid;
     align-items: center;
-    gap: 10px;
+    gap: px;
     grid-template-columns: 32px 1fr;
-    padding: 10px;
+    padding: 5px 10px 5px 10px;
     width: 100%;
     &:hover{
       background-color: var(--background-color);
@@ -42,7 +42,7 @@ const Aside = styled.aside`
 function DropDown({ visible, closeFunc, testid, children }) {
   return (
     <Aside
-      className="main-child"
+      className="main-child drop-down"
       visible={visible}
       onClick={closeFunc}
       data-testid={testid}

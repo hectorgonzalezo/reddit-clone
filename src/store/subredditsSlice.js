@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { database } from '../firebase/firebase';
 
 
-const initialState = { };
+const initialState = {};
 
 export const subredditsSlice = createSlice({
   name: 'subreddits',

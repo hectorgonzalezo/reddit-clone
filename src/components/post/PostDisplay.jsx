@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../../store/userSlice';
 import { database } from '../../firebase/firebase';
 import SubredditAbout from '../subreddit/SubredditAbout';
 import Agreements from '../Agreements';
 import Button from '../Button';
 import Post from './Post';
+import { changeCurrentSubreddit } from '../../store/currentSubredditSlice';
 
 function PostDisplay() {
   const { name, postId } = useParams();
   const user = useSelector(selectUser);
   const [post, setPost] = useState(false);
   const [chosenSubreddit, setChosenSubreddit] = useState(false);
+  const dispatch = useDispatch();
   
   function isPostUrlImage(url) {
     if (url !== undefined) {
@@ -38,6 +40,9 @@ function PostDisplay() {
       .then((data) => setPost(data));
   }, []);
 
+  useEffect(() => {
+    dispatch(changeCurrentSubreddit(chosenSubreddit.name));
+  }, [chosenSubreddit]);
   return (
     <>
       <div id="left-side">

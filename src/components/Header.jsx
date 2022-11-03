@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { func, bool } from 'prop-types';
+import { useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/Reddit_Mark_OnWhite.png';
 import logotype from '../assets/Reddit_Logotype_OnWhite.png';
 import homeIcon from '../assets/home_icon.svg';
@@ -9,15 +9,48 @@ import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import Button from './Button';
 import SearchBar from './SearchBar';
 import AccountDropDown from './AccountDropDown';
-import CommunityChooser from './CommunityChooser';
+import SubredditsDropDown from './subreddit/SubredditsDropDown';
 import { selectUser } from '../store/userSlice';
+import { selectCurrentSubreddit, changeCurrentSubreddit } from '../store/currentSubredditSlice';
+import { database } from '../firebase/firebase';
 
 import '../styles/headerStyle.scss';
 
 function Header({ signUpFunc, logInFunc, opaque }) {
   // gets user from redux store
   const user = useSelector(selectUser);
+  const currentSubreddit = useSelector(selectCurrentSubreddit);
   const [userDropdownVisible, setUserDropdownVisible] = useState(false);
+  const [subredditDropdownVisible, setSubredditDropdownVisible] = useState(false);
+  const [subredditIcon, setSubredditIcon] = useState(homeIcon);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
+  function toggleSubredditDropdown() {
+    setSubredditDropdownVisible((prev) => !prev);
+  }
+
+  async function navigateToSubreddit(e) {
+    const subredditName = e.target.getAttribute('data');
+    dispatch(changeCurrentSubreddit(subredditName));
+
+    // get subreddit icon
+    const subredditData = await database.getSubredditData(subredditName);
+    setSubredditIcon(subredditData.icon)
+
+    navigate(`/r/${subredditName}`);
+  }
+
+  useEffect(() => {
+    // change subreddit icon
+    if (currentSubreddit !== null) {
+    database.getSubredditData(currentSubreddit)
+      .then((data) => setSubredditIcon(data.icon));
+    } else {
+      setSubredditIcon(homeIcon)
+    }
+  }, [currentSubreddit]);
 
   return (
     <header className={opaque ? 'opaque' : ''}>
@@ -28,12 +61,21 @@ function Header({ signUpFunc, logInFunc, opaque }) {
         </Link>
       </div>
       {user.username !== undefined ? (
-        <div id="go-to">
-          <button type="button" className="button-show-drop-down">
-            <img src={homeIcon} alt="home icon" className="icon" />
-            <h1>Home</h1>
+        <div id="go-to" data-testid="go-to">
+          <button
+            type="button"
+            className="button-show-drop-down"
+            onClick={toggleSubredditDropdown}
+          >
+            <img src={subredditIcon} alt="home icon" className={subredditIcon === homeIcon ? 'icon' : 'user-icon'} />
+            <h1>{currentSubreddit === null ? 'Home' : currentSubreddit}</h1>
             <img src={arrowDownIcon} alt="" className="icon" />
           </button>
+          <SubredditsDropDown
+            dropdownVisible={subredditDropdownVisible}
+            toggleDropdown={toggleSubredditDropdown}
+            chooseFromDropdown={navigateToSubreddit}
+          />
         </div>
       ) : null}
       <SearchBar />

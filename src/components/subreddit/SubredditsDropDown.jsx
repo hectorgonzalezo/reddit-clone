@@ -12,7 +12,7 @@ function SubredditsDropDown({ dropdownVisible, toggleDropdown, chooseFromDropdow
       className="main-child"
       visible={dropdownVisible}
       closeFunc={toggleDropdown}
-      testid="user-dropdown"
+      testid="subreddits-dropdown"
     >
       <h1>Your communities</h1>
       {Object.values(subreddits).map((subreddit) => (

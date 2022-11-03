@@ -222,7 +222,7 @@ function Post({
           {" "}
           Posted by <a href="">u/{poster}</a>{" "}
           {formatDistanceToNow(new Date(timePosted))}
-          &nbsp; ago
+          &nbsp;ago
         </p>
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectSubreddits } from '../store/subredditsSlice';
 import CreatePostPreview from './CreatePostPreview';
 import PopularPostsBar from './PopularPostsBar';
@@ -8,14 +8,17 @@ import Button from './Button';
 import PostsArea from './post/PostsArea';
 import Agreements from './Agreements';
 import { authorization } from '../firebase/firebase';
+import { changeCurrentSubreddit } from '../store/currentSubredditSlice';
 
 function HomePage() {
   const subredditsData = useSelector(selectSubreddits);
   const [chosenSubreddits, setChosenSubreddits] = useState([]);
+  const dispatch = useDispatch();
 
   // update subreddits for posts area every time they change
   useEffect(() => {
     setChosenSubreddits(Object.values(subredditsData));
+    dispatch(changeCurrentSubreddit(null));
   }, [subredditsData]);
 
   return (

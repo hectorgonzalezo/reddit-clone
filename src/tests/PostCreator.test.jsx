@@ -108,7 +108,7 @@ describe('Post creator page', () => {
       </Provider>
     );
 
-    const dropDown = screen.getByTestId('user-dropdown');
+    const dropDown = screen.getByTestId('subreddits-dropdown');
     const button = screen.getByText('Choose a community');
 
     expect(dropDown).toHaveStyle('display: none');
@@ -137,7 +137,7 @@ describe('Post creator page', () => {
       });
     });
 
-    const dropDown = screen.getByTestId('user-dropdown');
+    const dropDown = screen.getByTestId('subreddits-dropdown');
     const button = screen.getByText('Choose a community');
     userEvent.click(button);
 
