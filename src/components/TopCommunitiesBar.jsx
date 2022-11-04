@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { selectSubreddits } from '../store/subredditsSlice';
 import { selectUser } from '../store/userSlice';
@@ -11,6 +11,7 @@ import '../styles/topCommunitiesBarStyle.scss';
 function TopCommunitiesBar() {
   const subreddits = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
 
   // sorts subreddits by number of posts
   function getTopSubreddits(number = 5) {
@@ -42,7 +43,7 @@ function TopCommunitiesBar() {
         </ol>
       </div>
       <div id="buttons-communities-bar">
-        <Button text="View all" />
+        <Button text="View all" onClick={() => navigate('/allSubreddits')} />
       </div>
     </aside>
   );

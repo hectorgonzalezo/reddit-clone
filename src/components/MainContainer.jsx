@@ -5,6 +5,7 @@ import PostDisplay from './post/PostDisplay';
 import PostCreator from './post/PostCreator';
 import HomePage from './HomePage';
 import SubredditDisplay from './subreddit/SubredditDisplay';
+import AllSubreddits from './subreddit/AllSubreddits';
 
 import '../styles/mainStyle.scss';
 
@@ -24,6 +25,7 @@ function MainContainer({ opaque }) {
         />
         <Route path="r/:name" element={<SubredditDisplay />}/>
         <Route path="r/:name/:postId" element={<PostDisplay />} />
+        <Route path="allSubreddits" element={<AllSubreddits />} />
       </Routes>
     </main>
   );

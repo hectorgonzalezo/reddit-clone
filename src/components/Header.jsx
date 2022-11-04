@@ -42,6 +42,16 @@ function Header({ signUpFunc, logInFunc, opaque }) {
     navigate(`/r/${subredditName}`);
   }
 
+  // closes subreddits and user dropdowns when mouse leaves the header area
+  function closeAllDropDowns() {
+    if (userDropdownVisible) {
+      setUserDropdownVisible(false);
+    }
+    if (subredditDropdownVisible) {
+      setSubredditDropdownVisible(false);
+    }
+  }
+
   useEffect(() => {
     // change subreddit icon
     if (currentSubreddit !== null) {
@@ -53,11 +63,11 @@ function Header({ signUpFunc, logInFunc, opaque }) {
   }, [currentSubreddit]);
 
   return (
-    <header className={opaque ? 'opaque' : ''}>
+    <header className={opaque ? 'opaque' : ''} onMouseLeave={closeAllDropDowns}>
       <div id="logos">
         <Link to="/">
-          <img src={logo} alt="reddit logo" />
-          <img src={logotype} alt="reddit logotype" />
+          <img src={logo} alt="reddit" />
+          <img src={logotype} alt="reddit" />
         </Link>
       </div>
       {user.username !== undefined ? (
@@ -66,8 +76,9 @@ function Header({ signUpFunc, logInFunc, opaque }) {
             type="button"
             className="button-show-drop-down"
             onClick={toggleSubredditDropdown}
+            
           >
-            <img src={subredditIcon} alt="home icon" className={subredditIcon === homeIcon ? 'icon' : 'user-icon'} />
+            <img src={subredditIcon} alt="chosen subreddit" className={subredditIcon === homeIcon ? 'icon' : 'user-icon'} />
             <h1>{currentSubreddit === null ? 'Home' : currentSubreddit}</h1>
             <img src={arrowDownIcon} alt="" className="icon" />
           </button>
