@@ -52,7 +52,7 @@ function LogInModal({ closeFunc }) {
     <div id="logIn-outer" className="modal-outer">
       <div id="logIn-inner" className="modal-inner">
         <div>
-          <button type="button" className="close-button" onClick={closeFunc}>
+          <button type="button" className="close-button" onClick={closeFunc} aria-label="close menu">
             x
           </button>
           <h1>Log In</h1>

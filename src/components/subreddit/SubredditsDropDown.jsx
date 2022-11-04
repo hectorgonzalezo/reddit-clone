@@ -20,7 +20,7 @@ function SubredditsDropDown({ dropdownVisible, toggleDropdown, chooseFromDropdow
       {user.subreddits !== undefined
         ? user.subreddits.map((subreddit) => {
           if (subreddits[subreddit] !== undefined) {
-          <React.Fragment key={`${subreddits[subreddit].name}-fragment`}>
+          return <React.Fragment key={`${subreddits[subreddit].name}-fragment`}>
             <hr key={`${subreddits[subreddit].name}-line`} />
             <a
               key={`${subreddits[subreddit].name}-link`}

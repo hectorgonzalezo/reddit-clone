@@ -176,6 +176,7 @@ describe('Post creator page', () => {
         ],
       });
     });
+
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -184,10 +185,8 @@ describe('Post creator page', () => {
       </Provider>
     );
 
-   
-
     const dropDown = screen.getByTestId('subreddits-dropdown');
-    const button = screen.getByText('Choose a community');
+    const button = screen.getByRole('button', { name: 'Choose a community'});
     userEvent.click(button);
 
     const subreditLink = getByRole(dropDown, 'img');

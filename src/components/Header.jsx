@@ -26,7 +26,6 @@ function Header({ signUpFunc, logInFunc, opaque }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   function toggleSubredditDropdown() {
     setSubredditDropdownVisible((prev) => !prev);
   }
@@ -80,7 +79,7 @@ function Header({ signUpFunc, logInFunc, opaque }) {
           >
             <img src={subredditIcon} alt="chosen subreddit" className={subredditIcon === homeIcon ? 'icon' : 'user-icon'} />
             <h1>{currentSubreddit === null ? 'Home' : currentSubreddit}</h1>
-            <img src={arrowDownIcon} alt="" className="icon" />
+            <img src={arrowDownIcon} className="icon" aria-hidden="true" />
           </button>
           <SubredditsDropDown
             dropdownVisible={subredditDropdownVisible}

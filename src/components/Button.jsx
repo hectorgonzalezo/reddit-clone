@@ -21,14 +21,16 @@ const StyledButton = styled.button`
   }
 `;
 
-function Button({ text, light, onClick, type, disabled, children }) {
+function Button({ text, light, type, disabled, children, onClick, onMouseEnter, onMouseLeave }) {
   return (
     <StyledButton
       type={type}
-      onClick={onClick}
       light={light}
       className="default-button"
       disabled={disabled}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {text}
       {children}
@@ -43,15 +45,19 @@ Button.defaultProps = {
   type: 'button',
   disabled: false,
   children: [],
+  onMouseEnter: () => {},
+  onMouseLeave: () => {},
 };
 
 Button.propTypes = {
   text: string,
   light: bool,
-  onClick: func,
   type: string,
   disabled: bool,
   children: oneOfType([arrayOf(string), string, element]),
+  onClick: func,
+  onMouseEnter: func,
+  onMouseLeave: func,
 };
 
 export default Button;

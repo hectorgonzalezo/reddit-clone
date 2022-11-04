@@ -97,7 +97,7 @@ function SignUpModal({ closeFunc }) {
     <div id="signUp-outer" className="modal-outer">
       <div id="signUp-inner" className="modal-inner">
         <div>
-          <button type="button" className="close-button" onClick={closeFunc}>
+          <button type="button" className="close-button" onClick={closeFunc} aria-label="close button">
             x
           </button>
           <h1>Sign Up</h1>

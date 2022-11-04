@@ -74,16 +74,12 @@ function CreateCommunityModal({ closeFunc }) {
         description,
         icon
       );
-      console.log('si')
       // get subreddit data from database and update redux store
       const fetchedSubreddit = await database.getSubredditData(subredditName);
-      console.log({fetchedSubreddit})
       dispatch(addSubreddit([fetchedSubreddit]));
-      console.log('dispatch')
       closeFunc();
       // go to subreddit display
       navigate(`/r/${subredditName}`);
-      console.log('nativata')
     } catch (error) {
       // If email already exists
       setLoadingData(false);
@@ -94,7 +90,7 @@ function CreateCommunityModal({ closeFunc }) {
     <div id="create-community-outer" className="modal-outer">
       <div id="create-community-inner" className="modal-inner">
         <div>
-          <button type="button" className="close-button" onClick={closeFunc}>
+          <button type="button" className="close-button" onClick={closeFunc} aria-label="close menu">
             x
           </button>
           <h1>Create a Comunity</h1>

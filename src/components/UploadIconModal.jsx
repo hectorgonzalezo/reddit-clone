@@ -37,7 +37,7 @@ function UploadIconModal({ closeFunc }) {
   return (
     <div id="uploadIcon-outer" className="modal-outer">
       <div id="uploadIcon-inner" className="modal-inner">
-        <button type="button" className="close-button" onClick={closeFunc}>
+        <button type="button" className="close-button" onClick={closeFunc} aria-label="close menu">
           x
         </button>
         <form action="">

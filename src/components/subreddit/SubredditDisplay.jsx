@@ -21,7 +21,6 @@ function SubredditDisplay() {
   const [chosenSubreddit, setChosenSubreddit] = useState();
   const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
-  console.log(user.subreddits)
 
   function changeOrder(newOrder) {
     setPostsOrder(newOrder);
