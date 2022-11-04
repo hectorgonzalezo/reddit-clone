@@ -21,6 +21,7 @@ function SubredditDisplay() {
   const [chosenSubreddit, setChosenSubreddit] = useState();
   const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
+  console.log(user.subreddits)
 
   function changeOrder(newOrder) {
     setPostsOrder(newOrder);
@@ -35,7 +36,7 @@ function SubredditDisplay() {
     <>
       {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
       <div id="left-side">
-        {user.subreddits !== undefined && user.subreddits.includes(chosenSubreddit) ? <CreatePostPreview /> : null}
+        {user.subreddits !== undefined && user.subreddits.includes(name) ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder}/>
         {chosenSubreddit !== undefined ? <PostsArea subreddits={[chosenSubreddit]} order={postsOrder} /> : null}
       </div>

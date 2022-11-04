@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { func, string } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 
 const UploadArea = styled.div`
   & > .inputfile {
@@ -12,7 +12,7 @@ const UploadArea = styled.div`
     z-index: -1;
   }
   .App & > .inputfile + label {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 500;
     border-radius: 1.5rem;
     padding: 5px 15px 5px 15px;
@@ -29,7 +29,7 @@ const UploadArea = styled.div`
   }
 `;
 
-function ImageUpload({ onChange, id }) {
+function ImageUpload({ onChange, id, required }) {
   return (
     <UploadArea>
       <input
@@ -39,7 +39,7 @@ function ImageUpload({ onChange, id }) {
         className="inputfile"
         onChange={onChange}
         accept="image/png, image/jpeg image/gif"
-        required
+        required={required}
       />
       <label htmlFor="file" className='image-input'>Choose a file</label>
     </UploadArea>
@@ -48,11 +48,13 @@ function ImageUpload({ onChange, id }) {
 
 ImageUpload.defaultProps = {
   id: 'file',
+  required: true,
 };
 
 ImageUpload.propTypes = {
   onChange: func.isRequired,
   id: string,
+  required: bool,
 };
 
 export default ImageUpload;

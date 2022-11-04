@@ -34,6 +34,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirebaseConfig } from './firebase-config';
 
 const firebaseApp = initializeApp(getFirebaseConfig());
+const defaultSubreditIcon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=b65c667b-5299-404a-b8d9-5d94c580936d';
 
 const database = (() => {
   const db = getFirestore(firebaseApp);
@@ -97,6 +98,27 @@ const database = (() => {
 
     return posts;
   }
+
+  // Links user authorization with user name
+  async function createSubreddit(subredditName, subtitle, description, icon) {
+    let iconUrl;
+    // if no icon is provided, use default, otherwise upload it to firestore
+    if (icon == undefined) {
+      iconUrl = defaultSubreditIcon;
+    } else {
+      iconUrl = await uploadImage(icon, 'subredditIcons');
+    }
+    const docRef = await setDoc(doc(db, 'subreddits', subredditName), {
+      dateCreated: (new Date()).toString(),
+      members: 0,
+      icon: iconUrl,
+      name: subredditName,
+      postQuantity: 0,
+      subtitle,
+      description,
+    });
+    return docRef;
+  } 
 
   // Links user authorization with user name
   async function addUser(email, username) {
@@ -225,7 +247,6 @@ const database = (() => {
     });
 
     await updateDoc(userDoc, { subreddits: callback(subreddit) });
-
   }
 
   async function subscribeToSubreddit(subreddit, username) {
@@ -241,6 +262,7 @@ const database = (() => {
     getSubredditData,
     getAllPostsInSubreddit,
     getTopPostsInSubreddit,
+    createSubreddit,
     addUser,
     getPost,
     getUser,
