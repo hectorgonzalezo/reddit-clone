@@ -17,7 +17,8 @@ function SubredditsDropDown({ dropdownVisible, toggleDropdown, chooseFromDropdow
       testid="subreddits-dropdown"
     >
       <h1>Your communities</h1>
-      {user.subreddits.map((subreddit) => (
+      { user.subreddits !== undefined ? 
+      user.subreddits.map((subreddit) => (
         <React.Fragment key={`${subreddits[subreddit].name}-fragment`}>
           <hr key={`${subreddits[subreddit].name}-line`} />
           <a
@@ -37,7 +38,8 @@ function SubredditsDropDown({ dropdownVisible, toggleDropdown, chooseFromDropdow
             </p>
           </a>
         </React.Fragment>
-      ))}
+      ))
+      :null}
       <hr />
       {header ?
       <>

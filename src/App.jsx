@@ -6,23 +6,25 @@ import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
 import LogInModal from './components/LogInModal';
+import UploadIconModal from './components/UploadIconModal';
+import CreateCommunityModal from './components/subreddit/CreateCommunityModal';
 import { toggleLogInModal, selectLoginModalVisibility } from './store/loginModalSlice';
 import { addSubreddit } from './store/subredditsSlice';
 import { database, authorization } from './firebase/firebase';
 import './styles/appStyle.scss';
 import './styles/modals.scss';
+import { toggleChangeIconModal, selectChangeIconModalVisibility } from './store/changeIconModalSlice';
+import { toggleAddCommunityModal, selectAddCommunityModalVisibility } from './store/addCommunityModalSlice';
 
 function App() {
   const [signUpVisible, setSignUpVisible] = useState(false);
   const logInVisible = useSelector(selectLoginModalVisibility);
+  const changeIconVisible = useSelector(selectChangeIconModalVisibility);
+  const addCommunityVisible = useSelector(selectAddCommunityModalVisibility);
   const dispatch = useDispatch();
 
   function toggleSignUp() {
     setSignUpVisible((prevVisibility) => !prevVisibility);
-  }
-
-  function toggleLogIn() {
-    dispatch(toggleLogInModal());
   }
 
   // If theres a user logged in, add it to redux store
@@ -59,11 +61,34 @@ function App() {
         <Header
           signUpFunc={toggleSignUp}
           logInFunc={toggleLogIn}
-          opaque={signUpVisible || logInVisible}
+          opaque={
+            signUpVisible ||
+            logInVisible ||
+            changeIconVisible ||
+            addCommunityVisible
+          }
         />
-        <MainContainer opaque={signUpVisible || logInVisible} />
+        <MainContainer
+          opaque={
+            signUpVisible ||
+            logInVisible ||
+            changeIconVisible ||
+            addCommunityVisible
+          }
+        />
+        {/* modals */}
         {signUpVisible ? <SignUpModal closeFunc={toggleSignUp} /> : null}
-        {logInVisible ? <LogInModal closeFunc={toggleLogIn} /> : null}
+        {logInVisible ? <LogInModal closeFunc={() => dispatch(toggleLogInModal())} /> : null}
+        {changeIconVisible ? (
+          <UploadIconModal
+            closeFunc={() => dispatch(toggleChangeIconModal())}
+          />
+        ) : null}
+        {addCommunityVisible ? (
+          <CreateCommunityModal
+            closeFunc={() => dispatch(toggleAddCommunityModal())}
+          />
+        ) : null}
       </div>
     </BrowserRouter>
   );
