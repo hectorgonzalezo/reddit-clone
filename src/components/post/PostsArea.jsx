@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { arrayOf, objectOf, string, number, oneOfType, array } from 'prop-types';
+import { useNavigate, useParams } from 'react-router-dom';
+import { arrayOf, objectOf, string, number, oneOfType, array, bool } from 'prop-types';
 import { authorization, database } from '../../firebase/firebase';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
@@ -16,11 +16,12 @@ const PostsDiv = styled.div`
   gap: 10px;
 `;
 
-function PostsArea({ subreddits, order }) {
+function PostsArea({ subreddits, order, onlyUser }) {
   const [posts, setPosts] = useState([]);
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const [rendered, setRendered] = useState(false);
+  const UserDisplayName = useParams().name;
 
   async function getTop(subredditName, subredditIcon) {
     let topPosts = await database.getTopPostsInSubreddit(subredditName);
@@ -60,14 +61,34 @@ function PostsArea({ subreddits, order }) {
 
   useEffect(() => {
     let newPosts = [];
-    // for subreddit display
-    if (Object.values(subreddits).length === 1 && !rendered) {
+    // if oonly displaying a particular user posts
+    if (onlyUser) {
+      setPosts([]);
+      let userPosts = []
+      Object.values(subreddits).forEach(async (subreddit) => {
+        let allPosts = await getTop(
+          subreddit.name,
+          subreddit.icon || defaultIconUrl
+        );
+        // only get posts authored by user
+        allPosts = allPosts.filter(
+          (post) => post.originalPoster === UserDisplayName
+        );
+        userPosts = userPosts.concat(allPosts)
+        setPosts(userPosts);
+      });
+      setRendered(true);
+    } else if (Object.values(subreddits).length === 1 && !rendered) {
+      // for subreddit display
       setPosts([]);
       Object.values(subreddits).forEach(async (subreddit) => {
-      // If there's no icon, show the default one
-        const subPosts = await getTop(subreddit.name, subreddit.icon || defaultIconUrl);
+        // If there's no icon, show the default one
+        const subPosts = await getTop(
+          subreddit.name,
+          subreddit.icon || defaultIconUrl
+        );
         newPosts = newPosts.concat(subPosts);
-        setPosts(newPosts)
+        setPosts(newPosts);
       });
       setRendered(true);
     } else if (user.subreddits !== undefined && authorization.isUserSignedIn()) {
@@ -86,13 +107,16 @@ function PostsArea({ subreddits, order }) {
       });
     } else if (Object.values(subreddits).length > 2) {
       // for homepage without user
-      setPosts([])
+      setPosts([]);
       Object.values(subreddits).forEach(async (subreddit) => {
-      // If there's no icon, show the default one
-        const subPosts = await getTop(subreddit.name, subreddit.icon || defaultIconUrl);
+        // If there's no icon, show the default one
+        const subPosts = await getTop(
+          subreddit.name,
+          subreddit.icon || defaultIconUrl
+        );
         newPosts = newPosts.concat(subPosts);
-        setPosts(newPosts)
-      }); 
+        setPosts(newPosts);
+      });
     }
   }, [subreddits, user]);
 
@@ -130,6 +154,7 @@ function PostsArea({ subreddits, order }) {
 
 PostsArea.defaultProps = {
   order: 'hot',
+  onlyUser: false,
 };
 
 PostsArea.propTypes = {
@@ -142,6 +167,7 @@ PostsArea.propTypes = {
     ])
   ).isRequired,
   order: string,
+  onlyUser: bool,
 };
 
 export default PostsArea;

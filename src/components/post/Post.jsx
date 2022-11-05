@@ -210,7 +210,7 @@ function Post({
         <p>&nbsp;•&nbsp;</p>
         <p>
           {" "}
-          Posted by <a href="">u/{poster}</a>{" "}
+          Posted by <Link to={`/u/${poster}`}>u/{poster}</Link>{" "}
           {formatDistanceToNow(new Date(timePosted))}
           &nbsp;ago
         </p>
@@ -247,12 +247,14 @@ function Post({
       </div>
       {!preview ? (
         <>
+          {user.username !== undefined ?
           <CommentCreator
             subreddit={subredditName}
             postId={postId}
             commentsList={comments}
             reloadPost={reloadPost}
           />
+          : null}
           <CommentsDisplay
             comments={comments}
             subreddit={subredditName}
