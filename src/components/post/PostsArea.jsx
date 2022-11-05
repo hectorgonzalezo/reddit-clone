@@ -22,6 +22,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
   const navigate = useNavigate();
   const [rendered, setRendered] = useState(false);
   const UserDisplayName = useParams().name;
+  const [loading, setLoading] = useState(true);
 
   async function getTop(subredditName, subredditIcon) {
     let topPosts = await database.getTopPostsInSubreddit(subredditName);
@@ -31,6 +32,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
       subredditName,
       subredditIcon,
     }));
+    setLoading(false);
     return topPosts;
   }
 
@@ -53,7 +55,6 @@ function PostsArea({ subreddits, order, onlyUser }) {
     window.scrollTo(0, 0);
   }
 
-
   // reorder posts when fetching new or changing the order
   useEffect(() => {
     setPosts(reorderPosts(posts, order));
@@ -61,7 +62,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
 
   useEffect(() => {
     let newPosts = [];
-    // if oonly displaying a particular user posts
+    // if only displaying a particular user posts
     if (onlyUser) {
       setPosts([]);
       let userPosts = []
@@ -75,7 +76,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
           (post) => post.originalPoster === UserDisplayName
         );
         userPosts = userPosts.concat(allPosts)
-        setPosts(userPosts);
+        setPosts(reorderPosts(userPosts, order));
       });
       setRendered(true);
     } else if (Object.values(subreddits).length === 1 && !rendered) {
@@ -88,23 +89,9 @@ function PostsArea({ subreddits, order, onlyUser }) {
           subreddit.icon || defaultIconUrl
         );
         newPosts = newPosts.concat(subPosts);
-        setPosts(newPosts);
+        setPosts(reorderPosts(newPosts, order));
       });
       setRendered(true);
-    } else if (user.subreddits !== undefined && authorization.isUserSignedIn()) {
-      setPosts([]);
-      // for homepage with user
-      user.subreddits.forEach(async (subreddit) => {
-        if (subreddits[subreddit] !== undefined) {
-          // If there's no icon, show the default one
-          const subPosts = await getTop(
-            subreddits[subreddit].name,
-            subreddits[subreddit].icon || defaultIconUrl
-          );
-          newPosts = newPosts.concat(subPosts);
-          setPosts(newPosts);
-        }
-      });
     } else if (Object.values(subreddits).length > 2) {
       // for homepage without user
       setPosts([]);
@@ -115,7 +102,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
           subreddit.icon || defaultIconUrl
         );
         newPosts = newPosts.concat(subPosts);
-        setPosts(newPosts);
+        setPosts(reorderPosts(newPosts, order));
       });
     }
   }, [subreddits, user]);

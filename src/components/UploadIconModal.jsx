@@ -24,7 +24,9 @@ function UploadIconModal({ closeFunc }) {
     e.preventDefault();
     try {
       setLoadingData(true);
+      console.log(iconFile, user.username)
       const icon = await database.saveUserIcon(iconFile, user.username);
+      console.log(icon)
       dispatch(updateIcon(icon));
       setLoadingData(false);
       closeFunc();

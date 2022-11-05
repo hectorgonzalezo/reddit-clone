@@ -37,7 +37,7 @@ function TopCommunitiesBar() {
                 <img src={carretUpIcon} alt="" className="icon" key={`${subreddit.name}-icon`} />
                 {`r/${subreddit.name}`}
               </Link>
-              {user !== undefined ? <JoinButton subreddit={subreddit.name} key={`${subreddit.name}-join-button`} /> : null}
+              {user.username !== undefined ? <JoinButton subreddit={subreddit.name} key={`${subreddit.name}-join-button`} /> : null}
             </li>
           ))}
         </ol>

@@ -8,6 +8,7 @@ import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './post/PostsArea';
 import Agreements from './Agreements';
+import uniqid from 'uniqid';
 import { authorization } from '../firebase/firebase';
 import { changeCurrentSubreddit } from '../store/currentSubredditSlice';
 
@@ -33,7 +34,7 @@ function HomePage() {
       <div id="left-side">
         {user.subreddits !== undefined ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder} />
-        <PostsArea subreddits={chosenSubreddits} order={postsOrder} />
+        <PostsArea subreddits={chosenSubreddits} order={postsOrder}/>
       </div>
       <div id="right-side">
         <TopCommunitiesBar />

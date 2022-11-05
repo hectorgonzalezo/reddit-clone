@@ -37,24 +37,26 @@ function JoinButton({ subreddit }) {
     if (user.subreddits !== undefined) {
       setUserSubreddits(user.subreddits);
     }
-  }, [user])
+  }, [user]);
 
-
-  return user !== undefined && userSubreddits.includes(subreddit) ? (
+  if (user.username !== undefined) {
+  return  userSubreddits.includes(subreddit) ? (
     <Button
       text={joinedText}
       onClick={changeSubscription}
       onMouseEnter={() => {
-        setJoinedText('Leave');
+        setJoinedText("Leave");
       }}
       onMouseLeave={() => {
-        setJoinedText('Joined');
+        setJoinedText("Joined");
       }}
       light
     />
-  ) : (
+    ) : (
     <Button onClick={changeSubscription}>Join</Button>
   );
+  }
+  return;
 }
 
 JoinButton.propTypes = {

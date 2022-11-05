@@ -166,7 +166,7 @@ function Post({
 
   function goToPostComment(e) {
     e.stopPropagation();
-    navigate(`/r/${subredditName}/${postId}/#create-post-area`)
+    navigate(`/r/${subredditName}/${postId}#create-post-area`)
   }
 
   return (

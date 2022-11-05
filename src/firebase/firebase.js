@@ -152,7 +152,7 @@ const database = (() => {
 
   async function saveUserIcon(file, username) {
     try {
-      const publicImageUrl = uploadImage(file, `users/${username}/icon`);
+      const publicImageUrl = await uploadImage(file, `users/${username}/icon`);
       // update user's icon
       const userDoc = doc(db, 'users', username);
       await updateDoc(userDoc, {
