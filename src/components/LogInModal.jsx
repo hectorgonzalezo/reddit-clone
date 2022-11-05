@@ -65,20 +65,8 @@ function LogInModal({ closeFunc }) {
             </a>
             .
           </p>
-          <button
-            type="button"
-            onClick={authorization.logInPopup}
-            className="google-button"
-          >
-            <img src={googleIcon} alt="" />
-            Continue with Google
-          </button>
         </div>
-
         <div className="division">
-          <hr />
-          <h3>or</h3>
-          <hr />
         </div>
         <form action="" ref={formRef}>
           <div className="input-wrap">
