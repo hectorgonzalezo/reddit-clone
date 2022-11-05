@@ -235,18 +235,6 @@ function Post({
           <img src={commentsIcon} alt="" className="icon" />
           <p>{formatUpVotes(countComments(comments))} Comments</p>
         </IconLink>
-        <IconLink>
-          <img src={shareIcon} alt="" className="icon" />
-          <p>Share</p>
-        </IconLink>
-        <IconLink>
-          <img src={saveIcon} alt="" className="icon" />
-          <p>Save</p>
-        </IconLink>
-        <IconLink>
-          <img src={hideIcon} alt="" className="icon" />
-          <p>Hide</p>
-        </IconLink>
       </div>
       {!preview ? (
         <>

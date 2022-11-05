@@ -29,7 +29,8 @@ function SubredditDisplay() {
   useEffect(() => {
     setChosenSubreddit(subredditsData[name]);
     dispatch(changeCurrentSubreddit(name));
-  }, [subredditsData]);
+    setPostsOrder(postsOrder);
+  }, [subredditsData, name]);
 
   return (
     <>

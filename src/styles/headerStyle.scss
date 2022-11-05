@@ -59,9 +59,20 @@
   flex: 5 0 200px;
   border-radius: 1rem;
   max-width: 600px;
+  position: relative;
+
+  .drop-down {
+    top: 35px;
+    right: 50%;
+    transform: translate(50%);
+    width: 100%;
+    h1{
+      color: red
+    }
+  }
   &:hover{
     > button{
-      display: block
+      display: flex
     }
   }
 
@@ -75,8 +86,11 @@
       outline: none;
     }
   }
-button {
+    button {
       display: none;
+      border: none;
+      background-color: white;
+      height: 12px;
     }
 }
 

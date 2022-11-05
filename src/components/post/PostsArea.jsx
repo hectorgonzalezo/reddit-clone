@@ -20,9 +20,8 @@ function PostsArea({ subreddits, order, onlyUser }) {
   const [posts, setPosts] = useState([]);
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  const [rendered, setRendered] = useState(false);
+  let rendered = false;
   const UserDisplayName = useParams().name;
-  const [loading, setLoading] = useState(true);
 
   async function getTop(subredditName, subredditIcon) {
     let topPosts = await database.getTopPostsInSubreddit(subredditName);
@@ -32,7 +31,6 @@ function PostsArea({ subreddits, order, onlyUser }) {
       subredditName,
       subredditIcon,
     }));
-    setLoading(false);
     return topPosts;
   }
 
@@ -78,7 +76,6 @@ function PostsArea({ subreddits, order, onlyUser }) {
         userPosts = userPosts.concat(allPosts)
         setPosts(reorderPosts(userPosts, order));
       });
-      setRendered(true);
     } else if (Object.values(subreddits).length === 1 && !rendered) {
       // for subreddit display
       setPosts([]);
@@ -91,7 +88,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
         newPosts = newPosts.concat(subPosts);
         setPosts(reorderPosts(newPosts, order));
       });
-      setRendered(true);
+      rendered = false;
     } else if (Object.values(subreddits).length > 2) {
       // for homepage without user
       setPosts([]);
