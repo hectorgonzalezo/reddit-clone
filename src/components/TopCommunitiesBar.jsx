@@ -22,7 +22,11 @@ function TopCommunitiesBar() {
     return firstNumSubreddits;
   }
   return (
-    <aside id="top-communities-bar" className="main-child">
+    <aside
+      id="top-communities-bar"
+      className="main-child"
+      aria-label="top communitites"
+    >
       <div id="title-communities-bar">
         <div>
           <h1>Top Communities</h1>
@@ -34,16 +38,26 @@ function TopCommunitiesBar() {
             <li key={`${subreddit.name}-item`}>
               <Link to={`r/${subreddit.name}`} key={`${subreddit.name}-link`}>
                 {i + 1}
-                <img src={carretUpIcon} alt="" className="icon" key={`${subreddit.name}-icon`} />
+                <img
+                  src={carretUpIcon}
+                  alt=""
+                  className="icon"
+                  key={`${subreddit.name}-icon`}
+                />
                 {`r/${subreddit.name}`}
               </Link>
-              {user.username !== undefined ? <JoinButton subreddit={subreddit.name} key={`${subreddit.name}-join-button`} /> : null}
+              {user.username !== undefined ? (
+                <JoinButton
+                  subreddit={subreddit.name}
+                  key={`${subreddit.name}-join-button`}
+                />
+              ) : null}
             </li>
           ))}
         </ol>
       </div>
       <div id="buttons-communities-bar">
-        <Button text="View all" onClick={() => navigate('/allSubreddits')} />
+        <Button text="View all" onClick={() => navigate("/allSubreddits")} />
       </div>
     </aside>
   );

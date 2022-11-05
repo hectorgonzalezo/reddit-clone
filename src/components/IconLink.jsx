@@ -71,7 +71,7 @@ img {
 }
 `;
 
-function IconLink({ children, round, fill, onClick, data, colored, className }) {
+function IconLink({ children, round, fill, onClick, data, colored, className, ariaLabel }) {
   return (
     <Button
       round={round}
@@ -81,6 +81,7 @@ function IconLink({ children, round, fill, onClick, data, colored, className }) 
       data={data !== '' ? data : null}
       className={className}
       data-testid="icon-link"
+      aria-label={ariaLabel}
     >
       {children}
     </Button>
@@ -94,6 +95,7 @@ IconLink.defaultProps = {
   fill: '',
   colored: false,
   className: '',
+  ariaLabel: '',
 };
 
 IconLink.propTypes = {
@@ -104,6 +106,7 @@ IconLink.propTypes = {
   fill: string,
   colored: bool,
   className: string,
+  ariaLabel: string,
 };
 
 export default IconLink;

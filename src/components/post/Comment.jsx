@@ -35,7 +35,6 @@ function Comment({
   // get user icon from database
   useEffect(() => {
     database.getUser(comment.user).then((fetchedUser) => {
-      console.log(fetchedUser)
     // if theres an icon, add it to state
       if (fetchedUser !== undefined && fetchedUser.icon !== undefined) {
         // console.log()

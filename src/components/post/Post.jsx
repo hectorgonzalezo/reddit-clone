@@ -176,6 +176,7 @@ function Post({
       voteType={previousVote}
       preview={preview}
       data-testid="post-container"
+      aria-label={`post ${title}`}
     >
       <div className="vote-area-post">
         <IconLink
@@ -183,6 +184,7 @@ function Post({
           onClick={updateVotes}
           data="upVote"
           colored={previousVote === "upVote"}
+          ariaLabel="up vote"
         >
           <img src={upIcon} alt="" data="upVote" data-testid="up-vote-img" />
         </IconLink>
@@ -192,6 +194,7 @@ function Post({
           onClick={updateVotes}
           data="downVote"
           colored={previousVote === "downVote"}
+          ariaLabel="down vote"
         >
           <img
             src={downIcon}
@@ -204,7 +207,7 @@ function Post({
 
       <div className="top-area-post">
         <Link to={`/r/${subredditName}`}>
-          <SubredditIcon icon={subredditIcon} small />
+          <SubredditIcon icon={subredditIcon} small subredditName={subredditName}/>
           <em>r/{subredditName}</em>
         </Link>
         <p>&nbsp;•&nbsp;</p>

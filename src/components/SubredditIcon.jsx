@@ -7,17 +7,19 @@ const Icon = styled.img`
   width: ${(props) => props.small ? "24px" : "48px"}
 `;
 
-function SubredditIcon({ icon, small }) {
-  return <Icon src={icon} small={small} />
+function SubredditIcon({ icon, small, subredditName}) {
+  return <Icon src={icon} small={small} alt={subredditName} />
 }
 
 SubredditIcon.defaultProps = {
   small: false,
+  subredditName: '',
 };
 
 SubredditIcon.propTypes = {
   icon: string.isRequired,
   small: bool,
+  subredditName: string,
 };
 
 export default SubredditIcon;

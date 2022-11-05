@@ -2,7 +2,7 @@ import React from 'react';
 
 function Agreements() {
   return (
-    <aside id="agreements">
+    <aside id="agreements" aria-label="agreements">
       <div>
         <a href="https://www.redditinc.com/policies/user-agreement">
           User Agreement

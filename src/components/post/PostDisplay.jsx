@@ -15,7 +15,6 @@ function PostDisplay() {
   const [post, setPost] = useState(false);
   const [chosenSubreddit, setChosenSubreddit] = useState(false);
   const dispatch = useDispatch();
-  console.log(postId)
   
   function isPostUrlImage(url) {
     if (url !== undefined) {
