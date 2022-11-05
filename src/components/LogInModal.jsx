@@ -20,15 +20,13 @@ function LogInModal({ closeFunc }) {
     const username = userNameRef.current.value;
     const password = passwordRef.current.value;
     try {
-      const { icon, votes } = await database.getUser(username);
+      // const { icon, votes } = await database.getUser(username);
+      const fetchedUser = await database.getUser(username);
       // add loading animation to button
       setLoadingData(true);
-      const account = await authorization.logIn(username, password);
-
       setUsernameDoesntExist(false);
-      const { email } = account;
       // update redux store
-      dispatch(addUser({ username, email, icon, votes }));
+      dispatch(addUser(fetchedUser));
       closeFunc();
     } catch (error) {
       setLoadingData(false);

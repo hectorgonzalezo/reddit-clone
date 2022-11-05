@@ -50,7 +50,6 @@ function App() {
         console.log("Couldn't get subreddit data");
         data = [];
       }
-      console.log({data})
       dispatch(addSubreddit(data));
     }
     getNames();

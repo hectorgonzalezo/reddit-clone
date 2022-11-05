@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectSubreddits } from '../store/subredditsSlice';
+import { selectUser } from '../store/userSlice';
 import CreatePostPreview from './CreatePostPreview';
 import PopularPostsBar from './PopularPostsBar';
 import TopCommunitiesBar from './TopCommunitiesBar';
@@ -12,7 +13,8 @@ import { changeCurrentSubreddit } from '../store/currentSubredditSlice';
 
 function HomePage() {
   const subredditsData = useSelector(selectSubreddits);
-  const [chosenSubreddits, setChosenSubreddits] = useState([]);
+  const user = useSelector(selectUser);
+  const [chosenSubreddits, setChosenSubreddits] = useState({});
   const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
 
@@ -22,14 +24,14 @@ function HomePage() {
 
   // update subreddits for posts area every time they change
   useEffect(() => {
-    setChosenSubreddits(Object.values(subredditsData));
+    setChosenSubreddits(subredditsData);
     dispatch(changeCurrentSubreddit(null));
   }, [subredditsData]);
 
   return (
     <>
       <div id="left-side">
-        {authorization.isUserSignedIn() ? <CreatePostPreview /> : null}
+        {user.subreddits !== undefined ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder} />
         <PostsArea subreddits={chosenSubreddits} order={postsOrder} />
       </div>

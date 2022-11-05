@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { arrayOf, objectOf, string, number, oneOfType, array } from 'prop-types';
-import { database } from '../../firebase/firebase';
+import { authorization, database } from '../../firebase/firebase';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
 import { selectUser } from '../../store/userSlice';
@@ -20,19 +20,17 @@ function PostsArea({ subreddits, order }) {
   const [posts, setPosts] = useState([]);
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  let rendered = false;
+  const [rendered, setRendered] = useState(false);
 
   async function getTop(subredditName, subredditIcon) {
-    if (posts.length === 0) {
-      let topPosts = await database.getTopPostsInSubreddit(subredditName);
-      // add subreddit name and icon to post
-      topPosts = topPosts.map((post) => ({
-        ...post,
-        subredditName,
-        subredditIcon,
-      }));
-      setPosts((prevPosts) => reorderPosts([...prevPosts, ...topPosts], order));
-    }
+    let topPosts = await database.getTopPostsInSubreddit(subredditName);
+    // add subreddit name and icon to post
+    topPosts = topPosts.map((post) => ({
+      ...post,
+      subredditName,
+      subredditIcon,
+    }));
+    return topPosts;
   }
 
   function isPostUrlImage(url) {
@@ -54,22 +52,49 @@ function PostsArea({ subreddits, order }) {
     window.scrollTo(0, 0);
   }
 
-  // gets top posts of every subreddit
-  useEffect(() => {
-    // prevent double render
-    if (!rendered) {
-      subreddits.forEach((subreddit) => {
-        // If there's no icon, show the default one
-        getTop(subreddit.name, subreddit.icon || defaultIconUrl);
-      });
-    }
-    rendered = true;
-  }, [subreddits]);
 
   // reorder posts when fetching new or changing the order
   useEffect(() => {
     setPosts(reorderPosts(posts, order));
   }, [order]);
+
+  useEffect(() => {
+    let newPosts = [];
+    // for subreddit display
+    if (Object.values(subreddits).length === 1 && !rendered) {
+      setPosts([]);
+      Object.values(subreddits).forEach(async (subreddit) => {
+      // If there's no icon, show the default one
+        const subPosts = await getTop(subreddit.name, subreddit.icon || defaultIconUrl);
+        newPosts = newPosts.concat(subPosts);
+        setPosts(newPosts)
+      });
+      setRendered(true);
+    } else if (user.subreddits !== undefined && authorization.isUserSignedIn()) {
+      setPosts([]);
+      // for homepage with user
+      user.subreddits.forEach(async (subreddit) => {
+        if (subreddits[subreddit] !== undefined) {
+          // If there's no icon, show the default one
+          const subPosts = await getTop(
+            subreddits[subreddit].name,
+            subreddits[subreddit].icon || defaultIconUrl
+          );
+          newPosts = newPosts.concat(subPosts);
+          setPosts(newPosts);
+        }
+      });
+    } else if (Object.values(subreddits).length > 2) {
+      // for homepage without user
+      setPosts([])
+      Object.values(subreddits).forEach(async (subreddit) => {
+      // If there's no icon, show the default one
+        const subPosts = await getTop(subreddit.name, subreddit.icon || defaultIconUrl);
+        newPosts = newPosts.concat(subPosts);
+        setPosts(newPosts)
+      }); 
+    }
+  }, [subreddits, user]);
 
   return (
     <PostsDiv id="posts">
@@ -108,7 +133,14 @@ PostsArea.defaultProps = {
 };
 
 PostsArea.propTypes = {
-  subreddits: arrayOf(objectOf(oneOfType([number, string, array]))).isRequired,
+  subreddits: objectOf(
+    oneOfType([
+      number,
+      string,
+      array,
+      objectOf(oneOfType([number, string, array])),
+    ])
+  ).isRequired,
   order: string,
 };
 

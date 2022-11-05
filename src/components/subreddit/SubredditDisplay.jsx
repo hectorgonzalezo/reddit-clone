@@ -37,7 +37,7 @@ function SubredditDisplay() {
       <div id="left-side">
         {user.subreddits !== undefined && user.subreddits.includes(name) ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder}/>
-        {chosenSubreddit !== undefined ? <PostsArea subreddits={[chosenSubreddit]} order={postsOrder} /> : null}
+        {chosenSubreddit !== undefined ? <PostsArea subreddits={{[chosenSubreddit.name] : chosenSubreddit}} order={postsOrder} /> : null}
       </div>
       <div id="right-side">
         {chosenSubreddit !== undefined ? <SubredditAbout subreddit={chosenSubreddit} /> : null}
