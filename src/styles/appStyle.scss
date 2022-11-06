@@ -9,6 +9,7 @@
   --grey-dark: #878a8c;
   --up-vote-color: orange;
   font-family: "Noto Sans" Arial sans-serif;
+  font-size: clamp(14px, 2.5vw, 16px);
 }
 
 body {
@@ -25,10 +26,6 @@ body {
   font-family: "Noto Sans"; 
   display: grid;
   grid-template-rows: auto 1fr;
-
-  // div {
-  //   position: relative;
-  // }
 }
 
 button{

@@ -15,8 +15,8 @@ main {
     gap: 20px;
   }
 }
+
 .icon{
-  // height: 22px;
   width: 22px;
 }
 
@@ -101,5 +101,15 @@ main {
 
   #right-side{
     display: none;
+  }
+}
+
+@media  screen and (max-width: 400px) {
+  main{
+    padding: 10px;
+  } 
+
+  .main-child{
+    padding: 8px;
   }
 }
