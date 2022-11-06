@@ -15,7 +15,9 @@ function PostDisplay() {
   const [post, setPost] = useState(false);
   const [chosenSubreddit, setChosenSubreddit] = useState(false);
   const dispatch = useDispatch();
-  
+
+  console.log({name, postId})
+
   function isPostUrlImage(url) {
     if (url !== undefined) {
       const extension = url.split('.').pop();
@@ -43,6 +45,7 @@ function PostDisplay() {
   useEffect(() => {
     dispatch(changeCurrentSubreddit(chosenSubreddit.name));
   }, [chosenSubreddit]);
+
   return (
     <>
       <div id="left-side">

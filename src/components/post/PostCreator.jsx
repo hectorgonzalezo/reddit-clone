@@ -124,8 +124,10 @@ function PostCreator() {
   }
 
   function loadPost(id) {
-    setIsLoading(false);
-    navigate(`/r/${selectedSubreddit}/${id}`);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate(`/r/${selectedSubreddit}/${id}`);
+    }, 2000);
   }
 
   return (
