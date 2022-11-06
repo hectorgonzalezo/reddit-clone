@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import { string, bool } from 'prop-types';
 
 const Icon = styled.img`
-  border-radius: 1rem;
-  width: ${(props) => props.small ? "24px" : "48px"}
+  border-radius: 100%;
+  width: ${(props) => props.small ? "24px" : "48px"};
+  background-color: white;
 `;
 
 function SubredditIcon({ icon, small, subredditName}) {

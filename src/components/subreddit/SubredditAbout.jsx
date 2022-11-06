@@ -1,6 +1,7 @@
 import React from 'react';
 import { objectOf, string, number, oneOfType, bool, array } from 'prop-types';
 import { format } from 'date-fns';
+import SubredditIcon from '../SubredditIcon';
 import cakeIcon from '../../assets/cake_icon.svg';
 import formatUpvotes from '../../utils/formatUpVotes';
 
@@ -10,7 +11,8 @@ function SubredditAbout({ subreddit, post }) {
       <div>
         {post ? (
           <>
-            <img src={subreddit.icon} alt="" /> 
+            {/* <img src={subreddit.icon} alt="" /> */}
+            <SubredditIcon icon={subreddit.icon} subredditName={subreddit.name} />
             <h1>{`r/${subreddit.name}`}</h1>
           </>
         ) : (
