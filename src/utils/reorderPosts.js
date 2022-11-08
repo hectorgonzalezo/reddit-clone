@@ -3,12 +3,10 @@ import countComments from './countComents';
 
 // this function is used to sort by hot
 function getWeight(post) {
-  // normalizes date by comparing with current one
   const timeDifference = differenceInHours(new Date(), new Date(post.timePosted));
 
   return (post.commentsNum * 100) / timeDifference;
 }
-
 
 function reorderPosts(postArray, order) {
   const copiedPosts = [...postArray];

@@ -122,7 +122,6 @@ function CreateCommunityModal({ closeFunc }) {
                 id="subSubtitle"
                 ref={subSubtitleRef}
                 onChange={validate}
-                pattern="[A-Za-z]*"
                 required
               />
             </div>

@@ -41,7 +41,7 @@ function ImageUpload({ onChange, id, required }) {
         accept="image/png, image/jpeg image/gif"
         required={required}
       />
-      <label htmlFor="file" className='image-input'>Choose a file</label>
+      <label htmlFor={id} className='image-input' >Choose a file</label>
     </UploadArea>
   );
 }

@@ -48,7 +48,7 @@ function PostCreator() {
         required
       />
     ),
-    imgArea: <ImageUpload id="img-area" onChange={updateFileToUpload} />,
+    imgArea: <ImageUpload id="img-area" onChange={updateFileToUpload} required />,
   };
   const [mediaType, setMediaType] = useState(inputs[initialType]);
 
