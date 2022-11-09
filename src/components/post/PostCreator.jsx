@@ -127,7 +127,7 @@ function PostCreator() {
     setTimeout(() => {
       setIsLoading(false);
       navigate(`/r/${selectedSubreddit}/${id}`);
-    }, 2000);
+    }, 1000);
   }
 
   return (
