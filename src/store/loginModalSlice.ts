@@ -4,14 +4,12 @@ export const loginModalSlice = createSlice({
   name: 'loginModalVisible',
   initialState: false,
   reducers: {
-    toggleLogInModal: (state, action) => {
-      return !state
-    }
+    toggleLogInModal: (state) => !state
   },
 });
 
 export const { toggleLogInModal } = loginModalSlice.actions;
 
-export const selectLoginModalVisibility = (state) => state.loginModalVisible;
+export const selectLoginModalVisibility = (state: LoginModalState): boolean => state.loginModalVisible;
 
 export default loginModalSlice.reducer;

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { database } from '../firebase/firebase';
+import { ICommunity, SubredditsState } from '../type';
 
 
 const initialState = {};
@@ -10,13 +11,13 @@ export const subredditsSlice = createSlice({
   reducers: {
     addSubreddit: (state, action) => {
       const updatedSubreedits = action.payload;
-      updatedSubreedits.forEach((subreddit) => state[subreddit.name] = subreddit);
+      updatedSubreedits.forEach((subreddit: ICommunity) => state[subreddit.name] = subreddit);
     },
   },
 });
 
 export const { addSubreddit } = subredditsSlice.actions;
 
-export const selectSubreddits = (state) => state.subreddits;
+export const selectSubreddits = (state: SubredditsState): [] | ICommunity[] => state.subreddits;
 
 export default subredditsSlice.reducer;

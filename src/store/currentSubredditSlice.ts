@@ -1,17 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { CurrentSubredditState, ICommunity } from '../type';
 
 export const currentSubredditSlice = createSlice({
   name: 'currentSubreddit',
   initialState: null,
   reducers: {
-    changeCurrentSubreddit: (state, action) => {
-      return action.payload
-    }
+    changeCurrentSubreddit: (state, action) => action.payload
   },
 });
 
 export const { changeCurrentSubreddit } = currentSubredditSlice.actions;
 
-export const selectCurrentSubreddit = (state) => state.currentSubreddit;
+export const selectCurrentSubreddit = (state: CurrentSubredditState): ICommunity => state.currentSubreddit;
 
 export default currentSubredditSlice.reducer;

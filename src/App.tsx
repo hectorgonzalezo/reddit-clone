@@ -16,33 +16,34 @@ import './styles/modals.scss';
 import { toggleChangeIconModal, selectChangeIconModalVisibility } from './store/changeIconModalSlice';
 import { toggleAddCommunityModal, selectAddCommunityModalVisibility } from './store/addCommunityModalSlice';
 
-function App() {
+function App(): JSX.Element {
   const [signUpVisible, setSignUpVisible] = useState(false);
   const logInVisible = useSelector(selectLoginModalVisibility);
   const changeIconVisible = useSelector(selectChangeIconModalVisibility);
   const addCommunityVisible = useSelector(selectAddCommunityModalVisibility);
   const dispatch = useDispatch();
 
-  function toggleSignUp() {
+  function toggleSignUp(): void {
     setSignUpVisible((prevVisibility) => !prevVisibility);
   }
 
   // If theres a user logged in, add it to redux store
   useEffect(() => {
     setTimeout(() => {
-      if (authorization.isUserSignedIn()) {
+      if (authorization?.isUserSignedIn()) {
         database
           .getUserByEmail(authorization.getUser().email)
           .then((fetchedUser) => {
             dispatch(addUser(fetchedUser));
-          });
+          })
+          .catch((error) => console.log(error))
       }
     }, 500);
   }, []);
 
   // Populate subreddits redux store
   useEffect(() => {
-    async function getNames() {
+    async function getNames(): Promise<void> {
       let data;
       try {
         data = await database.getSubredditsData();

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IUser } from '../type';
 
 const initialState = {};
 
@@ -28,6 +29,6 @@ export const userSlice = createSlice({
 
 export const { addUser, updateIcon, removeUser } = userSlice.actions;
 
-export const selectUser = (state) => state.user;
+export const selectUser = (state: UserState): IUser => state.user;
 
 export default userSlice.reducer;
