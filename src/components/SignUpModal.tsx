@@ -1,18 +1,20 @@
-import React, { useState, useRef } from 'react';
-import Button from './Button';
+import React, { useState, useRef, SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
+import Button from './Button';
 import { addUser } from '../store/userSlice';
-import googleIcon from '../assets/google.png';
 import loadingIcon from '../assets/loading.gif';
-import { func } from 'prop-types';
 import { authorization } from '../firebase/firebase';
 
-function SignUpModal({ closeFunc }) {
-  const formRef = useRef();
-  const userNameRef = useRef();
-  const emailRef = useRef();
-  const password1Ref = useRef();
-  const password2Ref = useRef();
+interface SignUpModalProps {
+  closeFunc: () => void;
+};
+
+function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
+  const formRef = useRef<HTMLFormElement>();
+  const userNameRef = useRef<HTMLInputElement>();
+  const emailRef = useRef<HTMLInputElement>();
+  const password1Ref = useRef<HTMLInputElement>();
+  const password2Ref = useRef<HTMLInputElement>();
   const [disableButton, setDisableButton] = useState(true);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
@@ -20,42 +22,43 @@ function SignUpModal({ closeFunc }) {
 
   // This function gets called on every input value change
   // If the whole form is valid, it activates the continue button
-  function validate(e) {
+  function validate(e: SyntheticEvent): void {
+    const target = e.target as HTMLInputElement;
     // Check input validity
-    const elementValidity = e.target.validity;
-    // Checkt type of validity
+    const elementValidity = target.validity;
+    // Check type of validity
     switch (true) {
       case elementValidity.typeMismatch:
-        e.target.setCustomValidity('Please write a valid email');
-        e.target.parentNode.firstChild.innerText = 'Please write a valid email';
+        target.setCustomValidity('Please write a valid email');
+        target.parentNode.firstChild.innerText = 'Please write a valid email';
         break;
       case elementValidity.patternMismatch:
-        if (e.target === userNameRef.current) {
-          e.target.setCustomValidity('Only letters allowed in username');
-          e.target.parentNode.firstChild.innerText = 'Only letters allowed in username';
+        if (target === userNameRef.current) {
+          target.setCustomValidity('Only letters allowed in username');
+          target.parentNode.firstChild.innerText = 'Only letters allowed in username';
         } else {
-          e.target.setCustomValidity('Please write a valid email');
-          e.target.parentNode.firstChild.innerText = 'Please write a valid email';
+          target.setCustomValidity('Please write a valid email');
+          target.parentNode.firstChild.innerText = 'Please write a valid email';
         }
         break;
       case elementValidity.tooShort:
-        e.target.setCustomValidity('Password must be at least 6 characters long');
-        e.target.parentNode.firstChild.innerText = 'Password must be at least 6 characters long';
+        target.setCustomValidity('Password must be at least 6 characters long');
+        target.parentNode.firstChild.innerText = 'Password must be at least 6 characters long';
         break;
       default:
-        e.target.setCustomValidity('');
-        e.target.parentNode.firstChild.innerText = '';
+        target.setCustomValidity('');
+        target.parentNode.firstChild.innerText = '';
     }
 
 
     // if element is password, check that both passwords equal each other
-    if ((e.target === password2Ref.current || e.target === password1Ref.current)) {
+    if ((target === password2Ref.current || target === password1Ref.current)) {
       if (
         // writing second password and first one is not the same
-        (e.target === password2Ref.current
+        (target === password2Ref.current
         && password2Ref.current.value !== password1Ref.current.value)
         // writing first password and second one is not empty
-        || (e.target === password1Ref.current
+        || (target === password1Ref.current
           && password2Ref.current.value !== ''
           && password2Ref.current.value !== password1Ref.current.value)
       ) {
@@ -198,12 +201,6 @@ function SignUpModal({ closeFunc }) {
   );
 }
 
-SignUpModal.defaultProps = {
-  closeFunc: () => {},
-};
 
-SignUpModal.propTypes = {
-  closeFunc: func,
-};
 
 export default SignUpModal;

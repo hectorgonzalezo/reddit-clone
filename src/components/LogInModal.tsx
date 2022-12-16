@@ -1,24 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../store/userSlice';
 import Button from './Button';
-import googleIcon from '../assets/google.png';
 import loadingIcon from '../assets/loading.gif';
-import { func } from 'prop-types';
 import { database, authorization } from '../firebase/firebase';
 
-function LogInModal({ closeFunc }) {
-  const formRef = useRef();
-  const userNameRef = useRef();
-  const passwordRef = useRef();
+interface LogInModalProps {
+  closeFunc: () => void;
+};
+
+function LogInModal({ closeFunc= () => {} }: LogInModalProps): JSX.Element {
+  const formRef = useRef<HTMLFormElement>();
+  const userNameRef = useRef<HTMLInputElement>();
+  const passwordRef = useRef<HTMLInputElement>();
   const [usernameDoesntExist, setUsernameDoesntExist] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const dispatch = useDispatch();
 
-  async function submitLogIn(e) {
+  async function submitLogIn(e: SyntheticEvent): Promise<void> {
     e.preventDefault();
-    const username = userNameRef.current.value;
-    const password = passwordRef.current.value;
+    if (userNameRef.current !== undefined && passwordRef.current !== undefined){
+      const username = userNameRef.current.value;
+      const password = passwordRef.current.value;
     try {
       // const { icon, votes } = await database.getUser(username);
       const fetchedUser = await database.getUser(username);
@@ -34,9 +37,11 @@ function LogInModal({ closeFunc }) {
       setUsernameDoesntExist(true);
     }
   }
+  }
 
   useEffect(() => {
     // add red outline to input fields if combination is invalid
+    if (userNameRef.current !== undefined && passwordRef.current !== undefined){
     if (usernameDoesntExist) {
       userNameRef.current.classList.add('invalid');
       passwordRef.current.classList.add('invalid');
@@ -44,6 +49,7 @@ function LogInModal({ closeFunc }) {
       userNameRef.current.classList.remove('invalid');
       passwordRef.current.classList.remove('invalid');
     }
+  }
   }, [usernameDoesntExist]);
 
   return (
@@ -66,8 +72,7 @@ function LogInModal({ closeFunc }) {
             .
           </p>
         </div>
-        <div className="division">
-        </div>
+        <div className="division"/>
         <form action="" ref={formRef}>
           <div className="input-wrap">
             <span />
@@ -121,12 +126,6 @@ function LogInModal({ closeFunc }) {
   );
 }
 
-LogInModal.defaultProps = {
-  closeFunc: () => {},
-};
 
-LogInModal.propTypes = {
-  closeFunc: func,
-};
 
 export default LogInModal;

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { SyntheticEvent, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../store/userSlice';
@@ -13,7 +13,7 @@ import linkIcon from '../../assets/link_icon.svg';
 import loadingIcon from '../../assets/loading.gif';
 import '../../styles/postCreatorStyle.scss';
 
-function PostCreator() {
+function PostCreator(): JSX.Element {
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const selectedButton = useRef();
@@ -32,8 +32,8 @@ function PostCreator() {
     textArea: (
       <textarea
         id="text-area"
-        cols="30"
-        rows="10"
+        cols={30}
+        rows={10}
         placeholder="Text (optional)"
         onChange={updateTextContent}
       />
@@ -41,8 +41,8 @@ function PostCreator() {
     urlArea: (
       <textarea
         id="url-area"
-        cols="30"
-        rows="2"
+        cols={30}
+        rows={2}
         placeholder="Url"
         onChange={updateTextContent}
         required
@@ -53,19 +53,21 @@ function PostCreator() {
   const [mediaType, setMediaType] = useState(inputs[initialType]);
 
   // used by both text areas onChange
-  function updateTextContent(e) {
-    const content = e.target.value;
+  function updateTextContent(e: SyntheticEvent): void {
+    const target = e.target as HTMLInputElement;
+    const content = target.value;
     setTextContent(content);
   }
 
   // used by imgArea
-  function updateFileToUpload(e) {
-    const newFile = e.target.files[0];
+  function updateFileToUpload(e: SyntheticEvent): void {
+    const target = e.target as HTMLInputElement;
+    const newFile = target.files[0];
     setFileToUpload(newFile);
   }
 
   // switches between text, images and link inputs
-  function addMediaType() {
+  function addMediaType(): void {
     const type = selectedButton.current.getAttribute('data');
     switch (type) {
       case 'post':

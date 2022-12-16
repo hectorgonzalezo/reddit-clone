@@ -1,16 +1,20 @@
 import React from 'react';
-import {
-  arrayOf,
-  objectOf,
-  oneOfType,
-  string,
-  number,
-  array,
-  func,
-} from 'prop-types';
 import Comment from './Comment';
 
-function CommentsDisplay({ comments, subreddit, postId, reloadPost }) {
+interface CommentsDisplayProps {
+  comments: IComment[];
+  subreddit: string;
+  postId: string;
+  reloadPost: () => void;
+};
+
+
+function CommentsDisplay({
+  comments = [],
+  subreddit,
+  postId,
+  reloadPost,
+}: CommentsDisplayProps): JSX.Element {
   return (
     <div id="comments-display" data-testid="comments-display">
       {comments.map((comment, commentIndex) => (
@@ -28,15 +32,5 @@ function CommentsDisplay({ comments, subreddit, postId, reloadPost }) {
   );
 }
 
-CommentsDisplay.defaultProps = {
-  comments: [],
-};
-
-CommentsDisplay.propTypes = {
-  comments: arrayOf(objectOf(oneOfType([string, number, array]))),
-  subreddit: string.isRequired,
-  postId: string.isRequired,
-  reloadPost: func.isRequired,
-};
 
 export default CommentsDisplay;

@@ -47,7 +47,7 @@ const AllCommunities = styled.div`
   }
 `;
 
-function AllSubreddits() {
+function AllSubreddits(): JSX.Element {
   const subredditsData = useSelector(selectSubreddits);
   const navigate = useNavigate();
 

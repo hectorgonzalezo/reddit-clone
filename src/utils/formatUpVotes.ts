@@ -1,4 +1,4 @@
-function formatUpVotes(num) {
+function formatUpVotes(num: number): string {
   let result = num.toString();
   if (num > 999 && num < 999999) {
     // handle thousands

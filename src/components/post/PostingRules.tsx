@@ -27,7 +27,7 @@ const Container = styled.div`
   } 
 `;
 
-function PostingRules() {
+function PostingRules(): JSX.Element {
   return (
     <>
       <Container className="main-child">
@@ -48,7 +48,7 @@ function PostingRules() {
       </Container>
       <div id="agreements">
         <p>
-          Please be mindfull of reddit's{" "}
+          Please be mindfull of reddit`&apos;`s{" "}
           <a href="https://www.redditinc.com/policies/content-policy">
             content policy
           </a>{" "}

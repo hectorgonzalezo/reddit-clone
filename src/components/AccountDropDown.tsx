@@ -1,26 +1,34 @@
-import React, { useState } from 'react';
-import { bool, func, string } from 'prop-types';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../store/userSlice';
 import { authorization } from '../firebase/firebase';
 import logoutIcon from '../assets/logout_icon.png';
-import UploadIconModal from './UploadIconModal';
 import { toggleChangeIconModal } from '../store/changeIconModalSlice';
 import { toggleAddCommunityModal } from '../store/addCommunityModalSlice';
 import DropDown from './DropDown';
 
-function AccountDropDown({ visible, closeFunc, userIcon }) {
+interface AccountDropDownProps {
+  visible: boolean,
+  closeFunc: () => void,
+  userIcon: string,
+};
+
+function AccountDropDown({ visible, closeFunc, userIcon }: AccountDropDownProps): JSX.Element {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Log out current user
-  function logOut() {
+  function logOut(): void {
     dispatch(removeUser());
     closeFunc();
-    authorization.logOut();
-    // On log out, go to homepage
-    navigate('/');
+    authorization
+      .logOut()
+      .then(() => {
+        // On log out, go to homepage
+        navigate("/");
+      })
+      .catch((error) => console.log(error));
   }
 
   return (
@@ -47,10 +55,5 @@ function AccountDropDown({ visible, closeFunc, userIcon }) {
   );
 }
 
-AccountDropDown.propTypes = {
-  visible: bool.isRequired,
-  closeFunc: func.isRequired,
-  userIcon: string.isRequired,
-};
 
 export default AccountDropDown;

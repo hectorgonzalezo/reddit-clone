@@ -8,18 +8,16 @@ import TopCommunitiesBar from './TopCommunitiesBar';
 import Button from './Button';
 import PostsArea from './post/PostsArea';
 import Agreements from './Agreements';
-import uniqid from 'uniqid';
-import { authorization } from '../firebase/firebase';
 import { changeCurrentSubreddit } from '../store/currentSubredditSlice';
 
-function HomePage() {
+function HomePage(): JSX.Element {
   const subredditsData = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
   const [chosenSubreddits, setChosenSubreddits] = useState({});
   const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
 
-  function changeOrder(newOrder) {
+  function changeOrder(newOrder: PostOrder): void{
     setPostsOrder(newOrder);
   }
 
@@ -32,7 +30,7 @@ function HomePage() {
   return (
     <>
       <div id="left-side">
-        {user.subreddits !== undefined ? <CreatePostPreview /> : null}
+        {user.communities !== undefined ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder} />
         <PostsArea subreddits={chosenSubreddits} order={postsOrder}/>
       </div>

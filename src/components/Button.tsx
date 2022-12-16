@@ -1,8 +1,20 @@
 import React from 'react';
-import { string, bool, func, arrayOf, oneOfType, element} from 'prop-types';
+import {} from 'styled-components/cssprop';
 import styled from 'styled-components';
 
-const StyledButton = styled.button`
+interface ButtonProps {
+  text?: string;
+  data?: string | null;
+  light?: boolean;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  children?: React.ReactNode;
+  onClick: (e: MouseEvent) => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+};
+
+const StyledButton = styled.button<ButtonProps>`
   border: none;
   background-color: ${(props) => props.light ? 'white' : 'var(--reddit-blue)'};
   outline: ${(props) => props.light ? '0.1rem solid var(--reddit-blue)' : ''};
@@ -21,43 +33,34 @@ const StyledButton = styled.button`
   }
 `;
 
-function Button({ text, light, type, disabled, children, onClick, onMouseEnter, onMouseLeave }) {
+function Button({
+  text = '',
+  data = '',
+  light= false,
+  type= "button",
+  disabled= false,
+  children= [],
+  onClick= (e: MouseEvent) => {},
+  onMouseEnter= () => {},
+  onMouseLeave= () => {},
+}: ButtonProps): JSX.Element {
   return (
     <StyledButton
       type={type}
       light={light}
       className="default-button"
       disabled={disabled}
+      data={data}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      value={text}
     >
       {text}
       {children}
     </StyledButton>
   );
-}
+  };
 
-Button.defaultProps = {
-  text: '',
-  light: false,
-  onClick: () => {},
-  type: 'button',
-  disabled: false,
-  children: [],
-  onMouseEnter: () => {},
-  onMouseLeave: () => {},
-};
-
-Button.propTypes = {
-  text: string,
-  light: bool,
-  type: string,
-  disabled: bool,
-  children: oneOfType([arrayOf(string), string, element]),
-  onClick: func,
-  onMouseEnter: func,
-  onMouseLeave: func,
-};
 
 export default Button;

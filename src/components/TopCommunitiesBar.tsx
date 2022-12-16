@@ -8,15 +8,15 @@ import JoinButton from './subreddit/Joinbutton';
 import carretUpIcon from '../assets/carret_up_icon.svg';
 import '../styles/topCommunitiesBarStyle.scss';
 
-function TopCommunitiesBar() {
+function TopCommunitiesBar(): JSX.Element {
   const subreddits = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
   const navigate = useNavigate();
 
   // sorts subreddits by number of posts
-  function getTopSubreddits(number = 5) {
+  function getTopSubreddits(number = 5): ICommunity[] {
     const sortedSubreddits = Object.values(subreddits).sort(
-      (a, b) => a.postQuantity + b.postQuantity
+      (a, b) => a.postsQuantity + b.postsQuantity
     );
     const firstNumSubreddits = sortedSubreddits.slice(0, number);
     return firstNumSubreddits;

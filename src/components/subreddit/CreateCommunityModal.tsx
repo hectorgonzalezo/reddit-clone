@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { func } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addSubreddit } from '../../store/subredditsSlice';
@@ -9,11 +8,18 @@ import defaultIcon from '../../assets/default_subreddit_icon.svg';
 import loadingIcon from '../../assets/loading.gif';
 import { database } from '../../firebase/firebase';
 
-function CreateCommunityModal({ closeFunc }) {
-  const formRef = useRef();
-  const subNameRef = useRef();
-  const subSubtitleRef = useRef();
-  const subDescriptionRef = useRef();
+
+interface CreateCommunityModalProps {
+  closeFunc: (arg0: MouseEvent) => void;
+};
+
+function CreateCommunityModal({
+  closeFunc = (e) => {},
+}: CreateCommunityModalProps): JSX.Element {
+  const formRef = useRef<HTMLFormElement>();
+  const subNameRef = useRef<HTMLInputElement>();
+  const subSubtitleRef = useRef<HTMLInputElement>();
+  const subDescriptionRef = useRef<HTMLInputElement>();
   const [nameRemainingLetters, setNameRemainingLetters] = useState(21);
   const [communityIcon, setCommunityIcon] = useState(defaultIcon);
   const [communityIconFile, setCommunityIconFile] = useState();
@@ -22,13 +28,19 @@ function CreateCommunityModal({ closeFunc }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  function addIcon(e) {
-    const file = e.target.files[0];
+  function addIcon(e: MouseEvent): void {
+    const target = e.target as HTMLInputElement;
+    const files = target.files as FileList;
+    const file = files[0];
     const reader = new FileReader();
     // show icon preview
-    reader.addEventListener('load', () => {
-      setCommunityIcon(reader.result)
-    }, false);
+    reader.addEventListener(
+      "load",
+      () => {
+        setCommunityIcon(reader.result);
+      },
+      false
+    );
 
     setCommunityIconFile(file);
     reader.readAsDataURL(file);
@@ -36,53 +48,64 @@ function CreateCommunityModal({ closeFunc }) {
 
   // This function gets called on every input value change
   // If the whole form is valid, it activates the continue button
-  function validate(e) {
+  function validate(e: MouseEvent): void {
+    const target = e.target as HTMLInputElement;
     setNameRemainingLetters(21 - subNameRef.current.value.length);
     // Check input validity
-    const elementValidity = e.target.validity;
+    const elementValidity = target.validity;
     // Checkt type of validity
     switch (true) {
       case elementValidity.patternMismatch:
-        e.target.setCustomValidity('Only letters allowed in community name');
-        e.target.parentNode.firstChild.innerText = 'Only letters allowed in username';
+        target.setCustomValidity("Only letters allowed in community name");
+        target.parentNode.firstChild.innerText =
+          "Only letters allowed in username";
         break;
       case elementValidity.tooShort:
-        e.target.setCustomValidity('community name must be at least 3 characters long');
-        e.target.parentNode.firstChild.innerText = 'Community name must be at least 3 characters long';
+        target.setCustomValidity(
+          "community name must be at least 3 characters long"
+        );
+        target.parentNode.firstChild.innerText =
+          "Community name must be at least 3 characters long";
         break;
       default:
-        e.target.setCustomValidity('');
-        e.target.parentNode.firstChild.innerText = '';
+        target.setCustomValidity("");
+        target.parentNode.firstChild.innerText = "";
     }
 
     // if form is valid, activate submit button
     setDisableButton(!formRef.current.checkValidity());
   }
 
-  async function submitCreateCommunity(e) {
+  async function submitCreateCommunity(e: MouseEvent): Promise<void> {
     e.preventDefault();
-    const subredditName = subNameRef.current.value;
-    const subtitles = subSubtitleRef.current.value;
-    const description = subDescriptionRef.current.value;
-    const icon = communityIconFile;
-    try {
-      // add loading animation
-      setLoadingData(true);
-      const newSubreddit = await database.createSubreddit(
-        subredditName,
-        subtitles,
-        description,
-        icon
-      );
-      // get subreddit data from database and update redux store
-      const fetchedSubreddit = await database.getSubredditData(subredditName);
-      dispatch(addSubreddit([fetchedSubreddit]));
-      closeFunc();
-      // go to subreddit display
-      navigate(`/r/${subredditName}`);
-    } catch (error) {
-      // If email already exists
-      setLoadingData(false);
+    if (
+      subNameRef.current !== undefined &&
+      subSubtitleRef.current !== undefined &&
+      subDescriptionRef.current !== undefined
+    ) {
+      const subredditName = subNameRef.current.value;
+      const subtitles = subSubtitleRef.current.value;
+      const description = subDescriptionRef.current.value;
+      const icon = communityIconFile;
+      try {
+        // add loading animation
+        setLoadingData(true);
+        const newSubreddit = await database.createSubreddit(
+          subredditName,
+          subtitles,
+          description,
+          icon
+        );
+        // get subreddit data from database and update redux store
+        const fetchedSubreddit = await database.getSubredditData(subredditName);
+        dispatch(addSubreddit([fetchedSubreddit]));
+        closeFunc(e);
+        // go to subreddit display
+        navigate(`/r/${subredditName}`);
+      } catch (error) {
+        // If email already exists
+        setLoadingData(false);
+      }
     }
   }
 
@@ -90,7 +113,12 @@ function CreateCommunityModal({ closeFunc }) {
     <div id="create-community-outer" className="modal-outer">
       <div id="create-community-inner" className="modal-inner">
         <div>
-          <button type="button" className="close-button" onClick={closeFunc} aria-label="close menu">
+          <button
+            type="button"
+            className="close-button"
+            onClick={closeFunc}
+            aria-label="close menu"
+          >
             x
           </button>
           <h1>Create a Comunity</h1>
@@ -139,8 +167,8 @@ function CreateCommunityModal({ closeFunc }) {
             </div>
             <h2>Community Icon</h2>
             <div>
-              <img src={communityIcon} alt="" className='user-icon'/>
-              <ImageUpload onChange={addIcon} required={false}/>
+              <img src={communityIcon} alt="" className="user-icon" />
+              <ImageUpload onChange={addIcon} required={false} />
             </div>
             <div id="button-area-community">
               <Button text="cancel" light onClick={closeFunc} />
@@ -169,12 +197,5 @@ function CreateCommunityModal({ closeFunc }) {
   );
 }
 
-CreateCommunityModal.defaultProps = {
-  closeFunc: () => {},
-};
-
-CreateCommunityModal.propTypes = {
-  closeFunc: func,
-};
 
 export default CreateCommunityModal;

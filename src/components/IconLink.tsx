@@ -1,8 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { arrayOf, element, bool, string, oneOfType, func } from 'prop-types';
 
-const Button = styled.button`
+
+
+interface IconLinkProps  {
+  children: React.ReactNode;
+  onClick: (e: MouseEvent) => void;
+  data: string;
+  round: boolean;
+  fill: string;
+  colored: boolean;
+  className: string;
+  ariaLabel: string;
+};
+
+const Button = styled.button<IconLinkProps>`
 border: none;
 display: flex;
 align-items: center;
@@ -45,6 +57,7 @@ ${'' /* change svg color when hovering over area */}
           return '';
       }
     }
+    return '';
   }}
   }
 }
@@ -66,19 +79,30 @@ img {
           return '';
       }
     }
+    return '';
   }
 }
 }
 `;
 
-function IconLink({ children, round, fill, onClick, data, colored, className, ariaLabel }) {
+
+function IconLink({
+  children,
+  round= false,
+  fill= '',
+  onClick= (e: MouseEvent) => {},
+  data= '',
+  colored= false,
+  className= "",
+  ariaLabel= '',
+}: IconLinkProps): JSX.Element {
   return (
     <Button
       round={round}
       fill={fill}
       onClick={onClick}
       colored={colored}
-      data={data !== '' ? data : null}
+      data={data}
       className={className}
       data-testid="icon-link"
       aria-label={ariaLabel}
@@ -88,25 +112,6 @@ function IconLink({ children, round, fill, onClick, data, colored, className, ar
   );
 }
 
-IconLink.defaultProps = {
-  round: false,
-  onClick: () => {},
-  data: '',
-  fill: '',
-  colored: false,
-  className: '',
-  ariaLabel: '',
-};
 
-IconLink.propTypes = {
-  children: oneOfType([element, arrayOf(oneOfType([element, string]))]).isRequired,
-  onClick: func,
-  data: string,
-  round: bool,
-  fill: string,
-  colored: bool,
-  className: string,
-  ariaLabel: string,
-};
 
 export default IconLink;

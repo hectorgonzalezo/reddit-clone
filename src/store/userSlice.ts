@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IUser } from '../type';
 
 const initialState = {};
 
@@ -17,7 +16,7 @@ export const userSlice = createSlice({
     updateIcon: (state, action) => {
       state.icon = action.payload;
     },
-    removeUser: (state, action) => {
+    removeUser: (state) => {
       state.username = undefined;
       state.email = undefined;
       state.icon = undefined;

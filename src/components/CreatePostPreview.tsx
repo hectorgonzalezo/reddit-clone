@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom';
 import linkIcon from '../assets/link_icon.svg';
 import imageIcon from '../assets/image_icon.svg';
 import { selectUser } from '../store/userSlice';
-import { authorization } from '../firebase/firebase';
 
-function CreatePostPreview() {
+function CreatePostPreview(): JSX.Element {
   const user = useSelector(selectUser);
-  console.log(user)
 
   return (
     <div id="post-preview" className="main-child">

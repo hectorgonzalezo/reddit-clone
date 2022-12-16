@@ -1,8 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import { bool, func, string } from 'prop-types';
 
-const UploadArea = styled.div`
+
+
+interface ImageUploadProps {
+  onChange: () => void;
+  id: string;
+  required: boolean;
+};
+
+const UploadArea = styled.div<ImageUploadProps>`
   & > .inputfile {
     width: 0.1px;
     height: 0.1px;
@@ -29,7 +36,11 @@ const UploadArea = styled.div`
   }
 `;
 
-function ImageUpload({ onChange, id, required }) {
+function ImageUpload({
+  onChange,
+  id = "file",
+  required = true,
+}: ImageUploadProps): JSX.Element {
   return (
     <UploadArea>
       <input
@@ -41,20 +52,13 @@ function ImageUpload({ onChange, id, required }) {
         accept="image/png, image/jpeg image/gif"
         required={required}
       />
-      <label htmlFor={id} className='image-input' >Choose a file</label>
+      <label htmlFor={id} className="image-input">
+        Choose a file
+      </label>
     </UploadArea>
   );
 }
 
-ImageUpload.defaultProps = {
-  id: 'file',
-  required: true,
-};
 
-ImageUpload.propTypes = {
-  onChange: func.isRequired,
-  id: string,
-  required: bool,
-};
 
 export default ImageUpload;

@@ -10,7 +10,11 @@ import UserDisplay from './UserDisplay';
 
 import '../styles/mainStyle.scss';
 
-function MainContainer({ opaque }) {
+interface MainContainerProps {
+  opaque: boolean;
+};
+
+function MainContainer({ opaque= false }: MainContainerProps): JSX.Element {
   const homepage = <HomePage />;
 
   return (
@@ -33,12 +37,6 @@ function MainContainer({ opaque }) {
   );
 }
 
-MainContainer.defaultProps = {
-  opaque: false,
-};
 
-MainContainer.propTypes = {
-  opaque: bool,
-};
 
 export default MainContainer;

@@ -32,7 +32,7 @@ function App(): JSX.Element {
     setTimeout(() => {
       if (authorization?.isUserSignedIn()) {
         database
-          .getUserByEmail(authorization.getUser().email)
+          .getUserByEmail(authorization.getUser()?.email)
           .then((fetchedUser) => {
             dispatch(addUser(fetchedUser));
           })
@@ -53,7 +53,7 @@ function App(): JSX.Element {
       }
       dispatch(addSubreddit(data));
     }
-    getNames();
+    getNames().catch((error) => console.log(error));
   }, []);
 
   return (

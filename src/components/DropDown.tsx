@@ -2,7 +2,14 @@ import React from 'react';
 import { bool, func, string, arrayOf, element, oneOfType } from 'prop-types';
 import styled from 'styled-components';
 
-const Aside = styled.aside`
+interface DropDownProps {
+  visible: boolean;
+  closeFunc?: () => void;
+  testid?: string,
+  children: React.ReactNode;
+};
+
+const Aside = styled.aside<DropDownProps>`
   position: absolute;
   top: 45px;
   right: 5px;
@@ -39,7 +46,12 @@ const Aside = styled.aside`
     }
   }
 `;
-function DropDown({ visible, closeFunc, testid, children }) {
+function DropDown({
+  visible,
+  closeFunc,
+  testid = "",
+  children,
+}: DropDownProps): JSX.Element {
   return (
     <Aside
       className="main-child drop-down"
@@ -52,15 +64,5 @@ function DropDown({ visible, closeFunc, testid, children }) {
   );
 }
 
-DropDown.defaultProps = {
-  testid: '',
-};
-
-DropDown.propTypes = {
-  visible: bool.isRequired,
-  closeFunc: func.isRequired,
-  testid: string,
-  children: arrayOf(oneOfType([element, arrayOf(element)])).isRequired,
-};
 
 export default DropDown;

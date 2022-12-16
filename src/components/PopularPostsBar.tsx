@@ -1,18 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import hotIcon from '../assets/hot_icon.svg';
 import newIcon from '../assets/new_icon.svg';
 import topIcon from '../assets/top_icon.svg';
 import IconLink from './IconLink';
-import { func } from 'prop-types';
 
-function PopularPostsBar({ changeOrder }) {
+interface PopularPostsBarProps {
+  changeOrder: (arg0: PostOrder) => void;
+};
+
+function PopularPostsBar({ changeOrder }: PopularPostsBarProps): JSX.Element {
   // a mode is one of the choices in bar: Hot, New, Top, etc.
   const [mode, setMode] = useState('hot');
 
-  function changeMode(e) {
-    const newMode = e.target.getAttribute('data');
+  function changeMode(e: SyntheticEvent): void {
+    const target = e.target as HTMLAnchorElement;
+    const newMode = target.getAttribute('data') as PostOrder;
     setMode(newMode);
-    changeOrder(newMode)
+    changeOrder(newMode);
   }
 
   return (
@@ -51,8 +55,6 @@ function PopularPostsBar({ changeOrder }) {
   );
 }
 
-PopularPostsBar.propTypes = {
-  changeOrder: func.isRequired,
-};
+
 
 export default PopularPostsBar;

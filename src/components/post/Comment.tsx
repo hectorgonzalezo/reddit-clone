@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  number,
-  objectOf,
-  oneOfType,
-  string,
-  array,
-  arrayOf,
-  func,
-} from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
 import { selectUser } from '../../store/userSlice';
 import CommentCreator from './CommentCreator';
@@ -16,15 +7,24 @@ import commentIcon from '../../assets/comments_icon.svg';
 import { database } from '../../firebase/firebase';
 import defaultUserIcon from '../../assets/user_icon.svg';
 
+interface CommentProps {
+  commentsList: IComment[];
+  commentIndex: number[];
+  comment: IComment;
+  subreddit: string;
+  postId: string;
+  reloadPost: () => void;
+};
+
 
 function Comment({
   comment,
-  commentsList,
-  commentIndex,
+  commentsList = [],
+  commentIndex = [0],
   subreddit,
   postId,
   reloadPost,
-}) {
+}: CommentProps): JSX.Element {
   const user = useSelector(selectUser);
   const [userIcon, setUserIcon] = useState(defaultUserIcon);
   const [visibleCreator, setVisibleCreator] = useState(false);
@@ -35,12 +35,13 @@ function Comment({
   // get user icon from database
   useEffect(() => {
     database.getUser(comment.user).then((fetchedUser) => {
-    // if theres an icon, add it to state
-      if (fetchedUser !== undefined && fetchedUser.icon !== undefined) {
+      // if theres an icon, add it to state
+      if (fetchedUser?.icon !== undefined) {
         // console.log()
         setUserIcon(fetchedUser.icon);
       }
-    });
+    })
+    .catch((error) => console.log(error));
   }, []);
 
   return (
@@ -51,14 +52,14 @@ function Comment({
           <a href="">{comment.user}</a>
           <p>
             &nbsp;•&nbsp;
-            {formatDistanceToNow(new Date(comment.timePosted))}
+            {formatDistanceToNow(new Date(comment.createdAt))}
             &nbsp;ago
           </p>
         </div>
         {visibleEditor ? (
           <CommentCreator
             commentsList={commentsList}
-            value={comment.content}
+            value={comment.text}
             index={commentIndex}
             subreddit={subreddit}
             postId={postId}
@@ -66,7 +67,7 @@ function Comment({
             edit
           />
         ) : (
-          <p>{comment.content}</p>
+          <p>{comment.text}</p>
         )}
         <div>
           <button
@@ -115,18 +116,6 @@ function Comment({
   );
 }
 
-Comment.defaultProps = {
-  commentsList: [],
-  commentIndex: [0],
-};
 
-Comment.propTypes = {
-  commentsList: arrayOf(objectOf(oneOfType([string, number, array]))),
-  commentIndex: arrayOf(number),
-  comment: objectOf(oneOfType([string, number, array])).isRequired,
-  subreddit: string.isRequired,
-  postId: string.isRequired,
-  reloadPost: func.isRequired,
-};
 
 export default Comment;

@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { database } from '../firebase/firebase';
-import { ICommunity, SubredditsState } from '../type';
 
 
 const initialState = {};
@@ -18,6 +16,6 @@ export const subredditsSlice = createSlice({
 
 export const { addSubreddit } = subredditsSlice.actions;
 
-export const selectSubreddits = (state: SubredditsState): [] | ICommunity[] => state.subreddits;
+export const selectSubreddits = (state: SubredditsState): SubredditsObject => state.subreddits;
 
 export default subredditsSlice.reducer;

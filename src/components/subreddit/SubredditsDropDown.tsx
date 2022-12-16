@@ -5,7 +5,7 @@ import { selectSubreddits } from '../../store/subredditsSlice';
 import { selectUser } from '../../store/userSlice';
 import DropDown from '../DropDown';
 
-function SubredditsDropDown({ dropdownVisible, toggleDropdown, chooseFromDropdown, header, search, filterBy }) {
+function SubredditsDropDown({ dropdownVisible, toggleDropdown, chooseFromDropdown, header, search, filterBy }): JSX.Element {
   const subreddits = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
   const [chosenSubreeddits, setChosenSubreddits] = useState(Object.values(subreddits));

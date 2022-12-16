@@ -1,24 +1,34 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { bool, func } from 'prop-types';
 import { selectSubreddits } from '../store/subredditsSlice';
-import { selectUser } from '../store/userSlice';
 import arrowDownIcon from '../assets/arrow_down_icon.svg';
 import SubredditsDropDown from './subreddit/SubredditsDropDown';
 
-function CommunityChooser({ onChoosing, header }) {
+
+interface CommunityChooserProps {
+  onChoosing: (arg0: string) => void;
+  header: boolean;
+};
+
+function CommunityChooser({
+  onChoosing,
+  header= false,
+}: CommunityChooserProps): JSX.Element {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const subreddits = useSelector(selectSubreddits);
 
-  const [chosenSubreddit, setChosenSubreddit] = useState(null);
+  const [chosenSubreddit, setChosenSubreddit] = useState<string | null>(null);
 
-  function toggleDropdown() {
+  function toggleDropdown(): void {
     setDropdownVisible((prev) => !prev);
   }
 
   // chooses subreddit from dropdown
-  function chooseFromDropdown(e) {
-    const subredditName = e.target.getAttribute('data');
+  function chooseFromDropdown(e: SyntheticEvent): void {
+
+    const target = e.target as HTMLAnchorElement;
+
+    const subredditName = target.getAttribute("data") as string;
     setChosenSubreddit(subredditName);
     onChoosing(subredditName);
   }
@@ -32,7 +42,7 @@ function CommunityChooser({ onChoosing, header }) {
       >
         <img
           src={
-            chosenSubreddit !== null ? subreddits[chosenSubreddit].icon : null
+            chosenSubreddit !== null ? subreddits[chosenSubreddit].icon : ''
           }
           alt=""
           className="user-icon"
@@ -44,18 +54,14 @@ function CommunityChooser({ onChoosing, header }) {
         </h1>
         <img src={arrowDownIcon} alt="" className="icon" />
       </button>
-      <SubredditsDropDown dropdownVisible={dropdownVisible} toggleDropdown={toggleDropdown} chooseFromDropdown={chooseFromDropdown} />
+      <SubredditsDropDown
+        dropdownVisible={dropdownVisible}
+        toggleDropdown={toggleDropdown}
+        chooseFromDropdown={chooseFromDropdown}
+      />
     </div>
   );
 }
 
-CommunityChooser.defaultProps = {
-  header: false,
-}
-
-CommunityChooser.propTypes = {
-  onChoosing: func.isRequired,
-  header: bool,
-};
 
 export default CommunityChooser;

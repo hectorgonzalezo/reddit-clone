@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Agreements() {
+function Agreements(): JSX.Element {
   return (
     <aside id="agreements" aria-label="agreements">
       <div>

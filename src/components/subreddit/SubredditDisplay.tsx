@@ -10,19 +10,20 @@ import Button from '../Button';
 import SubredditAbout from './SubredditAbout';
 import Agreements from '../Agreements';
 import CreatePostPreview from '../CreatePostPreview';
-import { authorization } from '../../firebase/firebase';
 import { changeCurrentSubreddit } from '../../store/currentSubredditSlice';
 import '../../styles/subredditStyle.scss';
 
-function SubredditDisplay() {
+function SubredditDisplay(): JSX.Element {
   const subredditsData = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
-  const { name } = useParams();
-  const [chosenSubreddit, setChosenSubreddit] = useState();
+  const params = useParams();
+  const name = params.name as string;
+  
+  const [chosenSubreddit, setChosenSubreddit] = useState<ICommunity>();
   const [postsOrder, setPostsOrder] = useState('hot');
   const dispatch = useDispatch();
 
-  function changeOrder(newOrder) {
+  function changeOrder(newOrder: PostOrder): void {
     setPostsOrder(newOrder);
   }
 
@@ -36,7 +37,7 @@ function SubredditDisplay() {
     <>
       {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
       <div id="left-side">
-        {user.subreddits !== undefined && user.subreddits.includes(name) ? <CreatePostPreview /> : null}
+        {user.subreddits?.includes(name) ? <CreatePostPreview /> : null}
         <PopularPostsBar changeOrder={changeOrder}/>
         {chosenSubreddit !== undefined ? <PostsArea subreddits={{[chosenSubreddit.name] : chosenSubreddit}} order={postsOrder} /> : null}
       </div>

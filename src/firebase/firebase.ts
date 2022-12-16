@@ -67,7 +67,7 @@ const database = (() => {
     return names;
   }
 
-  async function getSubredditData(subredditName) {
+  async function getSubredditData(subredditName): Promise<ICommunity> {
     const userDoc = await getDoc(doc(db, 'subreddits', subredditName));
     return userDoc.data();
   }

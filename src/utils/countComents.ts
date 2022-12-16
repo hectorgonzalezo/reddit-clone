@@ -1,5 +1,5 @@
 // used to display the actual number of comments
-function countComments(comm) {
+function countComments(comm: IComment[]): number {
   if (comm !== undefined && comm.length >= 1) {
     let levelQuantity = comm.length;
     // recursively count comments

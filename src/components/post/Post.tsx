@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
-import { string, number, arrayOf, objectOf, array, bool, func, oneOfType } from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { database } from '../../firebase/firebase';
 import upIcon from '../../assets/upvote_icon.svg';
 import downIcon from '../../assets/downvote_icon.svg';
 import commentsIcon from '../../assets/comments_icon.svg';
-import shareIcon from '../../assets/share_icon.svg';
-import saveIcon from '../../assets/save_icon.svg';
-import hideIcon from '../../assets/hide_icon.svg';
+import defaultCommunityIcon from '../../defaultCommunityIcon';
 import IconLink from '../IconLink';
 import SubredditIcon from '../SubredditIcon';
 import formatUpVotes from '../../utils/formatUpVotes';
@@ -21,7 +18,31 @@ import { toggleLogInModal } from '../../store/loginModalSlice';
 import countComments from '../../utils/countComents';
 import '../../styles/postStyle.scss';
 
-const PostContainer = styled.article`
+
+interface PostProps {
+  preview?: boolean;
+  onClick?: (arg0: MouseEvent) => void;
+  subredditName: string;
+  subredditIcon?: string;
+  postId: string;
+  voteType?: Vote;
+  poster: string;
+  title: string;
+  text?: string;
+  url?: string;
+  upVotes: number;
+  timePosted: string;
+  comments?: IComment[];
+  img?: string;
+  reloadPost?: () => void;
+};
+
+interface PostContainerProps {
+  voteType: Vote;
+  preview: boolean;
+}
+
+const PostContainer = styled.article<PostContainerProps>`
   .vote-area-post {
     p {
       color: ${(props) => {
@@ -63,22 +84,22 @@ const PostContainer = styled.article`
 `;
 
 function Post({
-  preview,
-  onClick,
+  preview = false,
+  onClick = (e: MouseEvent) => {},
   subredditName,
-  subredditIcon,
+  subredditIcon = defaultCommunityIcon,
   postId,
-  voteType,
+  voteType = '',
   poster,
   title,
-  text,
-  url,
+  text = '',
+  url = '',
   upVotes,
   timePosted,
-  comments,
-  img,
-  reloadPost,
-}) {
+  comments = [],
+  img = '',
+  reloadPost = () => {},
+}: PostProps): JSX.Element {
   const [previousVote, setPreviousVote] = useState(voteType);
   const [votes, setVotes] = useState(upVotes);
   const user = useSelector(selectUser);
@@ -86,20 +107,24 @@ function Post({
   const navigate = useNavigate();
 
   // updates number of upvotes in post
-  function updateVotes(e) {
+  function updateVotes(e: MouseEvent): void {
+    const target = e.target as HTMLAnchorElement;
     e.stopPropagation();
     // Only allow vote if user is authorized
     if (user.username !== undefined) {
       // if(authorization.user)
       // can be 'upVote' or 'downVote'
-      const newVoteType = e.target.getAttribute('data');
+      const newVoteType = target.getAttribute('data-vote');
       switch (true) {
         // previously clicked vote => new vote
         // upVote => upVote
         case newVoteType === 'upVote' && previousVote === 'upVote':
           setPreviousVote('');
           setVotes((prevVotes) => prevVotes - 1);
-          database.updateVotes(user.username, subredditName, postId, -1, '');
+          database
+            .updateVotes(user.username, subredditName, postId, -1, "")
+            .then((result) => {})
+            .catch((error) => console.log(error));
           break;
         // none => upVote
         case newVoteType === 'upVote' && previousVote === '':
@@ -111,49 +136,44 @@ function Post({
             postId,
             1,
             newVoteType
-          );
+          ).then((result) => {})
+          .catch((error) => console.log(error));
           break;
         // downVote => downVote
         case newVoteType === 'downVote' && previousVote === 'downVote':
           setPreviousVote('');
           setVotes((prevVotes) => prevVotes + 1);
-          database.updateVotes(user.username, subredditName, postId, 1, '');
+          database
+            .updateVotes(user.username, subredditName, postId, 1, "")
+            .then((result) => {})
+            .catch((error) => console.log(error));
           break;
         // none => downVote
         case newVoteType === 'downVote' && previousVote === '':
           setPreviousVote('downVote');
           setVotes((prevVotes) => prevVotes - 1);
-          database.updateVotes(
-            user.username,
-            subredditName,
-            postId,
-            -1,
-            newVoteType
-          );
+          database
+            .updateVotes(user.username, subredditName, postId, -1, newVoteType)
+            .then((result) => {})
+            .catch((error) => console.log(error));
           break;
         // downvote => upvote
         case newVoteType === 'downVote' && previousVote === 'upVote':
           setPreviousVote('downVote');
           setVotes((prevVotes) => prevVotes - 2);
-          database.updateVotes(
-            user.username,
-            subredditName,
-            postId,
-            -2,
-            newVoteType
-          );
+          database
+            .updateVotes(user.username, subredditName, postId, -2, newVoteType)
+            .then((result) => {})
+            .catch((error) => console.log(error));
           break;
         // upvote => downvote
         case newVoteType === 'upVote' && previousVote === 'downVote':
           setPreviousVote('upVote');
           setVotes((prevVotes) => prevVotes + 2);
-          database.updateVotes(
-            user.username,
-            subredditName,
-            postId,
-            2,
-            newVoteType
-          );
+          database
+            .updateVotes(user.username, subredditName, postId, 2, newVoteType)
+            .then((result) => {})
+            .catch((error) => console.log(error));
           break;
         default:
           break;
@@ -164,7 +184,7 @@ function Post({
     }
   }
 
-  function goToPostComment(e) {
+  function goToPostComment(e: SyntheticEvent): void {
     e.stopPropagation();
     navigate(`/r/${subredditName}/${postId}#create-post-area`)
   }
@@ -182,24 +202,24 @@ function Post({
         <IconLink
           fill="orange"
           onClick={updateVotes}
-          data="upVote"
+          data-vote="upVote"
           colored={previousVote === "upVote"}
           ariaLabel="up vote"
         >
-          <img src={upIcon} alt="" data="upVote" data-testid="up-vote-img" />
+          <img src={upIcon} alt="" data-vote="upVote" data-testid="up-vote-img" />
         </IconLink>
         <p data-testid="votes-display">{formatUpVotes(votes)}</p>
         <IconLink
           fill="blue"
           onClick={updateVotes}
-          data="downVote"
+          data-vote="downVote"
           colored={previousVote === "downVote"}
           ariaLabel="down vote"
         >
           <img
             src={downIcon}
             alt=""
-            data="downVote"
+            data-vote="downVote"
             data-testid="down-vote-img"
           />
         </IconLink>
@@ -224,7 +244,7 @@ function Post({
         {url !== "" ? <a href={url}>{url}</a> : null}
         {/* display image if any is provided */}
         {img !== "" ? (
-          <img src={img} alt="Content image" data-testid="image-content" />
+          <img src={img} alt="Content" data-testid="image-content" />
         ) : null}
         {/* display text if any is provided */}
         {text !== "" ? <p className="post-text">{text}</p> : null}
@@ -258,34 +278,5 @@ function Post({
   );
 }
 
-Post.defaultProps = {
-  preview: false,
-  onClick: () => {},
-  subredditIcon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=b65c667b-5299-404a-b8d9-5d94c580936d',
-  text: '',
-  voteType: '',
-  url: '',
-  comments: [],
-  img: '',
-  reloadPost: () => {},
-};
-
-Post.propTypes = {
-  preview: bool,
-  onClick: func,
-  subredditName: string.isRequired,
-  subredditIcon: string,
-  postId: string.isRequired,
-  poster: string.isRequired,
-  title: string.isRequired,
-  text: string,
-  url: string,
-  upVotes: number.isRequired,
-  voteType: string,
-  timePosted: string.isRequired,
-  comments: arrayOf(objectOf(oneOfType([string, number, array]))),
-  img: string,
-  reloadPost: func,
-};
 
 export default Post;

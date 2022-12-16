@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { arrayOf, objectOf, string, number, oneOfType, array, bool } from 'prop-types';
-import { authorization, database } from '../../firebase/firebase';
+import defaultCommunityIcon from '../../defaultCommunityIcon';
+import { database } from '../../firebase/firebase';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
 import { selectUser } from '../../store/userSlice';
 
-const defaultIconUrl = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/default_icon.svg?alt=media&token=b65c667b-5299-404a-b8d9-5d94c580936d'
+interface PostsAreaProps {
+  subreddits: ICommunity[];
+  order?: PostOrder;
+  onlyUser?: boolean;
+};
 
 const PostsDiv = styled.div`
   display: flex;
@@ -16,14 +20,21 @@ const PostsDiv = styled.div`
   gap: 10px;
 `;
 
-function PostsArea({ subreddits, order, onlyUser }) {
-  const [posts, setPosts] = useState([]);
+function PostsArea({
+  subreddits,
+  order = "hot",
+  onlyUser = false,
+}: PostsAreaProps): JSX.Element {
+  const [posts, setPosts] = useState<IPost[]>([]);
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   let rendered = false;
   const UserDisplayName = useParams().name;
 
-  async function getTop(subredditName, subredditIcon) {
+  async function getTop(
+    subredditName: string,
+    subredditIcon: string
+  ): Promise<IPost[]> {
     let topPosts = await database.getTopPostsInSubreddit(subredditName);
     // add subreddit name and icon to post
     topPosts = topPosts.map((post) => ({
@@ -34,20 +45,21 @@ function PostsArea({ subreddits, order, onlyUser }) {
     return topPosts;
   }
 
-  function isPostUrlImage(url) {
+  function isPostUrlImage(url: string): boolean {
     if (url !== undefined) {
-      const extension = url.split('.').pop();
-      const possibleImageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
+      const extension = url.split(".").pop() as string;
+      const possibleImageExtensions = ["jpeg", "jpg", "png", "gif"];
       return possibleImageExtensions.includes(extension);
     }
     return false;
   }
 
   // go to post when clicking on div
-  function gotToPost(e, subredditName, postId) {
+  function gotToPost(e: MouseEvent, subredditName: string, postId: string): void {
     e.stopPropagation();
+    const target = e.target as HTMLElement;
     // Don't navigate to post if pressing on an external link
-    if (e.target.tagName !== 'A' && e.target.tagName !== 'EM') {
+    if (target.tagName !== "A" && target.tagName !== "EM") {
       navigate(`/r/${subredditName}/${postId}`);
     }
     window.scrollTo(0, 0);
@@ -59,22 +71,23 @@ function PostsArea({ subreddits, order, onlyUser }) {
   }, [order]);
 
   useEffect(() => {
-    let newPosts = [];
+    let newPosts: IPost[] = [];
     // if only displaying a particular user posts
     if (onlyUser) {
       setPosts([]);
-      let userPosts = []
-      Object.values(subreddits).forEach(async (subreddit) => {
-        let allPosts = await getTop(
+      let userPosts: IPost[] = [];
+      Object.values(subreddits).forEach((subreddit) => {
+        getTop(
           subreddit.name,
-          subreddit.icon || defaultIconUrl
-        );
+          subreddit.icon || defaultCommunityIcon
+        ).then((allPosts) => {
         // only get posts authored by user
         allPosts = allPosts.filter(
-          (post) => post.originalPoster === UserDisplayName
+          (post) => post.user === UserDisplayName
         );
-        userPosts = userPosts.concat(allPosts)
+        userPosts = userPosts.concat(allPosts);
         setPosts(reorderPosts(userPosts, order));
+      }
       });
     } else if (Object.values(subreddits).length === 1 && !rendered) {
       // for subreddit display
@@ -83,7 +96,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
         // If there's no icon, show the default one
         const subPosts = await getTop(
           subreddit.name,
-          subreddit.icon || defaultIconUrl
+          subreddit.icon || defaultCommunityIcon
         );
         newPosts = newPosts.concat(subPosts);
         setPosts(reorderPosts(newPosts, order));
@@ -96,7 +109,7 @@ function PostsArea({ subreddits, order, onlyUser }) {
         // If there's no icon, show the default one
         const subPosts = await getTop(
           subreddit.name,
-          subreddit.icon || defaultIconUrl
+          subreddit.icon || defaultCommunityIcon
         );
         newPosts = newPosts.concat(subPosts);
         setPosts(reorderPosts(newPosts, order));
@@ -111,22 +124,22 @@ function PostsArea({ subreddits, order, onlyUser }) {
         return (
           <Post
             preview
-            onClick={(e) => gotToPost(e, post.subredditName, post.id)}
-            key={`${post.title}-${post.subredditName}-${post.timePosted}`}
+            onClick={(e) => gotToPost(e, post.subredditName, post._id)}
+            key={`${post.title}-${post.subredditName}-${post.createdAt}`}
             postId={post.id}
             subredditName={post.subredditName}
             subredditIcon={post.subredditIcon}
-            poster={post.originalPoster}
-            timePosted={post.timePosted}
+            poster={post.user}
+            timePosted={post.user}
             voteType={
-              user.username !== undefined && user.votes[post.id] !== undefined
-                ? user.votes[post.id]
+              user.username !== undefined && user.votes[post._id] !== undefined
+                ? user.votes[post._id]
                 : ""
             }
             text={post.text}
             title={post.title}
             img={imageUrl}
-            url={post.url}
+            url={post._url}
             upVotes={post.upVotes}
             comments={post.comments}
           />
@@ -136,22 +149,5 @@ function PostsArea({ subreddits, order, onlyUser }) {
   );
 }
 
-PostsArea.defaultProps = {
-  order: 'hot',
-  onlyUser: false,
-};
-
-PostsArea.propTypes = {
-  subreddits: objectOf(
-    oneOfType([
-      number,
-      string,
-      array,
-      objectOf(oneOfType([number, string, array])),
-    ])
-  ).isRequired,
-  order: string,
-  onlyUser: bool,
-};
 
 export default PostsArea;

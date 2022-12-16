@@ -2,13 +2,13 @@ import { differenceInHours } from 'date-fns';
 import countComments from './countComents';
 
 // this function is used to sort by hot
-function getWeight(post) {
-  const timeDifference = differenceInHours(new Date(), new Date(post.timePosted));
+function getWeight(post: IPost): number {
+  const timeDifference = differenceInHours(new Date(), new Date(post.createdAt));
 
   return (post.commentsNum * 100) / timeDifference;
 }
 
-function reorderPosts(postArray, order) {
+function reorderPosts(postArray: IPost[], order: PostOrder): IPost[] {
   const copiedPosts = [...postArray];
   let orderedPosts = copiedPosts;
   switch (order) {
@@ -30,8 +30,8 @@ function reorderPosts(postArray, order) {
         orderedPosts = copiedPosts
           .sort(
             (a, b) =>
-              new Date(a.timePosted).valueOf() -
-              new Date(b.timePosted).valueOf()
+              new Date(a.createdAt).valueOf() -
+              new Date(b.createdAt).valueOf()
           )
           .reverse();
       }

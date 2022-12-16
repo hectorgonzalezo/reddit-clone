@@ -1,18 +1,29 @@
 import React from 'react';
-import { objectOf, string, number, oneOfType, bool, array } from 'prop-types';
 import { format } from 'date-fns';
 import SubredditIcon from '../SubredditIcon';
 import cakeIcon from '../../assets/cake_icon.svg';
 import formatUpvotes from '../../utils/formatUpVotes';
+import defaultCommunityIcon from '../../defaultCommunityIcon';
 
-function SubredditAbout({ subreddit, post }) {
+interface SubredditAboutProps {
+  subreddit: ICommunity;
+  post?: boolean;
+};
+
+function SubredditAbout({
+  subreddit,
+  post = false,
+}: SubredditAboutProps): JSX.Element {
   return (
     <div className="main-child" id="subreddit-about">
       <div>
         {post ? (
           <>
             {/* <img src={subreddit.icon} alt="" /> */}
-            <SubredditIcon icon={subreddit.icon} subredditName={subreddit.name} />
+            <SubredditIcon
+              icon={subreddit.icon === undefined? defaultCommunityIcon : subreddit.icon}
+              subredditName={subreddit.name}
+            />
             <h1>{`r/${subreddit.name}`}</h1>
           </>
         ) : (
@@ -25,25 +36,17 @@ function SubredditAbout({ subreddit, post }) {
         <p>
           Created on
           {"  "}
-          {format(new Date(subreddit.dateCreated), "dd MMM yyyy")}
+          {format(new Date(subreddit.createdAt), "dd MMM yyyy")}
         </p>
       </div>
       <hr />
       <div id="members-div">
-        <h1 data-testid="members-num">{formatUpvotes(subreddit.members)}</h1>
+        <h1 data-testid="members-num">{formatUpvotes(subreddit.membersQuantity)}</h1>
         <p>Members</p>
       </div>
     </div>
   );
 }
 
-SubredditAbout.defaultProps = {
-  post: false,
-}
-
-SubredditAbout.propTypes = {
-  subreddit: objectOf(oneOfType([string, number, array])).isRequired,
-  post: bool,
-};
 
 export default SubredditAbout;

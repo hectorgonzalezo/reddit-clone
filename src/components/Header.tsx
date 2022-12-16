@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { func, bool } from 'prop-types';
 import { useNavigate, Link } from 'react-router-dom';
@@ -16,33 +16,47 @@ import { database } from '../firebase/firebase';
 
 import '../styles/headerStyle.scss';
 
-function Header({ signUpFunc, logInFunc, opaque }) {
+interface HeaderProps {
+  signUpFunc: () => void,
+  logInFunc: () => void,
+  opaque: boolean,
+};
+
+function Header({
+  signUpFunc = () => {},
+  logInFunc = () => {},
+  opaque = false,
+}: HeaderProps): JSX.Element {
   // gets user from redux store
   const user = useSelector(selectUser);
   const currentSubreddit = useSelector(selectCurrentSubreddit);
   const [userDropdownVisible, setUserDropdownVisible] = useState(false);
-  const [subredditDropdownVisible, setSubredditDropdownVisible] = useState(false);
+  const [subredditDropdownVisible, setSubredditDropdownVisible] =
+    useState(false);
   const [subredditIcon, setSubredditIcon] = useState(homeIcon);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  function toggleSubredditDropdown() {
+  function toggleSubredditDropdown(): void {
     setSubredditDropdownVisible((prev) => !prev);
   }
 
-  async function navigateToSubreddit(e) {
-    const subredditName = e.target.getAttribute('data');
+  async function navigateToSubreddit(e: SyntheticEvent): void {
+    const target = e.target as HTMLAnchorElement;
+    const subredditName = target.getAttribute("data") as string;
     dispatch(changeCurrentSubreddit(subredditName));
 
     // get subreddit icon
     const subredditData = await database.getSubredditData(subredditName);
-    setSubredditIcon(subredditData.icon)
+    if (subredditData.icon !== undefined) {
+    setSubredditIcon(subredditData.icon);
+  }
 
     navigate(`/r/${subredditName}`);
   }
 
   // closes subreddits and user dropdowns when mouse leaves the header area
-  function closeAllDropDowns() {
+  function closeAllDropDowns(): void {
     if (userDropdownVisible) {
       setUserDropdownVisible(false);
     }
@@ -54,15 +68,20 @@ function Header({ signUpFunc, logInFunc, opaque }) {
   useEffect(() => {
     // change subreddit icon
     if (currentSubreddit !== null) {
-    database.getSubredditData(currentSubreddit)
-      .then((data) => setSubredditIcon(data.icon));
+      database
+        .getSubredditData(currentSubreddit)
+        .then((data) =>     {
+          if (data.icon !== undefined) {
+          setSubredditIcon(data.icon);
+    }})
+      .catch((error) => console.log(error));
     } else {
-      setSubredditIcon(homeIcon)
+      setSubredditIcon(homeIcon);
     }
   }, [currentSubreddit]);
 
   return (
-    <header className={opaque ? 'opaque' : ''} onMouseLeave={closeAllDropDowns}>
+    <header className={opaque ? "opaque" : ""} onMouseLeave={closeAllDropDowns}>
       <div id="logos">
         <Link to="/">
           <img src={logo} alt="reddit" />
@@ -75,10 +94,13 @@ function Header({ signUpFunc, logInFunc, opaque }) {
             type="button"
             className="button-show-drop-down"
             onClick={toggleSubredditDropdown}
-            
           >
-            <img src={subredditIcon} alt="chosen subreddit" className={subredditIcon === homeIcon ? 'icon' : 'user-icon'} />
-            <h1>{currentSubreddit === null ? 'Home' : currentSubreddit}</h1>
+            <img
+              src={subredditIcon}
+              alt="chosen subreddit"
+              className={subredditIcon === homeIcon ? "icon" : "user-icon"}
+            />
+            <h1>{currentSubreddit === null ? "Home" : currentSubreddit}</h1>
             <img src={arrowDownIcon} className="icon" aria-hidden="true" />
           </button>
           <SubredditsDropDown
@@ -120,16 +142,5 @@ function Header({ signUpFunc, logInFunc, opaque }) {
   );
 }
 
-Header.defaultProps = {
-  signUpFunc: () => {},
-  logInFunc: () => {},
-  opaque: false,
-};
-
-Header.propTypes = {
-  signUpFunc: func,
-  logInFunc: func,
-  opaque: bool,
-};
 
 export default Header;

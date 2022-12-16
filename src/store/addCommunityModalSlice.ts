@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AddCommunityModalState } from '../type';
 
 export const addCommunityModalSlice = createSlice({
   name: 'addCommunityModalVisible',
   initialState: false,
   reducers: {
-    toggleAddCommunityModal: (state, action) => !state
+    toggleAddCommunityModal: (state) => !state
   },
 });
 

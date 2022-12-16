@@ -1,35 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { string } from 'prop-types';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser, addUser } from '../../store/userSlice';
 import { database } from '../../firebase/firebase';
 import Button from '../Button';
 
-function JoinButton({ subreddit }) {
+interface JoinButtonProps {
+  subreddit: string;
+};
+
+
+function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   const user = useSelector(selectUser);
   // This keeps track of user subreddits on the client side
   // so as to update the "join" button.
-  const [userSubreddits, setUserSubreddits] = useState([]);
+  const [userSubreddits, setUserSubreddits] = useState<string[]>([]);
   const [joinedText, setJoinedText] = useState('Joined');
   const dispatch = useDispatch();
 
-  async function updateUserStore() {
+  async function updateUserStore(): Promise<void> {
     const updatedUser = await database.getUser(user.username);
     dispatch(addUser(updatedUser));
   }
 
-  async function changeSubscription(e) {
+  async function changeSubscription(e: MouseEvent): Promise<void> {
     if (userSubreddits.includes(subreddit)) {
       setUserSubreddits((prev) => {
-        const newList = prev.filter((sub) => sub !== subreddit)
+        const newList = prev.filter((sub) => sub !== subreddit);
         return newList;
       });
-      await database.unsubscribeFromSubreddit(subreddit, user.username);
-      await updateUserStore();
+      database.unsubscribeFromSubreddit(subreddit, user.username)
+        .then((data) => {
+          updateUserStore()
+            .then()
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
     } else {
       setUserSubreddits((prev) => prev.concat(subreddit));
-      await database.subscribeToSubreddit(subreddit, user.username);
-      await updateUserStore();
+      database.subscribeToSubreddit(subreddit, user.username)
+        .then((data) => {
+          updateUserStore()
+            .then()
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
     }
   }
 
@@ -56,11 +70,8 @@ function JoinButton({ subreddit }) {
     <Button onClick={changeSubscription}>Join</Button>
   );
   }
-  return;
 }
 
-JoinButton.propTypes = {
-  subreddit: string.isRequired,
-};
+
 
 export default JoinButton;

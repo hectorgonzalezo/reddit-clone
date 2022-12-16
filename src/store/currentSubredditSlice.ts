@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { CurrentSubredditState, ICommunity } from '../type';
 
 export const currentSubredditSlice = createSlice({
   name: 'currentSubreddit',

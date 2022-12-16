@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ChangeIconModalState } from '../type';
 
 export const changeIconModalSlice = createSlice({
   name: 'changeIconModalVisible',
   initialState: false,
   reducers: {
-    toggleChangeIconModal: (state, action) => !state
+    toggleChangeIconModal: (state) => !state
   },
 });
 

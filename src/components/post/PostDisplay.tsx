@@ -9,36 +9,43 @@ import Button from '../Button';
 import Post from './Post';
 import { changeCurrentSubreddit } from '../../store/currentSubredditSlice';
 
-function PostDisplay() {
-  const { name, postId } = useParams();
+
+function PostDisplay(): JSX.Element {
+  const params = useParams();
+  const name = params.name as string;
+  const postId = params.postId as string;
+
   const user = useSelector(selectUser);
-  const [post, setPost] = useState(false);
-  const [chosenSubreddit, setChosenSubreddit] = useState(false);
+  const [post, setPost] = useState<IPost | false>(false);
+  const [chosenSubreddit, setChosenSubreddit] = useState<ICommunity | false>(false);
   const dispatch = useDispatch();
 
 
-  function isPostUrlImage(url) {
+  function isPostUrlImage(url: string): boolean {
     if (url !== undefined) {
-      const extension = url.split('.').pop();
+      const extension = url.split('.').pop() as string;
       const possibleImageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
       return possibleImageExtensions.includes(extension);
     }
     return false;
   }
 
-  function reloadPost() {
+  function reloadPost(): void {
     setPost(false);
     database.getPost(name, postId)
-      .then((data) => setPost(data));
+      .then((data) => setPost(data as IPost))
+      .catch((error) => console.log(error));
   }
 
   // get post from database on mount
   useEffect(() => {
     database.getSubredditData(name)
-      .then((data) => setChosenSubreddit(data));
+      .then((data) => setChosenSubreddit(data))
+      .catch((error) => console.log(error));
 
     database.getPost(name, postId)
-      .then((data) => setPost(data));
+      .then((data) => setPost(data as IPost))
+      .catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -50,13 +57,13 @@ function PostDisplay() {
   return (
     <>
       <div id="left-side">
-        {post !== false ? (
+        {post !== false && chosenSubreddit !== false? (
           <Post
             postId={postId}
             subredditName={name}
             subredditIcon={chosenSubreddit.icon}
-            poster={post.originalPoster}
-            timePosted={post.timePosted}
+            poster={post.user}
+            timePosted={post.createdAt}
             voteType={
               user.username !== undefined && user.votes[postId] !== undefined
                 ? user.votes[postId]

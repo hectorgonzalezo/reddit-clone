@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { selectSubreddits } from '../store/subredditsSlice';
 import { database } from '../firebase/firebase';
 import Agreements from './Agreements';
 import Button from './Button';
-import Post from './post/Post';
-import { selectUser } from '../store/userSlice';
 import PostsArea from './post/PostsArea';
 
 const UserInfo = styled.div`
@@ -27,14 +25,14 @@ const UserInfo = styled.div`
   }
 `;
 
-function UserDisplay() {
+function UserDisplay(): JSX.Element {
   const { name } = useParams();
   const subreddits = useSelector(selectSubreddits);
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState<IUser | false>(false);
 
   // get Info about user
   useEffect(() => {
-    const fetchedUser = database.getUser(name).then((data) => setUser(data));
+    const fetchedUser = database.getUser(name).then((data: IUser) => setUser(data));
   }, [])
 
   return (

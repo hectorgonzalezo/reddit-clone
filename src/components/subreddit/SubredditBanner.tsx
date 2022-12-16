@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { objectOf, number, string, oneOfType, array } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/userSlice';
 import JoinButton from './Joinbutton';
 
-function SubredditBanner({ subreddit }) {
+interface SubredditBannerProps  {
+  subreddit: ICommunity;
+};
+
+function SubredditBanner({ subreddit }: SubredditBannerProps): JSX.Element {
   const user = useSelector(selectUser);
 
   return (
@@ -17,8 +21,6 @@ function SubredditBanner({ subreddit }) {
   );
 }
 
-SubredditBanner.propTypes = {
-  subreddit: objectOf(oneOfType([array, number, string])).isRequired,
-};
+
 
 export default SubredditBanner;
