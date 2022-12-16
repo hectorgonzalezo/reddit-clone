@@ -21,7 +21,7 @@ import '../../styles/postStyle.scss';
 
 interface PostProps {
   preview?: boolean;
-  onClick?: (arg0: MouseEvent) => void;
+  onClick?: (arg0: SyntheticEvent) => void;
   subredditName: string;
   subredditIcon?: string;
   postId: string;
@@ -85,7 +85,7 @@ const PostContainer = styled.article<PostContainerProps>`
 
 function Post({
   preview = false,
-  onClick = (e: MouseEvent) => {},
+  onClick = (e: SyntheticEvent) => {},
   subredditName,
   subredditIcon = defaultCommunityIcon,
   postId,
@@ -107,14 +107,14 @@ function Post({
   const navigate = useNavigate();
 
   // updates number of upvotes in post
-  function updateVotes(e: MouseEvent): void {
+  function updateVotes(e: SyntheticEvent): void {
     const target = e.target as HTMLAnchorElement;
     e.stopPropagation();
     // Only allow vote if user is authorized
     if (user.username !== undefined) {
       // if(authorization.user)
       // can be 'upVote' or 'downVote'
-      const newVoteType = target.getAttribute('data-vote');
+      const newVoteType = target.getAttribute('data');
       switch (true) {
         // previously clicked vote => new vote
         // upVote => upVote
@@ -202,7 +202,7 @@ function Post({
         <IconLink
           fill="orange"
           onClick={updateVotes}
-          data-vote="upVote"
+          data="upVote"
           colored={previousVote === "upVote"}
           ariaLabel="up vote"
         >
@@ -212,7 +212,7 @@ function Post({
         <IconLink
           fill="blue"
           onClick={updateVotes}
-          data-vote="downVote"
+          data="downVote"
           colored={previousVote === "downVote"}
           ariaLabel="down vote"
         >

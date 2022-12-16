@@ -1,3 +1,4 @@
+
 interface IUser {
   username: string;
   password: string;
@@ -17,6 +18,7 @@ interface IPost {
   community: ObjectId | ICommunity;
   upVotes: number;
   comments: [] | ObjectId[] | IComment[];
+  _id: string | ObjectId;
   createdAt: string;
   updatedAt: string;
   commentsNum: number;
@@ -71,7 +73,7 @@ interface CurrentSubredditState {
 }
 
 interface SubredditsState {
-  subreddits: SubredditsObject
+  [index: string]: ICommunity;
 }
 
 interface UserState {

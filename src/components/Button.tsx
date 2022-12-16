@@ -1,5 +1,4 @@
-import React from 'react';
-import {} from 'styled-components/cssprop';
+import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps {
@@ -9,7 +8,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   children?: React.ReactNode;
-  onClick: (e: MouseEvent) => void;
+  onClick: (e: SyntheticEvent) => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 };
@@ -40,7 +39,7 @@ function Button({
   type= "button",
   disabled= false,
   children= [],
-  onClick= (e: MouseEvent) => {},
+  onClick= (e: SyntheticEvent) => {},
   onMouseEnter= () => {},
   onMouseLeave= () => {},
 }: ButtonProps): JSX.Element {

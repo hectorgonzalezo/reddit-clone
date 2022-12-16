@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import defaultUserIcon from '../defaultUserIcon';
 
 const initialState = {};
 
@@ -9,9 +10,13 @@ export const userSlice = createSlice({
     addUser: (state, action) => {
       state.username = action.payload.username;
       state.email = action.payload.email;
-      state.icon = action.payload.icon;
       state.votes = action.payload.votes;
       state.subreddits = action.payload.subreddits;
+      if(action.payload.icon !== undefined){
+        state.icon = action.payload.icon;
+      } else {
+        state.icon = defaultUserIcon
+      }
     },
     updateIcon: (state, action) => {
       state.icon = action.payload;

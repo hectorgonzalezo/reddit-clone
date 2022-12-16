@@ -10,16 +10,16 @@ interface LogInModalProps {
 };
 
 function LogInModal({ closeFunc= () => {} }: LogInModalProps): JSX.Element {
-  const formRef = useRef<HTMLFormElement>();
-  const userNameRef = useRef<HTMLInputElement>();
-  const passwordRef = useRef<HTMLInputElement>();
+  const formRef = useRef<HTMLFormElement>(null);
+  const userNameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const [usernameDoesntExist, setUsernameDoesntExist] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const dispatch = useDispatch();
 
   async function submitLogIn(e: SyntheticEvent): Promise<void> {
     e.preventDefault();
-    if (userNameRef.current !== undefined && passwordRef.current !== undefined){
+    if (userNameRef.current !== null && passwordRef.current !== null){
       const username = userNameRef.current.value;
       const password = passwordRef.current.value;
     try {
@@ -41,15 +41,15 @@ function LogInModal({ closeFunc= () => {} }: LogInModalProps): JSX.Element {
 
   useEffect(() => {
     // add red outline to input fields if combination is invalid
-    if (userNameRef.current !== undefined && passwordRef.current !== undefined){
-    if (usernameDoesntExist) {
-      userNameRef.current.classList.add('invalid');
-      passwordRef.current.classList.add('invalid');
-    } else {
-      userNameRef.current.classList.remove('invalid');
-      passwordRef.current.classList.remove('invalid');
+    if (userNameRef.current !== null && passwordRef.current !== null) {
+      if (usernameDoesntExist) {
+        userNameRef.current.classList.add("invalid");
+        passwordRef.current.classList.add("invalid");
+      } else {
+        userNameRef.current.classList.remove("invalid");
+        passwordRef.current.classList.remove("invalid");
+      }
     }
-  }
   }, [usernameDoesntExist]);
 
   return (

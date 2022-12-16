@@ -20,7 +20,7 @@ function SubredditDisplay(): JSX.Element {
   const name = params.name as string;
   
   const [chosenSubreddit, setChosenSubreddit] = useState<ICommunity>();
-  const [postsOrder, setPostsOrder] = useState('hot');
+  const [postsOrder, setPostsOrder] = useState<PostOrder>('hot');
   const dispatch = useDispatch();
 
   function changeOrder(newOrder: PostOrder): void {
@@ -35,16 +35,32 @@ function SubredditDisplay(): JSX.Element {
 
   return (
     <>
-      {chosenSubreddit !== undefined ? <SubredditBanner subreddit={chosenSubreddit} /> : null}
+      {chosenSubreddit !== undefined ? (
+        <SubredditBanner subreddit={chosenSubreddit} />
+      ) : null}
       <div id="left-side">
-        {user.subreddits?.includes(name) ? <CreatePostPreview /> : null}
-        <PopularPostsBar changeOrder={changeOrder}/>
-        {chosenSubreddit !== undefined ? <PostsArea subreddits={{[chosenSubreddit.name] : chosenSubreddit}} order={postsOrder} /> : null}
+        {user.communities?.find(
+          (community: ICommunity) => community.name === name
+        ) !== undefined ? (
+          <CreatePostPreview />
+        ) : null}
+        <PopularPostsBar changeOrder={changeOrder} />
+        {chosenSubreddit !== undefined ? (
+          <PostsArea
+            subreddits={{ [chosenSubreddit.name]: chosenSubreddit }}
+            order={postsOrder}
+          />
+        ) : null}
       </div>
       <div id="right-side">
-        {chosenSubreddit !== undefined ? <SubredditAbout subreddit={chosenSubreddit} /> : null}
+        {chosenSubreddit !== undefined ? (
+          <SubredditAbout subreddit={chosenSubreddit} />
+        ) : null}
         <Agreements />
-        <Button text="Back to Top" onClick={() => window.scrollTo({ top: 0 })}/>
+        <Button
+          text="Back to Top"
+          onClick={() => window.scrollTo({ top: 0 })}
+        />
       </div>
     </>
   );

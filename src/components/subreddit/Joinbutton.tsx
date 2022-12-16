@@ -11,7 +11,7 @@ interface JoinButtonProps {
 
 function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   const user = useSelector(selectUser);
-  // This keeps track of user subreddits on the client side
+  // This keeps track of user.communities on the client side
   // so as to update the "join" button.
   const [userSubreddits, setUserSubreddits] = useState<string[]>([]);
   const [joinedText, setJoinedText] = useState('Joined');
@@ -22,7 +22,7 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
     dispatch(addUser(updatedUser));
   }
 
-  async function changeSubscription(e: MouseEvent): Promise<void> {
+  async function changeSubscription(e: SyntheticEvent): Promise<void> {
     if (userSubreddits.includes(subreddit)) {
       setUserSubreddits((prev) => {
         const newList = prev.filter((sub) => sub !== subreddit);
@@ -48,12 +48,11 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   }
 
   useEffect(() => {
-    if (user.subreddits !== undefined) {
-      setUserSubreddits(user.subreddits);
+    if (user.communities !== undefined) {
+      setUserSubreddits(user.communities);
     }
   }, [user]);
 
-  if (user.username !== undefined) {
   return  userSubreddits.includes(subreddit) ? (
     <Button
       text={joinedText}
@@ -69,7 +68,6 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
     ) : (
     <Button onClick={changeSubscription}>Join</Button>
   );
-  }
 }
 
 

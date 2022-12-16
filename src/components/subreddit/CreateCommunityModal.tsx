@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addSubreddit } from '../../store/subredditsSlice';
@@ -10,25 +10,25 @@ import { database } from '../../firebase/firebase';
 
 
 interface CreateCommunityModalProps {
-  closeFunc: (arg0: MouseEvent) => void;
+  closeFunc: (arg0: SyntheticEvent) => void;
 };
 
 function CreateCommunityModal({
   closeFunc = (e) => {},
 }: CreateCommunityModalProps): JSX.Element {
-  const formRef = useRef<HTMLFormElement>();
-  const subNameRef = useRef<HTMLInputElement>();
-  const subSubtitleRef = useRef<HTMLInputElement>();
-  const subDescriptionRef = useRef<HTMLInputElement>();
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const subNameRef = useRef<HTMLInputElement | null>(null);
+  const subSubtitleRef = useRef<HTMLInputElement | null>(null);
+  const subDescriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const [nameRemainingLetters, setNameRemainingLetters] = useState(21);
-  const [communityIcon, setCommunityIcon] = useState(defaultIcon);
-  const [communityIconFile, setCommunityIconFile] = useState();
+  const [communityIcon, setCommunityIcon] = useState<string>(defaultIcon);
+  const [communityIconFile, setCommunityIconFile] = useState<File>();
   const [disableButton, setDisableButton] = useState(true);
   const [loadingData, setLoadingData] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  function addIcon(e: MouseEvent): void {
+  function addIcon(e: SyntheticEvent): void {
     const target = e.target as HTMLInputElement;
     const files = target.files as FileList;
     const file = files[0];
@@ -37,7 +37,8 @@ function CreateCommunityModal({
     reader.addEventListener(
       "load",
       () => {
-        setCommunityIcon(reader.result);
+        const loadedFile = reader.result as string;
+        setCommunityIcon(loadedFile);
       },
       false
     );
@@ -48,40 +49,47 @@ function CreateCommunityModal({
 
   // This function gets called on every input value change
   // If the whole form is valid, it activates the continue button
-  function validate(e: MouseEvent): void {
-    const target = e.target as HTMLInputElement;
-    setNameRemainingLetters(21 - subNameRef.current.value.length);
-    // Check input validity
-    const elementValidity = target.validity;
-    // Checkt type of validity
-    switch (true) {
-      case elementValidity.patternMismatch:
-        target.setCustomValidity("Only letters allowed in community name");
-        target.parentNode.firstChild.innerText =
-          "Only letters allowed in username";
-        break;
-      case elementValidity.tooShort:
-        target.setCustomValidity(
-          "community name must be at least 3 characters long"
-        );
-        target.parentNode.firstChild.innerText =
-          "Community name must be at least 3 characters long";
-        break;
-      default:
-        target.setCustomValidity("");
-        target.parentNode.firstChild.innerText = "";
-    }
+  function validate(e: SyntheticEvent): void {
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    if (
+      target.parentNode !== null &&
+      subNameRef.current !== null &&
+      formRef.current !== null
+    ) {
+      // error display
+      const display = target.parentNode.firstChild as HTMLSpanElement;
+      setNameRemainingLetters(21 - subNameRef.current.value.length);
+      // Check input validity
+      const elementValidity = target.validity;
+      // Checkt type of validity
+      switch (true) {
+        case elementValidity.patternMismatch:
+          target.setCustomValidity("Only letters allowed in community name");
+          display.innerText = "Only letters allowed in username";
+          break;
+        case elementValidity.tooShort:
+          target.setCustomValidity(
+            "community name must be at least 3 characters long"
+          );
+          display.innerText =
+            "Community name must be at least 3 characters long";
+          break;
+        default:
+          target.setCustomValidity("");
+          display.innerText = "";
+      }
 
-    // if form is valid, activate submit button
-    setDisableButton(!formRef.current.checkValidity());
+      // if form is valid, activate submit button
+      setDisableButton(!formRef.current.checkValidity());
+    }
   }
 
-  async function submitCreateCommunity(e: MouseEvent): Promise<void> {
+  async function submitCreateCommunity(e: SyntheticEvent): Promise<void> {
     e.preventDefault();
     if (
-      subNameRef.current !== undefined &&
-      subSubtitleRef.current !== undefined &&
-      subDescriptionRef.current !== undefined
+      subNameRef?.current !== null &&
+      subSubtitleRef?.current !== null &&
+      subDescriptionRef?.current !== null
     ) {
       const subredditName = subNameRef.current.value;
       const subtitles = subSubtitleRef.current.value;

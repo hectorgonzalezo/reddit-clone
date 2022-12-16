@@ -10,11 +10,11 @@ interface SignUpModalProps {
 };
 
 function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
-  const formRef = useRef<HTMLFormElement>();
-  const userNameRef = useRef<HTMLInputElement>();
-  const emailRef = useRef<HTMLInputElement>();
-  const password1Ref = useRef<HTMLInputElement>();
-  const password2Ref = useRef<HTMLInputElement>();
+  const formRef = useRef<HTMLFormElement>(null);
+  const userNameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const password1Ref = useRef<HTMLInputElement>(null);
+  const password2Ref = useRef<HTMLInputElement>(null);
   const [disableButton, setDisableButton] = useState(true);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
@@ -24,75 +24,97 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
   // If the whole form is valid, it activates the continue button
   function validate(e: SyntheticEvent): void {
     const target = e.target as HTMLInputElement;
+    const form = formRef.current as HTMLFormElement;
     // Check input validity
     const elementValidity = target.validity;
+    if (target.parentNode?.firstChild) {
+      // error display element
+      const display = target.parentNode.firstChild as HTMLSpanElement;
     // Check type of validity
     switch (true) {
       case elementValidity.typeMismatch:
         target.setCustomValidity('Please write a valid email');
-        target.parentNode.firstChild.innerText = 'Please write a valid email';
+        display.innerText = 'Please write a valid email';
         break;
       case elementValidity.patternMismatch:
         if (target === userNameRef.current) {
           target.setCustomValidity('Only letters allowed in username');
-          target.parentNode.firstChild.innerText = 'Only letters allowed in username';
+          display.innerText = 'Only letters allowed in username';
         } else {
           target.setCustomValidity('Please write a valid email');
-          target.parentNode.firstChild.innerText = 'Please write a valid email';
+          display.innerText = 'Please write a valid email';
         }
         break;
       case elementValidity.tooShort:
         target.setCustomValidity('Password must be at least 6 characters long');
-        target.parentNode.firstChild.innerText = 'Password must be at least 6 characters long';
+        display.innerText = 'Password must be at least 6 characters long';
         break;
       default:
         target.setCustomValidity('');
-        target.parentNode.firstChild.innerText = '';
+        display.innerText = '';
     }
+  }
 
 
     // if element is password, check that both passwords equal each other
-    if ((target === password2Ref.current || target === password1Ref.current)) {
+    if (
+      (target === password2Ref.current || target === password1Ref.current) &&
+      password1Ref?.current !== null &&
+      password2Ref?.current?.parentNode
+    ) {
+      const display = password2Ref.current.parentNode.firstChild as HTMLSpanElement;
       if (
         // writing second password and first one is not the same
-        (target === password2Ref.current
-        && password2Ref.current.value !== password1Ref.current.value)
+        (target === password2Ref.current &&
+          password2Ref.current.value !== password1Ref.current.value) ||
         // writing first password and second one is not empty
-        || (target === password1Ref.current
-          && password2Ref.current.value !== ''
-          && password2Ref.current.value !== password1Ref.current.value)
+        (target === password1Ref.current &&
+          password2Ref.current.value !== "" &&
+          password2Ref.current.value !== password1Ref.current.value)
       ) {
         password2Ref.current.setCustomValidity("Passwords don't match");
-        password2Ref.current.parentNode.firstChild.innerText = "Passwords don't match";
+        display.innerText =
+          "Passwords don't match";
       } else {
-        password2Ref.current.setCustomValidity('');
-        password2Ref.current.parentNode.firstChild.innerText = '';
+        password2Ref.current.setCustomValidity("");
+        display.innerText = "";
       }
     }
 
     // if form is valid, activate submit button
-    setDisableButton(!formRef.current.checkValidity());
+    setDisableButton(!form.checkValidity());
   }
 
-  async function submitSignUp(e) {
+  function submitSignUp(e: SyntheticEvent): void {
     e.preventDefault();
-    const username = userNameRef.current.value;
-    const email = emailRef.current.value;
-    const password = password1Ref.current.value;
-    const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
-    const votes = {};
-    try {
-      // add loading animation
-      setLoadingData(true);
-      const account = await authorization.createAccount(email, password, username);
-      setEmailAlreadyExists(false);
-      // update redux store
-      dispatch(addUser({ username, email, icon, votes }));
-      closeFunc();
-    } catch (error) {
-      // If email already exists
-      setEmailAlreadyExists(true);
-      setLoadingData(false);
+    if (
+      userNameRef?.current !== null &&
+      emailRef.current !== null &&
+      password1Ref.current !== null
+    ) {
+      const username = userNameRef.current.value;
+      const email = emailRef.current.value;
+      const password = password1Ref.current.value;
+      const icon =
+        "https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1";
+      const votes = {};
+      try {
+        // add loading animation
+        setLoadingData(true);
+        authorization
+          .createAccount(email, password, username)
+          .then((data) => {
+            setEmailAlreadyExists(false);
+            // update redux store
+            dispatch(addUser({ username, email, icon, votes }));
+            closeFunc();
+          })
+          .catch((err) => console.log(err));
+      } catch (error) {
+        // If email already exists
+        setEmailAlreadyExists(true);
+        setLoadingData(false);
+      }
     }
   }
 
@@ -117,8 +139,7 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
           </p>
         </div>
 
-        <div className="division">
-        </div>
+        <div className="division"/>
         <form action="" ref={formRef}>
           <div className="input-wrap">
             <span />

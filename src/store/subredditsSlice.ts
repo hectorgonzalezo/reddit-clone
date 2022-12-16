@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import defaultCommunityIcon from '../defaultCommunityIcon';
 
 
 const initialState = {};
@@ -9,7 +10,14 @@ export const subredditsSlice = createSlice({
   reducers: {
     addSubreddit: (state, action) => {
       const updatedSubreedits = action.payload;
-      updatedSubreedits.forEach((subreddit: ICommunity) => state[subreddit.name] = subreddit);
+      updatedSubreedits.forEach((subreddit: ICommunity) => {
+        if(subreddit.icon === undefined){
+          subreddit.icon = defaultCommunityIcon
+        }
+        return state[subreddit.name] = subreddit;
+
+      }
+);
     },
   },
 });

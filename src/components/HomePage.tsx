@@ -11,10 +11,10 @@ import Agreements from './Agreements';
 import { changeCurrentSubreddit } from '../store/currentSubredditSlice';
 
 function HomePage(): JSX.Element {
-  const subredditsData = useSelector(selectSubreddits);
+  const subredditsData: SubredditsObject = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
   const [chosenSubreddits, setChosenSubreddits] = useState({});
-  const [postsOrder, setPostsOrder] = useState('hot');
+  const [postsOrder, setPostsOrder] = useState<PostOrder>('hot');
   const dispatch = useDispatch();
 
   function changeOrder(newOrder: PostOrder): void{

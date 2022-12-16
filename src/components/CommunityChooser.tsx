@@ -7,7 +7,7 @@ import SubredditsDropDown from './subreddit/SubredditsDropDown';
 
 interface CommunityChooserProps {
   onChoosing: (arg0: string) => void;
-  header: boolean;
+  header?: boolean;
 };
 
 function CommunityChooser({

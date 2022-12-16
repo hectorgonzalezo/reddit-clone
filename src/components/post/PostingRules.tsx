@@ -1,6 +1,6 @@
 import React from 'react';
-import redditIcon from '../../assets/Reddit_Mark_OnWhite.png';
 import styled from 'styled-components';
+import redditIcon from '../../assets/Reddit_Mark_OnWhite.png';
 
 const Container = styled.div`
   margin-top: 50px;

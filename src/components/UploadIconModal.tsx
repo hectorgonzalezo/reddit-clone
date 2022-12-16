@@ -18,12 +18,14 @@ function UploadIconModal({
   const [loadingData, setLoadingData] = useState(false);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  const [iconFile, setIconFile] = useState();
+  const [iconFile, setIconFile] = useState<File>();
 
   function addIcon(e: SyntheticEvent): void{
     const target = e.target as HTMLInputElement;
-    setIconFile(target.files[0]);
-    setDisableButton(false);
+    if( target.files !== null) {
+      setIconFile(target.files[0]);
+      setDisableButton(false);
+    }
   }
 
   async function uploadIcon(e: SyntheticEvent): Promise<void> {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { func, bool } from 'prop-types';
 import { useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/Reddit_Mark_OnWhite.png';
 import logotype from '../assets/Reddit_Logotype_OnWhite.png';
@@ -41,7 +40,7 @@ function Header({
     setSubredditDropdownVisible((prev) => !prev);
   }
 
-  async function navigateToSubreddit(e: SyntheticEvent): void {
+  async function navigateToSubreddit(e: SyntheticEvent): Promise<void> {
     const target = e.target as HTMLAnchorElement;
     const subredditName = target.getAttribute("data") as string;
     dispatch(changeCurrentSubreddit(subredditName));
@@ -100,8 +99,8 @@ function Header({
               alt="chosen subreddit"
               className={subredditIcon === homeIcon ? "icon" : "user-icon"}
             />
-            <h1>{currentSubreddit === null ? "Home" : currentSubreddit}</h1>
-            <img src={arrowDownIcon} className="icon" aria-hidden="true" />
+            <h1>{currentSubreddit === null ? "Home" : currentSubreddit.name}</h1>
+            <img src={arrowDownIcon} className="icon" alt="" aria-hidden="true" />
           </button>
           <SubredditsDropDown
             dropdownVisible={subredditDropdownVisible}
@@ -131,7 +130,7 @@ function Header({
               <img src={arrowDownIcon} alt="" className="icon" />
             </button>
             <AccountDropDown
-              userIcon={user.icon}
+              userIcon={user.icon !== undefined ? user.icon : ''}
               visible={userDropdownVisible}
               closeFunc={() => setUserDropdownVisible(false)}
             />

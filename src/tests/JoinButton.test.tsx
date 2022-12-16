@@ -148,11 +148,11 @@ describe('Button that allows user to join a subreddit', () => {
     const button = screen.getByRole('button');
     await act(async () => userEvent.click(button));
     // update state
-    expect(store.getState().user.subreddits.includes('aww')).toBe(true);
+    expect(store.getState().user.communities.includes('aww')).toBe(true);
 
     // clicking it again, removes it
     await act(async () => userEvent.click(button));
     // update state
-    expect(store.getState().user.subreddits.includes('aww')).toBe(false);
+    expect(store.getState().user.communities.includes('aww')).toBe(false);
   });
 });

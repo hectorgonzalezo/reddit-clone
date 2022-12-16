@@ -40,7 +40,7 @@ function CommentCreator({
       indexesList = index;
     }
     // access specific location where comment should be in commentsList
-    const locationToAdd: IComment = indexesList.reduce((prev, curr, i) => {
+    const locationToAdd = indexesList.reduce((prev, curr, i) => {
       // dont acces responses if its the last elemen and it's editing the post
       if (i === indexesList.length - 1 && edit) {
         return prev[curr];
@@ -48,7 +48,7 @@ function CommentCreator({
       return prev[curr].responses;
     }, copiedComments);
 
-    // if youre editing a previous post, just update its text content
+    // if you're editing a previous post, just update its text content
     if (edit) {
       locationToAdd.text = textContent;
     } else {

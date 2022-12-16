@@ -32,8 +32,15 @@ function UserDisplay(): JSX.Element {
 
   // get Info about user
   useEffect(() => {
-    const fetchedUser = database.getUser(name).then((data: IUser) => setUser(data));
-  }, [])
+    const fetchedUser = database
+      .getUser(name)
+      .then((data) => {
+        if (data !== undefined) {
+          setUser(data.user);
+        }
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <>

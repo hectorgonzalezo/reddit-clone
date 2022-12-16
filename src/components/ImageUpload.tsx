@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
 
 
 
 interface ImageUploadProps {
-  onChange: () => void;
-  id: string;
-  required: boolean;
+  onChange: (e: SyntheticEvent) => void;
+  id?: string;
+  required?: boolean;
 };
 
-const UploadArea = styled.div<ImageUploadProps>`
+
+const UploadArea = styled.div`
   & > .inputfile {
     width: 0.1px;
     height: 0.1px;

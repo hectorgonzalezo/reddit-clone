@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,7 +9,7 @@ import reorderPosts from '../../utils/reorderPosts';
 import { selectUser } from '../../store/userSlice';
 
 interface PostsAreaProps {
-  subreddits: ICommunity[];
+  subreddits: SubredditsObject;
   order?: PostOrder;
   onlyUser?: boolean;
 };
@@ -55,7 +55,7 @@ function PostsArea({
   }
 
   // go to post when clicking on div
-  function gotToPost(e: MouseEvent, subredditName: string, postId: string): void {
+  function gotToPost(e: SyntheticEvent, subredditName: string, postId: string): void {
     e.stopPropagation();
     const target = e.target as HTMLElement;
     // Don't navigate to post if pressing on an external link
@@ -81,13 +81,13 @@ function PostsArea({
           subreddit.name,
           subreddit.icon || defaultCommunityIcon
         ).then((allPosts) => {
-        // only get posts authored by user
-        allPosts = allPosts.filter(
-          (post) => post.user === UserDisplayName
-        );
-        userPosts = userPosts.concat(allPosts);
-        setPosts(reorderPosts(userPosts, order));
-      }
+          // only get posts authored by user
+          const newAllPosts = allPosts.filter((post) => post.user === UserDisplayName);
+          userPosts = userPosts.concat(newAllPosts);
+          setPosts(reorderPosts(userPosts, order));
+        }
+        )
+        .catch((error) => console.log(error));
       });
     } else if (Object.values(subreddits).length === 1 && !rendered) {
       // for subreddit display
@@ -124,11 +124,13 @@ function PostsArea({
         return (
           <Post
             preview
-            onClick={(e) => gotToPost(e, post.subredditName, post._id)}
-            key={`${post.title}-${post.subredditName}-${post.createdAt}`}
-            postId={post.id}
-            subredditName={post.subredditName}
-            subredditIcon={post.subredditIcon}
+            onClick={(e) => gotToPost(e, post.community.name, post._id)}
+            key={`${post.title}-${post.community.name as string}-${
+              post.createdAt
+            }`}
+            postId={post._id}
+            subredditName={post.community.name}
+            subredditIcon={post.community.icon}
             poster={post.user}
             timePosted={post.user}
             voteType={

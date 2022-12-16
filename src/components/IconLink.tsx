@@ -1,20 +1,30 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
-
-
 
 interface IconLinkProps  {
   children: React.ReactNode;
-  onClick: (e: MouseEvent) => void;
-  data: string;
-  round: boolean;
-  fill: string;
-  colored: boolean;
-  className: string;
-  ariaLabel: string;
+  round?: boolean;
+  fill?: string;
+  onClick: (e: SyntheticEvent) => void;
+  data?: string;
+  colored?: boolean;
+  className?: string;
+  ariaLabel?: string;
 };
 
-const Button = styled.button<IconLinkProps>`
+interface ButtonProps {
+  children: React.ReactNode;
+  round: boolean;
+  fill: string;
+  onClick: (e: SyntheticEvent) => void;
+  data: string;
+  colored: boolean;
+  className: string;
+  'data-testid': string;
+  'aria-label': string;
+}
+
+const Button = styled.button<ButtonProps>`
 border: none;
 display: flex;
 align-items: center;
@@ -90,7 +100,7 @@ function IconLink({
   children,
   round= false,
   fill= '',
-  onClick= (e: MouseEvent) => {},
+  onClick,
   data= '',
   colored= false,
   className= "",

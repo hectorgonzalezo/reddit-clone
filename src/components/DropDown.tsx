@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, func, string, arrayOf, element, oneOfType } from 'prop-types';
 import styled from 'styled-components';
 
 interface DropDownProps {

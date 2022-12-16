@@ -16,11 +16,11 @@ import '../../styles/postCreatorStyle.scss';
 function PostCreator(): JSX.Element {
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  const selectedButton = useRef();
-  const titleRef = useRef();
+  const selectedButton = useRef<HTMLButtonElement | null>(null);
+  const titleRef = useRef<HTMLInputElement | null>(null);
   const [textContent, setTextContent] = useState('');
-  const [selectedSubreddit, setSelectedSubreddit] = useState(null);
-  const [fileToUpload, setFileToUpload] = useState(null);
+  const [selectedSubreddit, setSelectedSubreddit] = useState<string>();
+  const [fileToUpload, setFileToUpload] = useState<File>();
   const [isLoading, setIsLoading] = useState(false);
   let { initialType } = useParams();
   // by default should be textArea
@@ -50,7 +50,8 @@ function PostCreator(): JSX.Element {
     ),
     imgArea: <ImageUpload id="img-area" onChange={updateFileToUpload} required />,
   };
-  const [mediaType, setMediaType] = useState(inputs[initialType]);
+
+  const [mediaType, setMediaType] = useState<JSX.Element>(inputs[initialType]);
 
   // used by both text areas onChange
   function updateTextContent(e: SyntheticEvent): void {
@@ -62,13 +63,16 @@ function PostCreator(): JSX.Element {
   // used by imgArea
   function updateFileToUpload(e: SyntheticEvent): void {
     const target = e.target as HTMLInputElement;
-    const newFile = target.files[0];
-    setFileToUpload(newFile);
+    if (target.files) {
+      const newFile = target.files[0];
+      setFileToUpload(newFile);
+    }
   }
 
   // switches between text, images and link inputs
   function addMediaType(): void {
-    const type = selectedButton.current.getAttribute('data');
+    if (selectedButton.current !== null) {
+    const type = selectedButton.current.getAttribute('data-type');
     switch (type) {
       case 'post':
         setMediaType(inputs.textArea);
@@ -83,18 +87,23 @@ function PostCreator(): JSX.Element {
         break;
     }
   }
+  }
 
   // Selects a type of media button
-  function selectMedia(e) {
-    selectedButton.current.classList.remove('selected');
-    e.target.classList.add('selected');
-    selectedButton.current = e.target;
-    addMediaType();
+  function selectMedia(e: SyntheticEvent): void {
+    const target = e.target as HTMLButtonElement;
+    if (selectedButton.current !== null) {
+      selectedButton.current.classList.remove('selected');
+      target.classList.add('selected');
+      selectedButton.current = target;
+      addMediaType();
+    }
   }
 
   // adds a post to database
-  async function submitPost() {
+  async function submitPost(): Promise<void> {
     const { username } = user;
+    if ( titleRef.current !== null) {
     const title = titleRef.current.value;
     const subreddit = selectedSubreddit;
     const text = textContent;
@@ -124,8 +133,9 @@ function PostCreator(): JSX.Element {
         break;
     }
   }
+  }
 
-  function loadPost(id) {
+  function loadPost(id: string): void {
     setTimeout(() => {
       setIsLoading(false);
       navigate(`/r/${selectedSubreddit}/${id}`);
@@ -144,7 +154,7 @@ function PostCreator(): JSX.Element {
               className={initialType === 'textArea' ? "selected" : ''}
               ref={selectedButton}
               onClick={selectMedia}
-              data="post"
+              data-type="post"
             >
               <img src={postIcon} alt="" />
               Post

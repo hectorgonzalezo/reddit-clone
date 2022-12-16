@@ -10,6 +10,8 @@ export const currentSubredditSlice = createSlice({
 
 export const { changeCurrentSubreddit } = currentSubredditSlice.actions;
 
-export const selectCurrentSubreddit = (state: CurrentSubredditState): ICommunity => state.currentSubreddit;
+export const selectCurrentSubreddit = (
+  state: CurrentSubredditState
+): ICommunity => state.currentSubreddit;
 
 export default currentSubredditSlice.reducer;
