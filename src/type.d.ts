@@ -19,6 +19,7 @@ interface IPost {
   upVotes: number;
   comments: [] | ObjectId[] | IComment[];
   _id: string | ObjectId;
+  url?: string;
   createdAt: string;
   updatedAt: string;
   commentsNum: number;

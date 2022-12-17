@@ -45,7 +45,7 @@ function PostsArea({
     return topPosts;
   }
 
-  function isPostUrlImage(url: string): boolean {
+  function isPostUrlImage(url: string | undefined): boolean {
     if (url !== undefined) {
       const extension = url.split(".").pop() as string;
       const possibleImageExtensions = ["jpeg", "jpg", "png", "gif"];
@@ -120,7 +120,7 @@ function PostsArea({
   return (
     <PostsDiv id="posts">
       {posts.map((post) => {
-        const imageUrl = isPostUrlImage(post.url) ? post.url : post.imageUrl;
+        const imageUrl = isPostUrlImage(post.url) ? post.url : '';
         return (
           <Post
             preview
@@ -141,7 +141,7 @@ function PostsArea({
             text={post.text}
             title={post.title}
             img={imageUrl}
-            url={post._url}
+            url={post.url}
             upVotes={post.upVotes}
             comments={post.comments}
           />

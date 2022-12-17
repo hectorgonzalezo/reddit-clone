@@ -15,7 +15,7 @@ const mockPost = {
   poster: 'yo',
   title: 'Title',
   text: 'Hey!',
-  imageUrl:
+  url:
     'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/postImages%2Fbar%2Fimages58b82c35dcf6e61433da9494.png?alt=media&token=c77db72a-07d3-4c61-9a2c-cfc86e8e4bb1',
   postId: '0',
   upVotes: 10,
@@ -36,7 +36,7 @@ const {
   poster,
   title,
   text,
-  imageUrl,
+  url,
   upVotes,
   timePosted,
   comments,
@@ -127,7 +127,7 @@ describe('Post previews', () => {
             poster={poster}
             timePosted={timePosted}
             title={title}
-            img={imageUrl}
+            img={url}
             postId={postId}
             upVotes={upVotes}
             comments={comments}
@@ -140,7 +140,7 @@ describe('Post previews', () => {
 
     const imageContent = screen.getByTestId('image-content');
     expect(imageContent).toBeInTheDocument();
-    expect(imageContent).toHaveAttribute('src', mockPost.imageUrl);
+    expect(imageContent).toHaveAttribute('src', mockPost.url);
 
     expect(container).toMatchSnapshot();
   });

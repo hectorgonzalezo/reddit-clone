@@ -21,7 +21,7 @@ function PostDisplay(): JSX.Element {
   const dispatch = useDispatch();
 
 
-  function isPostUrlImage(url: string): boolean {
+  function isPostUrlImage(url: string | undefined): boolean {
     if (url !== undefined) {
       const extension = url.split('.').pop() as string;
       const possibleImageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
@@ -71,7 +71,7 @@ function PostDisplay(): JSX.Element {
             }
             text={post.text}
             title={post.title}
-            img={isPostUrlImage(post.url) ? post.url : post.imageUrl}
+            img={isPostUrlImage(post.url) ? post.url : ""}
             url={post.url}
             upVotes={post.upVotes}
             comments={post.comments}
