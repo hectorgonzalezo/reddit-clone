@@ -8,12 +8,9 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action) => {
-
       const { user } = action.payload;
 
-      if(action.payload.user.icon !== undefined){
-        user.icon = action.payload.user.icon;
-      } else {
+      if(user.icon === undefined){
         user.icon = defaultUserIcon;
       }
 

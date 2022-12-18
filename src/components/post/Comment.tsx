@@ -78,7 +78,7 @@ function Comment({
             <img src={commentIcon} alt="" className="icon" />
             <p>Reply</p>
           </button>
-          {comment.user === user.username ? (
+          {comment.user === user._id.toString() ? (
             <button
               type="button"
               onClick={() => setVisibleEditor((prev) => !prev)}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, container, act, getByText } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
@@ -6,16 +7,33 @@ import store from '../store/store';
 import Comment from '../components/post/Comment';
 import userEvent from '@testing-library/user-event';
 
-jest.mock('..//firebase/firebase');
+jest.mock('../api/users');
 
 const mockReload = jest.fn();
 const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
 
+beforeAll(async() => {
+  await act(async () => {
+    store.dispatch({
+      type: "user/addUser",
+      payload: {
+        user: {
+        username: "juan",
+        email: "mock@mock.com",
+        icon,
+        _id: "123456789a123456789b1234",
+        },
+        token: '1234701923491273401243'
+      },
+    });
+  });
+})
+
 describe('Comment', () => {
   test('Display basic comment data', async () => {
     const mockComment = {
-      timePosted: new Date().toString(),
-      content: 'mockContent',
+      createdAt: new Date().toString(),
+      text: 'mocktext',
       user: 'mockUser',
       upVotes: 10,
     };
@@ -32,7 +50,7 @@ describe('Comment', () => {
       )
     );
 
-    expect(screen.getByText('mockContent')).toBeInTheDocument();
+    expect(screen.getByText('mocktext')).toBeInTheDocument();
     expect(screen.getByText('mockUser')).toBeInTheDocument();
     expect(screen.getByText(/less/)).toBeInTheDocument();
     expect(container).toMatchSnapshot();
@@ -40,13 +58,13 @@ describe('Comment', () => {
 
   test('Display nested comments', async () => {
     const mockComment = {
-      timePosted: new Date().toString(),
-      content: 'mockContent',
+      createdAt: new Date().toString(),
+      text: 'mocktext',
       user: 'mockUser',
       upVotes: 10,
       responses: [{
-        timePosted: new Date().toString(),
-        content: 'anotherMockContent',
+        createdAt: new Date().toString(),
+        text: 'anotherMocktext',
         user: 'anotherMockUser',
         upVotes: 1,
       }],
@@ -66,16 +84,16 @@ describe('Comment', () => {
 
     const comments = screen.queryAllByTestId('comment');
 
-    const nestedContent = getByText(comments[1], 'anotherMockContent');
+    const nestedtext = getByText(comments[1], 'anotherMocktext');
 
-    expect(nestedContent).toBeInTheDocument();
+    expect(nestedtext).toBeInTheDocument();
     
   });
 
   test('Reply button should open a Comment creator', async () => {
     const mockComment = {
-      timePosted: new Date().toString(),
-      content: 'mockContent',
+      createdAt: new Date().toString(),
+      text: 'mocktext',
       user: 'mockUser',
       upVotes: 10,
     };
@@ -88,7 +106,8 @@ describe('Comment', () => {
             postId="1"
             reloadPost={mockReload}
           />
-        </Provider>
+        </Provider>,
+        { wrapper: MemoryRouter }
       )
     );
 
@@ -105,8 +124,8 @@ describe('Comment', () => {
 
   test('Edit button should be available by default', async () => {
     const mockComment = {
-      timePosted: new Date().toString(),
-      content: 'mockContent',
+      createdAt: new Date().toString(),
+      text: 'mocktext',
       user: 'mockUser',
       upVotes: 10,
     };
@@ -130,18 +149,12 @@ describe('Comment', () => {
 
   test('If user is the creator of comment, edit button should be displayed', async () => {
     const mockComment = {
-      timePosted: new Date().toString(),
-      content: 'mockContent',
-      user: 'mockUser',
+      createdAt: new Date().toString(),
+      text: 'mocktext',
+      user: "123456789a123456789b1234",
       upVotes: 10,
     };
 
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "mockUser", email: "mock@mock.com", icon },
-      });
-    });
 
     await act(async () =>
       render(
@@ -152,28 +165,23 @@ describe('Comment', () => {
             postId="1"
             reloadPost={mockReload}
           />
-        </Provider>
+        </Provider>,
+        { wrapper: MemoryRouter }
       )
     );
     
+    screen.debug();
     expect(screen.queryByTestId("edit-button")).toBeInTheDocument();
 
   });
 
   test('Edit button should open a Comment creator', async () => {
     const mockComment = {
-      timePosted: new Date().toString(),
-      content: 'mockContent',
-      user: 'mockUser',
+      createdAt: new Date().toString(),
+      text: 'mocktext',
+      user: "123456789a123456789b1234",
       upVotes: 10,
     };
-
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "mockUser", email: "mock@mock.com", icon },
-      });
-    });
 
     await act(async () =>
       render(
@@ -184,7 +192,8 @@ describe('Comment', () => {
             postId="1"
             reloadPost={mockReload}
           />
-        </Provider>
+        </Provider>,
+        { wrapper: MemoryRouter }
       )
     );
 
