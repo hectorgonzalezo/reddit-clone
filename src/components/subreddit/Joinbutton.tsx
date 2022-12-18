@@ -22,7 +22,7 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
 
   async function updateUserStore(): Promise<void> {
     const updatedUser = await getUser(user._id);
-    dispatch(addUser(updatedUser));
+    dispatch(addUser({ user: updatedUser }));
   }
 
   async function changeSubscription(e: SyntheticEvent): Promise<void> {

@@ -71,6 +71,10 @@ interface LoginModalState {
   loginModalVisible: boolean;
 }
 
+interface UserState {
+  user: UserInState;
+}
+
 interface AddCommunityModalState {
   addCommunityModalVisible: boolean;
 }
@@ -83,7 +87,7 @@ interface CurrentSubredditState {
   currentSubreddit: string;
 }
 
-interface UserState {
+interface UserInState {
   username: string;
   email: string;
   permission: "regular" | "admin";

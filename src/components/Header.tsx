@@ -70,13 +70,14 @@ function Header({
   useEffect(() => {
     // change subreddit icon
     if (currentSubreddit !== null) {
-      const currentSubredditId = subreddits[currentSubreddit]._id;
-        getSubreddit(currentSubredditId)
-        .then((data) =>     {
+      const currentSubredditId = subreddits[currentSubreddit]._id.toString();
+      getSubreddit(currentSubredditId)
+        .then((data) => {
           if (data.icon !== undefined) {
-          setSubredditIcon(data.icon);
-    }})
-      .catch((error) => console.log(error));
+            setSubredditIcon(data.icon);
+          }
+        })
+        .catch((error) => console.log(error));
     } else {
       setSubredditIcon(homeIcon);
     }

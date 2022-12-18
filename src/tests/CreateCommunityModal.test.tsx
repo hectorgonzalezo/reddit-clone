@@ -8,7 +8,7 @@ import CreateCommunityModal from '../components/subreddit/CreateCommunityModal';
 
 import store from '../store/store';
 
-jest.mock('../firebase/firebase');
+jest.mock('../api/users');
 
 describe('Styled button works', () => {
   test('Create community button should be disabled by default', async () => {

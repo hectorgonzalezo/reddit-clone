@@ -7,11 +7,14 @@ import { Provider } from 'react-redux';
 import Header from '../components/Header';
 import store from '../store/store';
 
-jest.mock('../firebase/firebase');
+jest.mock('../api/users');
+jest.mock('../api/communities');
 
 const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
 
-describe('Sign up modal', () => {
+
+
+describe('Sign up modal without user', () => {
   test('User area should display log in and sign up buttons by default', () => {
     render(<Provider store={store}>
       <BrowserRouter>
@@ -51,7 +54,7 @@ describe('Sign up modal', () => {
     expect(mockSignUpFunc).toBeCalled();
   });
 
-  test('If given a user, user area should contain a single button with the user info', async () => {
+  test("There should be no go to bar", async () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -60,20 +63,31 @@ describe('Sign up modal', () => {
       </Provider>
     );
 
+    // It shouldn't be there by default
+    expect(screen.queryByTestId("go-to")).not.toBeInTheDocument();
+  });
+});
+
+describe('Sign up modal with user', () => {
+  // Add user to redux store
+  beforeEach(async () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: []},
+        payload: {
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+          },
+          token: "1234701923491273401243",
+        },
       });
     });
-
-    // User name and icon should be displayed
-    expect(screen.getByText('juan')).toBeInTheDocument();
-    expect(screen.getByAltText('user icon')).toBeInTheDocument();
-
   });
 
-  test('If given a user, drop down menu should be invisible and shown only when clicking', async () => {
+  test("If given a user, user area should contain a single button with the user info", async () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -82,27 +96,34 @@ describe('Sign up modal', () => {
       </Provider>
     );
 
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: []},
-      });
-    });
+    // User name and icon should be displayed
+    expect(screen.getByText("juan")).toBeInTheDocument();
+    expect(screen.getByAltText("user icon")).toBeInTheDocument();
+  });
 
-    const userArea = screen.queryByTestId('user-area');
+  test("If given a user, drop down menu should be invisible and shown only when clicking", async () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Header />
+        </BrowserRouter>
+      </Provider>
+    );
+
+    const userArea = screen.queryByTestId("user-area");
 
     // drop down shoul be invisible
-    const dropDown = screen.getByTestId('user-dropdown');
-    expect(dropDown).toHaveStyle('display: none');
+    const dropDown = screen.getByTestId("user-dropdown");
+    expect(dropDown).toHaveStyle("display: none");
 
     // User name and icon should be displayed
-    const userButton = getByRole(userArea, 'button');
+    const userButton = getByRole(userArea, "button");
     userEvent.click(userButton);
 
-    expect(dropDown).not.toHaveStyle('display: none');
+    expect(dropDown).not.toHaveStyle("display: none");
   });
 
-  test('Pressing logout on user dropdown logs user out', async () => {
+  test("Pressing logout on user dropdown logs user out", async () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -111,32 +132,24 @@ describe('Sign up modal', () => {
       </Provider>
     );
 
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
+    const userArea = screen.queryByTestId("user-area");
 
-    const userArea = screen.queryByTestId('user-area');
+    const dropDown = screen.getByTestId("user-dropdown");
+    expect(dropDown).toHaveStyle("display: none");
 
-    const dropDown = screen.getByTestId('user-dropdown');
-    expect(dropDown).toHaveStyle('display: none');
-
-    const userButton = getByRole(userArea, 'button');
+    const userButton = getByRole(userArea, "button");
     userEvent.click(userButton);
 
-    const logOutLink = screen.getByTestId('logout-link');
+    const logOutLink = screen.getByTestId("logout-link");
 
     await act(async () => userEvent.click(logOutLink));
 
-
     // there should be no user information
-    expect(screen.queryByText('juan')).not.toBeInTheDocument();
-    expect(screen.queryByAltText('user icon')).not.toBeInTheDocument();
+    expect(screen.queryByText("juan")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("user icon")).not.toBeInTheDocument();
   });
 
-  test('If given a user, there should be a go to bar', async () => {
+  test("If given a user, there should be a go to bar", async () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -145,21 +158,10 @@ describe('Sign up modal', () => {
       </Provider>
     );
 
-    // It shouldn't be there by default
-    expect(screen.queryByTestId('go-to')).not.toBeInTheDocument()
-
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
-
-    expect(screen.queryByTestId('go-to')).toBeInTheDocument()
-
+    expect(screen.queryByTestId("go-to")).toBeInTheDocument();
   });
 
-  test('Pressing on go to button shows subreddits dropdown', async () => {
+  test("Pressing on go to button shows subreddits dropdown", async () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -170,42 +172,29 @@ describe('Sign up modal', () => {
 
     // It shouldn't be there by default
 
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
-
-    const goToArea = screen.getByTestId('go-to')
-    const goToButton = getByRole(goToArea, 'button');
-    const dropDown = screen.getByTestId('subreddits-dropdown');
-
-    expect(dropDown).toHaveStyle('display: none');
+    const goToArea = screen.getByTestId("go-to");
+    const goToButton = getByRole(goToArea, "button");
+    const dropDown = screen.getAllByTestId("subreddits-dropdown");
+    // There are two drop downs, the second one is in the search bar
+    expect(dropDown[0]).toHaveStyle("display: none");
 
     userEvent.click(goToButton);
 
-    expect(dropDown).not.toHaveStyle('display: none');
+    expect(dropDown[0]).not.toHaveStyle("display: none");
   });
 
-  test('Selecting a subreddit shows its name and icon in go to bar', async () => {
+  test("Selecting a subreddit shows its name and icon in go to bar", async () => {
     const mockSubreddit = {
-      name: 'aww',
-      dateCreated: (new Date()).toString(),
+      name: "aww",
       description:
-          'Things that make you go AWW! Like puppies, bunnies, babies, and so on... A place for really cute pictures and videos!',
+        "Things that make you go AWW! Like puppies, bunnies, babies, and so on... A place for really cute pictures and videos!",
       icon,
       members: 0,
       postQuantity: 3,
-      subtitle: 'A subreddit for cute and cuddly pictures',
+      subtitle: "A subreddit for cute and cuddly pictures",
+      _id: "123456789a123456789b1234"
     };
 
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
 
     await act(async () => {
       store.dispatch({
@@ -217,28 +206,26 @@ describe('Sign up modal', () => {
     await act(async () => {
       store.dispatch({
         type: "currentSubreddit/changeCurrentSubreddit",
-        payload: 'aww',
+        payload: "aww",
       });
     });
 
     await act(async () => {
       render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <Header />
-        </BrowserRouter>
-      </Provider>
-    )
+        <Provider store={store}>
+          <BrowserRouter>
+            <Header />
+          </BrowserRouter>
+        </Provider>
+      );
     });
 
-    // It shouldn't be there by default
+    const goToArea = screen.getByTestId("go-to");
+    const goToButton = getByRole(goToArea, "button");
+    const subredditName = getByRole(goToButton, "heading");
+    const subredditIcon = getByRole(goToButton, "img");
 
-    const goToArea = screen.getByTestId('go-to')
-    const goToButton = getByRole(goToArea, 'button');
-    const subredditName = getByRole(goToButton, 'heading');
-    const subredditIcon = getByRole(goToButton, 'img');
-
-    expect(subredditName).toHaveTextContent('aww');
-    expect(subredditIcon).toHaveAttribute('src', icon);
+    expect(subredditName).toHaveTextContent("aww");
+    expect(subredditIcon).toHaveAttribute("src", icon);
   });
 });

@@ -7,7 +7,9 @@ import { Provider } from 'react-redux';
 import store from '../store/store';
 import JoinButton from '../components/subreddit/Joinbutton';
 
-jest.mock('../firebase/firebase');
+jest.mock('../api/users');
+jest.mock('../api/communities');
+
 const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
 
 const mockSubreddit = {
@@ -21,16 +23,39 @@ const mockSubreddit = {
   subtitle: 'A subreddit for cute and cuddly pictures',
 };
 
+// Add user
+beforeEach(async () => {
+  await act(async () => {
+    store.dispatch({
+      type: "user/addUser",
+      payload: {
+        user: {
+          username: "juan",
+          email: "mock@mock.com",
+          icon,
+          _id: "123456789a123456789b1234",
+        },
+        token: "1234701923491273401243",
+      },
+    });
+  });
+})
+
 describe('Button that allows user to join a subreddit', () => {
   test('Displays "Join" if user isnt subscribed  to subreddit', async () => {
+
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
         payload: {
-          username: "juan",
-          email: "mock@mock.com",
-          icon,
-          subreddits: [],
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+            subreddits: [],
+          },
+          token: "1234701923491273401243",
         },
       });
     });
@@ -53,14 +78,19 @@ describe('Button that allows user to join a subreddit', () => {
   });
 
   test('Displays "Joined" if user is subscribed  to subreddit', async () => {
+
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
         payload: {
-          username: "juan",
-          email: "mock@mock.com",
-          icon,
-          subreddits: ['aww'],
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+            subreddits: ['aww'],
+          },
+          token: "1234701923491273401243",
         },
       });
     });
@@ -83,14 +113,19 @@ describe('Button that allows user to join a subreddit', () => {
   });
 
   test('Displays "Leave" if user is subscribed  to subreddit and hover on button', async () => {
+
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
         payload: {
-          username: "juan",
-          email: "mock@mock.com",
-          icon,
-          subreddits: ['aww'],
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+            subreddits: ['aww'],
+          },
+          token: "1234701923491273401243",
         },
       });
     });
@@ -122,10 +157,14 @@ describe('Button that allows user to join a subreddit', () => {
       store.dispatch({
         type: "user/addUser",
         payload: {
-          username: "juan",
-          email: "mock@mock.com",
-          icon,
-          subreddits: [],
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+            subreddits: [],
+          },
+          token: "1234701923491273401243",
         },
       });
     });
@@ -138,7 +177,6 @@ describe('Button that allows user to join a subreddit', () => {
     });
 
 
-
     render(
       <Provider store={store}>
         <JoinButton subreddit="aww" />
@@ -148,11 +186,11 @@ describe('Button that allows user to join a subreddit', () => {
     const button = screen.getByRole('button');
     await act(async () => userEvent.click(button));
     // update state
-    expect(store.getState().user.communities.includes('aww')).toBe(true);
+    expect(store.getState().user.subreddits.includes('aww')).toBe(true);
 
     // clicking it again, removes it
     await act(async () => userEvent.click(button));
     // update state
-    expect(store.getState().user.communities.includes('aww')).toBe(false);
+    expect(store.getState().user.subreddits.includes('aww')).toBe(false);
   });
 });
