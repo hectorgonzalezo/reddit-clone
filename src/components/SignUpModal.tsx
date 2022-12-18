@@ -4,8 +4,6 @@ import { useDispatch } from 'react-redux';
 import Button from './Button';
 import { addUser } from '../store/userSlice';
 import loadingIcon from '../assets/loading.gif';
-import { authorization } from '../firebase/firebase';
-import { sign } from 'crypto';
 
 interface SignUpModalProps {
   closeFunc: () => void;

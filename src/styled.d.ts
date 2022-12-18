@@ -11,3 +11,4 @@ declare module 'styled-components' {
       secondary: string;
     };
   }
+}

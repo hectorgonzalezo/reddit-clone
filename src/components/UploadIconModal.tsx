@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateIcon } from '../store/userSlice';
+import { addUser } from '../store/userSlice';
 import { saveUserIcon } from '../api/users';
 import ImageUpload from './ImageUpload';
 import Button from './Button';
@@ -32,8 +32,8 @@ function UploadIconModal({
     e.preventDefault();
     try {
       setLoadingData(true);
-      const icon = await saveUserIcon(iconFile as File, user);
-      dispatch(updateIcon(icon));
+      const updatedUser = await saveUserIcon(iconFile as File, user);
+      dispatch(addUser(updatedUser));
       setLoadingData(false);
       closeFunc();
     } catch (error) {

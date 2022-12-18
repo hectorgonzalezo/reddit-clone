@@ -112,12 +112,11 @@ function Post({
   function updateVotes(e: SyntheticEvent): void {
     const subredditId = subreddts[subredditName]._id;
     const target = e.target as HTMLAnchorElement;
+    const newVoteType = target.getAttribute('data') as Vote;
     e.stopPropagation();
     // Only allow vote if user is authorized
-    if (user.username !== undefined) {
-      // if(authorization.user)
+    if (user.username !== undefined && newVoteType !== null) {
       // can be 'upVote' or 'downVote'
-      const newVoteType = target.getAttribute('data');
       switch (true) {
         // previously clicked vote => new vote
         // upVote => upVote

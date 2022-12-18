@@ -70,7 +70,7 @@ function Header({
   useEffect(() => {
     // change subreddit icon
     if (currentSubreddit !== null) {
-      const currentSubredditId = subreddits[currentSubreddit];
+      const currentSubredditId = subreddits[currentSubreddit]._id;
         getSubreddit(currentSubredditId)
         .then((data) =>     {
           if (data.icon !== undefined) {
@@ -102,7 +102,7 @@ function Header({
               alt="chosen subreddit"
               className={subredditIcon === homeIcon ? "icon" : "user-icon"}
             />
-            <h1>{currentSubreddit === null ? "Home" : currentSubreddit.name}</h1>
+            <h1>{currentSubreddit === null ? "Home" : currentSubreddit}</h1>
             <img src={arrowDownIcon} className="icon" alt="" aria-hidden="true" />
           </button>
           <SubredditsDropDown

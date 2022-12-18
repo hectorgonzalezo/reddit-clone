@@ -9,7 +9,7 @@ interface Votes {
 
 interface IUser {
   username: string;
-  password: string;
+  password?: string;
   passwordConfirm?: string;
   email: string;
   permission: "regular" | "admin";
@@ -20,6 +20,7 @@ interface IUser {
   createdAt: string;
   updatedAt: string;
   votes: Votes;
+  token: string;
 }
 
 interface IPost {
@@ -35,7 +36,6 @@ interface IPost {
   updatedAt: string;
   commentsNum: number;
 }
-
 
 
 interface IComment {
@@ -80,15 +80,21 @@ interface ChangeIconModalState {
 }
 
 interface CurrentSubredditState {
-  currentSubreddit: ICommunity;
-}
-
-interface SubredditsState {
-  [index: string]: ICommunity;
+  currentSubreddit: string;
 }
 
 interface UserState {
-  user: IUser;
+  username: string;
+  email: string;
+  permission: "regular" | "admin";
+  icon?: string;
+  communities: [] | ObjectId[] | ICommunity[];
+  subreddits: string[];
+  _id: string | ObjectId;
+  createdAt: string;
+  updatedAt: string;
+  votes: Votes;
+  token: string;
 }
 
 
