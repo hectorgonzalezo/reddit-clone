@@ -8,12 +8,13 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action) => {
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.votes = action.payload.votes;
-      state.subreddits = action.payload.subreddits;
+      state.username = action.payload.user.username;
+      state.email = action.payload.user.email;
+      state.votes = action.payload.user.votes;
+      state.subreddits = action.payload.user.subreddits;
+      state.token = action.payload.token;
       if(action.payload.icon !== undefined){
-        state.icon = action.payload.icon;
+        state.icon = action.payload.user.icon;
       } else {
         state.icon = defaultUserIcon
       }
@@ -29,6 +30,7 @@ export const userSlice = createSlice({
       state.icon = undefined;
       state.votes = undefined;
       state.subreddits = undefined;
+      state.token = undefined;
 
       localStorage.removeItem("whoAmI");
     },

@@ -2,19 +2,21 @@ import React, { SyntheticEvent, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../store/userSlice';
+import { createPost, createImagePost } from '../../api/posts';
 import CommunityChooser from '../CommunityChooser';
 import PostingRules from './PostingRules';
 import ImageUpload from '../ImageUpload';
 import Button from '../Button';
-import { database } from '../../firebase/firebase';
 import postIcon from '../../assets/post_icon.svg';
 import imagesIcon from '../../assets/images_icon.svg';
 import linkIcon from '../../assets/link_icon.svg';
 import loadingIcon from '../../assets/loading.gif';
 import '../../styles/postCreatorStyle.scss';
+import { selectSubreddits } from '../../store/subredditsSlice';
 
 function PostCreator(): JSX.Element {
   const user = useSelector(selectUser);
+  const subreddits = useSelector(selectSubreddits);
   const navigate = useNavigate();
   const selectedButton = useRef<HTMLButtonElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
@@ -107,7 +109,7 @@ function PostCreator(): JSX.Element {
     const { username } = user;
     if ( titleRef.current !== null) {
     const title = titleRef.current.value;
-    const subreddit = selectedSubreddit;
+    const community = subreddits[selectedSubreddit as string]._id;
     const text = textContent;
     const image = fileToUpload;
     let id;
@@ -119,15 +121,17 @@ function PostCreator(): JSX.Element {
     // extract the id of the element to identify the type
     switch (mediaType.props.id) {
       case 'text-area':
-        id = await database.addTextPost(username, title, subreddit, text);
+        id = await createPost({ title, community, text }, user.token);
         loadPost(id);
         break;
       case 'img-area':
-        id = await database.addImagePost(username, title, subreddit, image);
-        loadPost(id);
+        if (image !== undefined){
+          id = await createImagePost({ title, community}, user, image);
+          loadPost(id);
+        }
         break;
       case 'url-area':
-        id = await database.addUrlPost(username, title, subreddit, text);
+        id = await createPost({ title, community, url: text }, user.token);
         loadPost(id);
         break;
       default:

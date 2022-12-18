@@ -1,5 +1,3 @@
-import { ObjectBindingOrAssignmentElement } from "typescript";
-
 // Three ways to orders posts by
 type PostOrder = 'hot' | 'new' | 'top';
 
@@ -112,3 +110,4 @@ interface UserState {
 declare module "*.jpg";
 declare module "*.png";
 declare module "*.gif";
+declare module "*.svg";

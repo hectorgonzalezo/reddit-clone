@@ -11,7 +11,6 @@ import AccountDropDown from './AccountDropDown';
 import SubredditsDropDown from './subreddit/SubredditsDropDown';
 import { selectUser } from '../store/userSlice';
 import { selectCurrentSubreddit, changeCurrentSubreddit } from '../store/currentSubredditSlice';
-import { database } from '../firebase/firebase';
 import { getSubreddit } from '../api/communities';
 
 import '../styles/headerStyle.scss';

@@ -1,111 +1,87 @@
 import BASEURL from './baseurl';
+import uploadImage from './uploadImage';
+
+export async function getPost(postId: string): Promise<IPost> {
+  const response = await fetch(`${BASEURL}/posts/${postId}`, {
+    method: "GET",
+    mode: 'cors',
+    headers: {
+      "Content-Type": "application/json",
+    }});
+    const post = await response.json();
+    return post;
+}
 
 
-// uploads an image to firestore
-// arguments are the file to upload and the path to upload it to
-export async function uploadImage(
-    file: File,
-    path: string
-  ): Promise<string | Error> {
-    try {
-      // Upload the image to Cloud Storage.
-      const filePath = `${path}${file.name}`;
-      const newImageRef = ref(getStorage(), filePath);
-      const fileSnapshot = await uploadBytesResumable(newImageRef, file);
-      // Generate a public URL for the file.
-      const publicImageUrl = await getDownloadURL(newImageRef);
-      return publicImageUrl;
-    } catch (error) {
-      console.log(`couldn't upload ${file.name}`);
-      return error as Error;
-    }
-  }
+export async function vote(
+  userId: string,
+  postId: string,
+  voteType: Vote,
+  token: string,
+): Promise<void> {
+  const response = await fetch(`${BASEURL}/${userId}/vote/${postId}`, {
+    method: "PUT",
+    mode: 'cors',
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ vote: voteType }),
+  });
+}
 
-export async function getPost(subredditName, postId) {
-    const userDoc = await getDoc(doc(db, `subreddits/${subredditName}/posts`, postId));
-    return userDoc.data();
-  }
-
-
-export async function updateVotes(username, subreddit, postId, incrementQuantity, voteType) {
-    const postDoc = doc(db, `subreddits/${subreddit}/posts/`, postId);
-    const userDoc = doc(db, 'users', username);
-
-    // update upVotes in original document
-    await updateDoc(postDoc, {
-      upVotes: increment(incrementQuantity),
-    });
-
-    // updates votes
-    await updateDoc(userDoc, {
-      [`votes.${postId}`]: voteType,
-    });
-  }
-  export async function getAllPostsInSubreddit(
-    subredditName: string
-  ): Promise<IPost[]> {
-    const posts: IPost[] = [];
-    const postsQuery = query(
-      collection(db, `subreddits/${subredditName}/posts`),
-      orderBy("timePosted", "desc"),
-      limit(10)
-    );
-    const postsInSubreddit = await getDocs(postsQuery);
-    postsInSubreddit.forEach((post) => posts.push(post.data() as IPost));
-
-    return posts;
-  }
-
-  export async function getTopPostsInSubreddit(subredditName: string): Promise<IPost[]> {
-    const posts: IPost[] = [];
-    const postsQuery = query(collection(db, `subreddits/${subredditName}/posts`));
-    const postsInSubreddit = await getDocs(postsQuery);
-    postsInSubreddit.forEach((post) => {
-      const postData = post.data();
-      // Add id of post to object
-      posts.push(postData as IPost);
-    });
-
-    return posts;
-  }
+export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]> {
+  const response = await fetch(`${BASEURL}/posts/?community=${subredditId}`, {
+    method: "GET",
+    mode: 'cors',
+    headers: {
+      "Content-Type": "application/json",
+    }});
+    const posts = await response.json();
+    return posts.posts;
+}
 
 
-
-
+// Both create posts return the post id
   // adds a post in the specified subreddit
-  export async function addTextPost(username, title, subreddit, text) {
-    const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
-      originalPoster: username,
-      title,
-      text,
-      comments: [],
-      upVotes: 0,
-      timePosted: new Date().toString(),
+  export async function createPost(
+    post: { title: string; community: string; text?: string, url?: string},
+    token: string
+  ): Promise<string> {
+    const response = await fetch(`${BASEURL}/posts}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(post),
     });
-    return docRef.id;
+
+    const data = await response.json();
+
+    return data.post._id;
   }
 
-  export async function addImagePost(username, title, subreddit, image) {
-    const imageUrl = await uploadImage(image, `postImages/${username}/images`)
-    const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
-      originalPoster: username,
-      title,
-      imageUrl,
-      comments: [],
-      upVotes: 0,
-      timePosted: new Date().toString(),
-    });
-    return docRef.id;
-  }
+  export async function createImagePost(
+    post: { title: string; community: string },
+    user: IUser,
+    image: File,
+  ): Promise<string> {
+    const imageUrl = await uploadImage(image, `postImages/${user._id as string}/images`);
 
-  export async function addUrlPost(username, title, subreddit, url) {
-    const docRef = await addDoc(collection(db, 'subreddits', subreddit, 'posts'), {
-      originalPoster: username,
-      title,
-      url,
-      comments: [],
-      upVotes: 0,
-      timePosted: new Date().toString(),
+    const { title, community } = post;
+    const response = await fetch(`${BASEURL}/posts}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({ title, community, imageUrl }),
     });
-    return docRef.id;
+
+    const data = await response.json();
+
+    return data.post._id;
   }

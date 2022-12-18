@@ -2,11 +2,12 @@ import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getPostsInSubreddit } from '../../api/posts';
 import defaultCommunityIcon from '../../defaultCommunityIcon';
-import { database } from '../../firebase/firebase';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
 import { selectUser } from '../../store/userSlice';
+import { selectSubreddits } from '../../store/subredditsSlice';
 
 interface PostsAreaProps {
   subreddits: SubredditsObject;
@@ -27,6 +28,7 @@ function PostsArea({
 }: PostsAreaProps): JSX.Element {
   const [posts, setPosts] = useState<IPost[]>([]);
   const user = useSelector(selectUser);
+  const subreddits = useSelector(selectSubreddits);
   const navigate = useNavigate();
   let rendered = false;
   const UserDisplayName = useParams().name;
@@ -35,7 +37,8 @@ function PostsArea({
     subredditName: string,
     subredditIcon: string
   ): Promise<IPost[]> {
-    let topPosts = await database.getTopPostsInSubreddit(subredditName);
+    const subredditId = subreddits[subredditName]._id;
+    let topPosts = await getPostsInSubreddit(subredditId);
     // add subreddit name and icon to post
     topPosts = topPosts.map((post) => ({
       ...post,
@@ -76,7 +79,7 @@ function PostsArea({
     if (onlyUser) {
       setPosts([]);
       let userPosts: IPost[] = [];
-      Object.values(subreddits).forEach((subreddit) => {
+      Object.values(subreddits).forEach((subreddit: ICommunity) => {
         getTop(
           subreddit.name,
           subreddit.icon || defaultCommunityIcon

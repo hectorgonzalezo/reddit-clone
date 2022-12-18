@@ -2,8 +2,8 @@ import React, { SyntheticEvent, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { vote } from '../../api/posts';
 import styled from 'styled-components';
-import { database } from '../../firebase/firebase';
 import upIcon from '../../assets/upvote_icon.svg';
 import downIcon from '../../assets/downvote_icon.svg';
 import commentsIcon from '../../assets/comments_icon.svg';
@@ -17,6 +17,7 @@ import { selectUser } from '../../store/userSlice';
 import { toggleLogInModal } from '../../store/loginModalSlice';
 import countComments from '../../utils/countComents';
 import '../../styles/postStyle.scss';
+import { selectSubreddits } from '../../store/subredditsSlice';
 
 
 interface PostProps {
@@ -103,11 +104,13 @@ function Post({
   const [previousVote, setPreviousVote] = useState(voteType);
   const [votes, setVotes] = useState(upVotes);
   const user = useSelector(selectUser);
+  const subreddts = useSelector(selectSubreddits);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // updates number of upvotes in post
   function updateVotes(e: SyntheticEvent): void {
+    const subredditId = subreddts[subredditName]._id;
     const target = e.target as HTMLAnchorElement;
     e.stopPropagation();
     // Only allow vote if user is authorized
@@ -121,8 +124,7 @@ function Post({
         case newVoteType === 'upVote' && previousVote === 'upVote':
           setPreviousVote('');
           setVotes((prevVotes) => prevVotes - 1);
-          database
-            .updateVotes(user.username, subredditName, postId, -1, "")
+          vote(user._id, subredditId, '', user.token)
             .then((result) => {})
             .catch((error) => console.log(error));
           break;
@@ -130,30 +132,23 @@ function Post({
         case newVoteType === 'upVote' && previousVote === '':
           setPreviousVote('upVote');
           setVotes((prevVotes) => prevVotes + 1);
-          database.updateVotes(
-            user.username,
-            subredditName,
-            postId,
-            1,
-            newVoteType
-          ).then((result) => {})
-          .catch((error) => console.log(error));
+          vote(user._id, subredditId, newVoteType, user.token)
+            .then((result) => {})
+            .catch((error) => console.log(error));
           break;
         // downVote => downVote
         case newVoteType === 'downVote' && previousVote === 'downVote':
           setPreviousVote('');
           setVotes((prevVotes) => prevVotes + 1);
-          database
-            .updateVotes(user.username, subredditName, postId, 1, "")
-            .then((result) => {})
-            .catch((error) => console.log(error));
+          vote(user._id, subredditId, '', user.token)
+          .then((result) => {})
+          .catch((error) => console.log(error));
           break;
         // none => downVote
         case newVoteType === 'downVote' && previousVote === '':
           setPreviousVote('downVote');
           setVotes((prevVotes) => prevVotes - 1);
-          database
-            .updateVotes(user.username, subredditName, postId, -1, newVoteType)
+          vote(user._id, subredditId, newVoteType, user.token)
             .then((result) => {})
             .catch((error) => console.log(error));
           break;
@@ -161,8 +156,7 @@ function Post({
         case newVoteType === 'downVote' && previousVote === 'upVote':
           setPreviousVote('downVote');
           setVotes((prevVotes) => prevVotes - 2);
-          database
-            .updateVotes(user.username, subredditName, postId, -2, newVoteType)
+          vote(user._id, subredditId, newVoteType, user.token)
             .then((result) => {})
             .catch((error) => console.log(error));
           break;
@@ -170,8 +164,7 @@ function Post({
         case newVoteType === 'upVote' && previousVote === 'downVote':
           setPreviousVote('upVote');
           setVotes((prevVotes) => prevVotes + 2);
-          database
-            .updateVotes(user.username, subredditName, postId, 2, newVoteType)
+          vote(user._id, subredditId, newVoteType, user.token)
             .then((result) => {})
             .catch((error) => console.log(error));
           break;
@@ -186,7 +179,7 @@ function Post({
 
   function goToPostComment(e: SyntheticEvent): void {
     e.stopPropagation();
-    navigate(`/r/${subredditName}/${postId}#create-post-area`)
+    navigate(`/r/${subredditName}/${postId}#create-post-area`);
   }
 
   return (

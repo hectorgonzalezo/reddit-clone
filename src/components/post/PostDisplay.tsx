@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../../store/userSlice';
-import { database } from '../../firebase/firebase';
+import { getPost } from '../../api/posts';
 import { getSubreddit } from '../../api/communities';
 import SubredditAbout from '../subreddit/SubredditAbout';
 import Agreements from '../Agreements';
@@ -35,8 +35,8 @@ function PostDisplay(): JSX.Element {
 
   function reloadPost(): void {
     setPost(false);
-    database.getPost(name, postId)
-      .then((data) => setPost(data as IPost))
+    getPost(postId)
+      .then((data) => setPost(data))
       .catch((error) => console.log(error));
   }
 
@@ -47,8 +47,8 @@ function PostDisplay(): JSX.Element {
       .then((data) => setChosenSubreddit(data.name))
       .catch((error) => console.log(error));
 
-    database.getPost(name, postId)
-      .then((data) => setPost(data as IPost))
+    getPost(postId)
+      .then((data) => setPost(data))
       .catch((error) => console.log(error));
   }, []);
 
