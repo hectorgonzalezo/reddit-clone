@@ -1,14 +1,27 @@
+import { ObjectBindingOrAssignmentElement } from "typescript";
+
+// Three ways to orders posts by
+type PostOrder = 'hot' | 'new' | 'top';
+
+type Vote = "upVote" | "downVote" | '';
+
+interface Votes {
+  [index: string]: Vote;
+}
 
 interface IUser {
   username: string;
   password: string;
+  passwordConfirm?: string;
   email: string;
   permission: "regular" | "admin";
   icon?: string;
   communities: [] | ObjectId[] | ICommunity[];
+  subreddits: string[];
   _id: string | ObjectId;
   createdAt: string;
   updatedAt: string;
+  votes: Votes;
 }
 
 interface IPost {
@@ -25,12 +38,10 @@ interface IPost {
   commentsNum: number;
 }
 
-// Three ways to orders posts by
-type PostOrder = 'hot' | 'new' | 'top';
 
-type Vote = "upVote" | "downVote" | '';
 
 interface IComment {
+  _id: string | ObjectId;
   text: string;
   user: ObjectId | IUser;
   upVotes: number;
@@ -40,6 +51,7 @@ interface IComment {
 }
 
 interface ICommunity {
+  _id: string | ObjectId;
   name: string;
   subtitle: string;
   description: string;

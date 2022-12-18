@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { selectUser } from '../../store/userSlice';
 import CommentCreator from './CommentCreator';
 import commentIcon from '../../assets/comments_icon.svg';
-import { database } from '../../firebase/firebase';
+import { getUser } from '../../api/users';
 import defaultUserIcon from '../../assets/user_icon.svg';
 
 interface CommentProps {
@@ -34,7 +34,7 @@ function Comment({
 
   // get user icon from database
   useEffect(() => {
-    database.getUser(comment.user).then((fetchedUser) => {
+    getUser(comment.user.toString()).then((fetchedUser) => {
       // if theres an icon, add it to state
       if (fetchedUser?.icon !== undefined) {
         // console.log()

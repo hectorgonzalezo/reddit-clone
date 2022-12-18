@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
+import { logIn } from '../api/users';
 import { addUser } from '../store/userSlice';
 import Button from './Button';
 import loadingIcon from '../assets/loading.gif';
-import { database, authorization } from '../firebase/firebase';
 
 interface LogInModalProps {
   closeFunc: () => void;
@@ -23,8 +23,7 @@ function LogInModal({ closeFunc= () => {} }: LogInModalProps): JSX.Element {
       const username = userNameRef.current.value;
       const password = passwordRef.current.value;
     try {
-      // const { icon, votes } = await database.getUser(username);
-      const fetchedUser = await database.getUser(username);
+      const fetchedUser = await logIn({username, password});
       // add loading animation to button
       setLoadingData(true);
       setUsernameDoesntExist(false);

@@ -1,12 +1,15 @@
 import React, { useState, useRef, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addSubreddit } from '../../store/subredditsSlice';
+import { selectUser } from '../../store/userSlice';
 import Button from '../Button';
 import ImageUpload from '../ImageUpload';
 import defaultIcon from '../../assets/default_subreddit_icon.svg';
 import loadingIcon from '../../assets/loading.gif';
-import { database } from '../../firebase/firebase';
+import { createSubreddit, getSubreddit } from '../../api/communities';
+import SubredditAbout from './SubredditAbout';
+import defaultCommunityIcon from '../../defaultCommunityIcon';
 
 
 interface CreateCommunityModalProps {
@@ -16,6 +19,7 @@ interface CreateCommunityModalProps {
 function CreateCommunityModal({
   closeFunc = (e) => {},
 }: CreateCommunityModalProps): JSX.Element {
+  const user = useSelector(selectUser);
   const formRef = useRef<HTMLFormElement | null>(null);
   const subNameRef = useRef<HTMLInputElement | null>(null);
   const subSubtitleRef = useRef<HTMLInputElement | null>(null);
@@ -91,25 +95,23 @@ function CreateCommunityModal({
       subSubtitleRef?.current !== null &&
       subDescriptionRef?.current !== null
     ) {
-      const subredditName = subNameRef.current.value;
-      const subtitles = subSubtitleRef.current.value;
+      const name = subNameRef.current.value;
+      const subtitle = subSubtitleRef.current.value;
       const description = subDescriptionRef.current.value;
       const icon = communityIconFile;
       try {
         // add loading animation
         setLoadingData(true);
-        const newSubreddit = await database.createSubreddit(
-          subredditName,
-          subtitles,
-          description,
-          icon
+        const subData = { name, subtitle, description };
+        const newSubreddit = await createSubreddit(
+          { name, subtitle, description, icon },
+          user.token
         );
         // get subreddit data from database and update redux store
-        const fetchedSubreddit = await database.getSubredditData(subredditName);
-        dispatch(addSubreddit([fetchedSubreddit]));
+        dispatch(addSubreddit([newSubreddit]));
         closeFunc(e);
         // go to subreddit display
-        navigate(`/r/${subredditName}`);
+        navigate(`/r/${name}`);
       } catch (error) {
         // If email already exists
         setLoadingData(false);

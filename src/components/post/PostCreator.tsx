@@ -22,13 +22,13 @@ function PostCreator(): JSX.Element {
   const [selectedSubreddit, setSelectedSubreddit] = useState<string>();
   const [fileToUpload, setFileToUpload] = useState<File>();
   const [isLoading, setIsLoading] = useState(false);
-  let { initialType } = useParams();
+  let { initialType } = useParams<string>();
   // by default should be textArea
   if (initialType === undefined) {
     initialType = 'textArea';
   }
 
-  const inputs = {
+  const inputs: { [index: string]: JSX.Element } = {
     textArea: (
       <textarea
         id="text-area"
@@ -48,7 +48,9 @@ function PostCreator(): JSX.Element {
         required
       />
     ),
-    imgArea: <ImageUpload id="img-area" onChange={updateFileToUpload} required />,
+    imgArea: (
+      <ImageUpload id="img-area" onChange={updateFileToUpload} required />
+    ),
   };
 
   const [mediaType, setMediaType] = useState<JSX.Element>(inputs[initialType]);
@@ -138,7 +140,7 @@ function PostCreator(): JSX.Element {
   function loadPost(id: string): void {
     setTimeout(() => {
       setIsLoading(false);
-      navigate(`/r/${selectedSubreddit}/${id}`);
+      navigate(`/r/${selectedSubreddit as string}/${id}`);
     }, 1000);
   }
 
@@ -151,7 +153,7 @@ function PostCreator(): JSX.Element {
           <div id="buttons-div" data-testid="buttons-div">
             <button
               type="button"
-              className={initialType === 'textArea' ? "selected" : ''}
+              className={initialType === "textArea" ? "selected" : ""}
               ref={selectedButton}
               onClick={selectMedia}
               data-type="post"
@@ -159,11 +161,21 @@ function PostCreator(): JSX.Element {
               <img src={postIcon} alt="" />
               Post
             </button>
-            <button type="button" className={initialType === 'imgArea' ? "selected" : ''} onClick={selectMedia} data="image">
+            <button
+              type="button"
+              className={initialType === "imgArea" ? "selected" : ""}
+              onClick={selectMedia}
+              data-type="image"
+            >
               <img src={imagesIcon} alt="" />
               Images & Video
             </button>
-            <button type="button" className={initialType === 'urlArea' ? "selected" : ''} onClick={selectMedia} data="link">
+            <button
+              type="button"
+              className={initialType === "urlArea" ? "selected" : ""}
+              onClick={selectMedia}
+              data-type="link"
+            >
               <img src={linkIcon} alt="" />
               Link
             </button>
@@ -171,8 +183,19 @@ function PostCreator(): JSX.Element {
           <form action="" id="post-form" aria-label="Submit Form">
             <input type="text" placeholder="Title" ref={titleRef} />
             {mediaType}
-            <Button onClick={submitPost} disabled={selectedSubreddit === null ? true : false}>
-              {isLoading ? <img src={loadingIcon} alt="loading icon" className="loading-icon" /> : 'Post'}
+            <Button
+              onClick={submitPost}
+              disabled={selectedSubreddit === null ? true : false}
+            >
+              {isLoading ? (
+                <img
+                  src={loadingIcon}
+                  alt="loading icon"
+                  className="loading-icon"
+                />
+              ) : (
+                "Post"
+              )}
             </Button>
           </form>
         </div>

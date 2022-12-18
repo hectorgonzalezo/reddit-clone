@@ -10,7 +10,7 @@ import UploadIconModal from './components/UploadIconModal';
 import CreateCommunityModal from './components/subreddit/CreateCommunityModal';
 import { toggleLogInModal, selectLoginModalVisibility } from './store/loginModalSlice';
 import { addSubreddit } from './store/subredditsSlice';
-import { database, authorization } from './firebase/firebase';
+import { getSubreddits } from './api/communities';
 import './styles/appStyle.scss';
 import './styles/modals.scss';
 import { toggleChangeIconModal, selectChangeIconModalVisibility } from './store/changeIconModalSlice';
@@ -27,26 +27,23 @@ function App(): JSX.Element {
     setSignUpVisible((prevVisibility) => !prevVisibility);
   }
 
-  // If theres a user logged in, add it to redux store
+
+  // look if theres a user stored in local storage
+  // this keeps the user logged in even after closing the broswer
   useEffect(() => {
-    setTimeout(() => {
-      if (authorization?.isUserSignedIn()) {
-        database
-          .getUserByEmail(authorization.getUser()?.email)
-          .then((fetchedUser) => {
-            dispatch(addUser(fetchedUser));
-          })
-          .catch((error) => console.log(error))
-      }
-    }, 500);
-  }, []);
+    const previousUser = localStorage.getItem('whoAmI');
+    if (previousUser !== null) {
+      const parsedUser = JSON.parse(previousUser);
+      dispatch(addUser(parsedUser));
+    }
+  },[]);
 
   // Populate subreddits redux store
   useEffect(() => {
     async function getNames(): Promise<void> {
-      let data;
+      let data: ICommunity[];
       try {
-        data = await database.getSubredditsData();
+        data = await getSubreddits();
       } catch {
         console.log("Couldn't get subreddit data");
         data = [];

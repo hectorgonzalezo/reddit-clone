@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { selectSubreddits } from '../store/subredditsSlice';
-import { database } from '../firebase/firebase';
+import { getUser } from '../api/users';
 import Agreements from './Agreements';
 import Button from './Button';
 import PostsArea from './post/PostsArea';
@@ -26,17 +26,16 @@ const UserInfo = styled.div`
 `;
 
 function UserDisplay(): JSX.Element {
-  const { name } = useParams();
+  const { id } = useParams();
   const subreddits = useSelector(selectSubreddits);
   const [user, setUser] = useState<IUser | false>(false);
 
   // get Info about user
   useEffect(() => {
-    const fetchedUser = database
-      .getUser(name)
+      getUser(id as string)
       .then((data) => {
         if (data !== undefined) {
-          setUser(data.user);
+          setUser(data);
         }
       })
       .catch((error) => console.log(error));

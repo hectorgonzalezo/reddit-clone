@@ -12,8 +12,10 @@ import SubredditsDropDown from './subreddit/SubredditsDropDown';
 import { selectUser } from '../store/userSlice';
 import { selectCurrentSubreddit, changeCurrentSubreddit } from '../store/currentSubredditSlice';
 import { database } from '../firebase/firebase';
+import { getSubreddit } from '../api/communities';
 
 import '../styles/headerStyle.scss';
+import { selectSubreddits } from '../store/subredditsSlice';
 
 interface HeaderProps {
   signUpFunc: () => void,
@@ -28,6 +30,7 @@ function Header({
 }: HeaderProps): JSX.Element {
   // gets user from redux store
   const user = useSelector(selectUser);
+  const subreddits = useSelector(selectSubreddits);
   const currentSubreddit = useSelector(selectCurrentSubreddit);
   const [userDropdownVisible, setUserDropdownVisible] = useState(false);
   const [subredditDropdownVisible, setSubredditDropdownVisible] =
@@ -42,15 +45,16 @@ function Header({
 
   async function navigateToSubreddit(e: SyntheticEvent): Promise<void> {
     const target = e.target as HTMLAnchorElement;
-    const subredditName = target.getAttribute("data") as string;
-    dispatch(changeCurrentSubreddit(subredditName));
+    const subredditId = target.getAttribute("data-id") as string;
 
     // get subreddit icon
-    const subredditData = await database.getSubredditData(subredditName);
+    const subredditData = await getSubreddit(subredditId);
     if (subredditData.icon !== undefined) {
     setSubredditIcon(subredditData.icon);
   }
 
+   const subredditName: string = subredditData.name;
+    dispatch(changeCurrentSubreddit(subredditName));
     navigate(`/r/${subredditName}`);
   }
 
@@ -67,8 +71,8 @@ function Header({
   useEffect(() => {
     // change subreddit icon
     if (currentSubreddit !== null) {
-      database
-        .getSubredditData(currentSubreddit)
+      const currentSubredditId = subreddits[currentSubreddit];
+        getSubreddit(currentSubredditId)
         .then((data) =>     {
           if (data.icon !== undefined) {
           setSubredditIcon(data.icon);

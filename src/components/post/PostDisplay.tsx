@@ -3,19 +3,22 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../../store/userSlice';
 import { database } from '../../firebase/firebase';
+import { getSubreddit } from '../../api/communities';
 import SubredditAbout from '../subreddit/SubredditAbout';
 import Agreements from '../Agreements';
 import Button from '../Button';
 import Post from './Post';
 import { changeCurrentSubreddit } from '../../store/currentSubredditSlice';
+import { selectSubreddits } from '../../store/subredditsSlice';
 
 
 function PostDisplay(): JSX.Element {
   const params = useParams();
-  const name = params.name as string;
+  const name= params.name as string;
   const postId = params.postId as string;
 
   const user = useSelector(selectUser);
+  const subreddits = useSelector(selectSubreddits);
   const [post, setPost] = useState<IPost | false>(false);
   const [chosenSubreddit, setChosenSubreddit] = useState<ICommunity | false>(false);
   const dispatch = useDispatch();
@@ -39,8 +42,9 @@ function PostDisplay(): JSX.Element {
 
   // get post from database on mount
   useEffect(() => {
-    database.getSubredditData(name)
-      .then((data) => setChosenSubreddit(data))
+    const subredditId = subreddits[name]._id;
+    getSubreddit(subredditId)
+      .then((data) => setChosenSubreddit(data.name))
       .catch((error) => console.log(error));
 
     database.getPost(name, postId)

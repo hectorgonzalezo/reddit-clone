@@ -1,7 +1,7 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser, addUser } from '../../store/userSlice';
-import { database } from '../../firebase/firebase';
+import { getUser } from '../../api/users';
 import Button from '../Button';
 
 interface JoinButtonProps {
@@ -11,14 +11,14 @@ interface JoinButtonProps {
 
 function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   const user = useSelector(selectUser);
-  // This keeps track of user.communities on the client side
+  // This keeps track of user.subreddit on the client side
   // so as to update the "join" button.
   const [userSubreddits, setUserSubreddits] = useState<string[]>([]);
   const [joinedText, setJoinedText] = useState('Joined');
   const dispatch = useDispatch();
 
   async function updateUserStore(): Promise<void> {
-    const updatedUser = await database.getUser(user.username);
+    const updatedUser = await getUser(user._id);
     dispatch(addUser(updatedUser));
   }
 
@@ -48,8 +48,8 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   }
 
   useEffect(() => {
-    if (user.communities !== undefined) {
-      setUserSubreddits(user.communities);
+    if (user.subreddits !== undefined) {
+      setUserSubreddits(user.subreddits);
     }
   }, [user]);
 

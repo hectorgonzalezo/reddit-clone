@@ -55,18 +55,18 @@ function SubredditsDropDown({
                   <a
                     key={`${subreddits[subreddit].name}-link`}
                     onClick={chooseFromDropdown}
-                    data={subreddits[subreddit].name}
+                    data-id={subreddits[subreddit]._id}
                   >
                     <img
                       key={`${subreddits[subreddit].name}-icon`}
                       src={subreddits[subreddit].icon}
                       alt=""
-                      data-name={subreddits[subreddit].name}
+                      data-id={subreddits[subreddit]._id}
                       className="user-icon"
                     />
                     <p
                       key={`${subreddits[subreddit].name}-name`}
-                      data-name={subreddits[subreddit].name}
+                      data-id={subreddits[subreddit]._id}
                     >
                       {subreddits[subreddit].name}
                     </p>
@@ -86,16 +86,16 @@ function SubredditsDropDown({
               <a
                 key={`${subreddit.name}-link`}
                 onClick={chooseFromDropdown}
-                data={subreddit.name}
+                data-id={subreddit._id}
               >
                 <img
                   key={`${subreddit.name}-icon`}
                   src={subreddit.icon}
                   alt=""
-                  data-name={subreddit.name}
+                  data-id={subreddit.-id}
                   className="user-icon"
                 />
-                <p key={`${subreddit.name}-name`} data-name={subreddit.name}>
+                <p key={`${subreddit.id}-id`} data-id={subreddit._id}>
                   {subreddit.name}
                 </p>
               </a>

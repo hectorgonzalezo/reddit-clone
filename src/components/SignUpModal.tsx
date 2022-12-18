@@ -1,9 +1,11 @@
 import React, { useState, useRef, SyntheticEvent } from 'react';
+import { signUp } from '../api/users';
 import { useDispatch } from 'react-redux';
 import Button from './Button';
 import { addUser } from '../store/userSlice';
 import loadingIcon from '../assets/loading.gif';
 import { authorization } from '../firebase/firebase';
+import { sign } from 'crypto';
 
 interface SignUpModalProps {
   closeFunc: () => void;
@@ -90,23 +92,26 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
     if (
       userNameRef?.current !== null &&
       emailRef.current !== null &&
-      password1Ref.current !== null
+      password1Ref.current !== null &&
+      password2Ref.current !== null
     ) {
       const username = userNameRef.current.value;
       const email = emailRef.current.value;
       const password = password1Ref.current.value;
+      const passwordConfirm = password2Ref.current.value;
       const icon =
         "https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1";
       const votes = {};
       try {
         // add loading animation
         setLoadingData(true);
-        authorization
-          .createAccount(email, password, username)
+
+        // Sign up user
+        signUp({ username, email, password, passwordConfirm })
           .then((data) => {
             setEmailAlreadyExists(false);
             // update redux store
-            dispatch(addUser({ username, email, icon, votes }));
+            dispatch(addUser(data));
             closeFunc();
           })
           .catch((err) => console.log(err));

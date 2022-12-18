@@ -17,6 +17,8 @@ export const userSlice = createSlice({
       } else {
         state.icon = defaultUserIcon
       }
+      
+      localStorage.setItem("whoAmI", JSON.stringify(action.payload));
     },
     updateIcon: (state, action) => {
       state.icon = action.payload;
@@ -27,6 +29,8 @@ export const userSlice = createSlice({
       state.icon = undefined;
       state.votes = undefined;
       state.subreddits = undefined;
+
+      localStorage.removeItem("whoAmI");
     },
   }
 });
