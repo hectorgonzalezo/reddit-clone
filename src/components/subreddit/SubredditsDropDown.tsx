@@ -92,10 +92,10 @@ function SubredditsDropDown({
                   key={`${subreddit.name}-icon`}
                   src={subreddit.icon}
                   alt=""
-                  data-id={subreddit.-id}
+                  data-id={subreddit._id}
                   className="user-icon"
                 />
-                <p key={`${subreddit.id}-id`} data-id={subreddit._id}>
+                <p key={`${subreddit._id}-id`} data-id={subreddit._id}>
                   {subreddit.name}
                 </p>
               </a>

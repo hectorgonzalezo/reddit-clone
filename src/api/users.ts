@@ -1,4 +1,5 @@
 import BASEURL from './baseurl';
+import uploadImage from './uploadImage';
 
 export async function getUser(userId: string): Promise<IUser> {
   const response = await fetch(`${BASEURL}/users/${userId}`, {
@@ -47,37 +48,58 @@ export async function logIn(user: {
 };
 
 
-
-export async function saveUserIcon(file, username) {
+export async function saveUserIcon(file: File, user: IUser): Promise<string> {
     try {
-      const publicImageUrl = await uploadImage(file, `users/${username}/icon`);
-      // update user's icon
-      const userDoc = doc(db, 'users', username);
-      await updateDoc(userDoc, {
-        icon: publicImageUrl,
+      // host image
+      const icon = await uploadImage(file, `users/${user._id as string}/icon`);
+
+      // update user's icon with url
+      const response = await fetch(`${BASEURL}/users/${user._id as string}`, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ icon }),
       });
-      return publicImageUrl;
+
+      const returnedUser = await response.json();
+      return returnedUser.user.icon;
     } catch (error) {
       console.error('There was an error uploading a file to Cloud Storage:', error);
-      return error;
+      throw error;
     }
   }
 
-export async function editSubscription(subreddit, username, callback, userIncrement) {
-    const subredditDoc = doc(db, 'subreddits', subreddit);
-    const userDoc = doc(db, 'users', username);
+export async function subscribeToSubreddit(
+  subredditId: string,
+  user: IUser
+): Promise<void> {
+  const response = await fetch(
+    `${BASEURL}/communities/${subredditId}/subscription/${user._id as string}`,
+    {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    }
+  );
+}
 
-    await updateDoc(subredditDoc, {
-      members: increment(userIncrement),
-    });
-
-    await updateDoc(userDoc, { subreddits: callback(subreddit) });
-  }
-
-export async function subscribeToSubreddit(subreddit, username) {
-    await editSubscription(subreddit, username, arrayUnion, 1);
-  }
-
-export async function unsubscribeFromSubreddit(subreddit, username) {
-    await editSubscription(subreddit, username, arrayRemove, -1);
-  }
+export async function unsubscribeFromSubreddit(
+  subredditId: string,
+  user: IUser
+): Promise<void> {
+  const response = await fetch(
+    `${BASEURL}/communities/${subredditId}/subscription/${user._id as string}`,
+    {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    }
+  );
+}

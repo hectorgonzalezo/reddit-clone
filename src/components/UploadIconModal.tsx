@@ -1,10 +1,10 @@
 import React, { SyntheticEvent, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIcon } from '../store/userSlice';
+import { saveUserIcon } from '../api/users';
 import ImageUpload from './ImageUpload';
 import Button from './Button';
 import loadingIcon from '../assets/loading.gif';
-import { database } from '../firebase/firebase';
 import { selectUser } from '../store/userSlice';
 
 interface UploadIconModalProps {
@@ -32,7 +32,7 @@ function UploadIconModal({
     e.preventDefault();
     try {
       setLoadingData(true);
-      const icon = await database.saveUserIcon(iconFile, user.username);
+      const icon = await saveUserIcon(iconFile as File, user);
       dispatch(updateIcon(icon));
       setLoadingData(false);
       closeFunc();

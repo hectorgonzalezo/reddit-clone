@@ -1,8 +1,10 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react';
+import { subscribeToSubreddit, unsubscribeFromSubreddit } from '../../api/users';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser, addUser } from '../../store/userSlice';
 import { getUser } from '../../api/users';
 import Button from '../Button';
+import { selectSubreddits } from '../../store/subredditsSlice';
 
 interface JoinButtonProps {
   subreddit: string;
@@ -11,6 +13,7 @@ interface JoinButtonProps {
 
 function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   const user = useSelector(selectUser);
+  const subreddits = useSelector(selectSubreddits);
   // This keeps track of user.subreddit on the client side
   // so as to update the "join" button.
   const [userSubreddits, setUserSubreddits] = useState<string[]>([]);
@@ -23,12 +26,13 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   }
 
   async function changeSubscription(e: SyntheticEvent): Promise<void> {
+    const subredditId = subreddits[subreddit]._id;
     if (userSubreddits.includes(subreddit)) {
       setUserSubreddits((prev) => {
         const newList = prev.filter((sub) => sub !== subreddit);
         return newList;
       });
-      database.unsubscribeFromSubreddit(subreddit, user.username)
+      unsubscribeFromSubreddit(subredditId, user)
         .then((data) => {
           updateUserStore()
             .then()
@@ -37,7 +41,7 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
         .catch((error) => console.log(error));
     } else {
       setUserSubreddits((prev) => prev.concat(subreddit));
-      database.subscribeToSubreddit(subreddit, user.username)
+      subscribeToSubreddit(subredditId, user)
         .then((data) => {
           updateUserStore()
             .then()

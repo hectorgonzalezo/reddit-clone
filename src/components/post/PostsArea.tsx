@@ -28,7 +28,7 @@ function PostsArea({
 }: PostsAreaProps): JSX.Element {
   const [posts, setPosts] = useState<IPost[]>([]);
   const user = useSelector(selectUser);
-  const subreddits = useSelector(selectSubreddits);
+  const currentSubreddits = useSelector(selectSubreddits);
   const navigate = useNavigate();
   let rendered = false;
   const UserDisplayName = useParams().name;
@@ -37,7 +37,7 @@ function PostsArea({
     subredditName: string,
     subredditIcon: string
   ): Promise<IPost[]> {
-    const subredditId = subreddits[subredditName]._id;
+    const subredditId = currentSubreddits[subredditName]._id;
     let topPosts = await getPostsInSubreddit(subredditId);
     // add subreddit name and icon to post
     topPosts = topPosts.map((post) => ({
