@@ -17,5 +17,5 @@ export async function getSubreddit(
   subredditId: string
 ): Promise<any> {
   const subreddit = await Promise.resolve(mockSubreddit);
-  return subreddit;
+  return { community: subreddit};
 }

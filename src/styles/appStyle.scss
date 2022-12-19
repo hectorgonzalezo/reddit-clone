@@ -66,6 +66,13 @@ main {
   object-fit: contain;
 }
 
+.App .user-icon-hidden{
+  height: 32px;
+  border-radius: 100%;
+  object-fit: contain;
+}
+
+
 .button-show-drop-down{
   display: flex;
   align-items: center;
@@ -96,7 +103,7 @@ main {
   }
 }
 
-.App .loading-icon{
+.App .default-button img{
   height: 24px;
 }
 

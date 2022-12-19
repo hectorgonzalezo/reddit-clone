@@ -23,6 +23,8 @@ function SubredditsDropDown({
 }: SubredditsDropDownProps): JSX.Element {
   const subreddits = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
+  const userCommunities = user.communities as string[];
+  console.log({userCommunities})
   const [chosenSubreeddits, setChosenSubreddits] = useState(
     Object.values(subreddits)
   );
@@ -46,29 +48,29 @@ function SubredditsDropDown({
       testid="subreddits-dropdown"
     >
       {!search ? <h1>Your communities</h1> : null}
-      {user.communities !== undefined
-        ? user.communities.map((subreddit) => {
-            if (subreddits[subreddit] !== undefined) {
+      {userCommunities !== undefined
+        ? Object.values(subreddits).map((subreddit: ICommunity) => {
+            if (userCommunities.includes(subreddit._id)) {
               return (
-                <React.Fragment key={`${subreddits[subreddit].name}-fragment`}>
-                  <hr key={`${subreddits[subreddit].name}-line`} />
+                <React.Fragment key={`${subreddit.name}-fragment`}>
+                  <hr key={`${subreddit.name}-line`} />
                   <a
-                    key={`${subreddits[subreddit].name}-link`}
+                    key={`${subreddit.name}-link`}
                     onClick={chooseFromDropdown}
-                    data-name={subreddits[subreddit].name}
+                    data-name={subreddit.name}
                   >
                     <img
-                      key={`${subreddits[subreddit].name}-icon`}
-                      src={subreddits[subreddit].icon}
+                      key={`${subreddit.name}-icon`}
+                      src={subreddit.icon}
                       alt=""
-                      data-name={subreddits[subreddit].name}
+                      data-name={subreddit.name}
                       className="user-icon"
                     />
                     <p
-                      key={`${subreddits[subreddit].name}-name`}
-                      data-name={subreddits[subreddit].name}
+                      key={`${subreddit.name}-name`}
+                      data-name={subreddit.name}
                     >
-                      {subreddits[subreddit].name}
+                      {subreddit.name}
                     </p>
                   </a>
                 </React.Fragment>

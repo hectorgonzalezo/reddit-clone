@@ -43,7 +43,9 @@ function CommunityChooser({
             chosenSubreddit !== null ? subreddits[chosenSubreddit].icon : ''
           }
           alt=""
-          className="user-icon"
+          className={
+            chosenSubreddit !== null ? 'user-icon' : 'user-icon-hidden'
+          }
         />
         <h1 data-testid="community-chooser-title">
           {chosenSubreddit !== null

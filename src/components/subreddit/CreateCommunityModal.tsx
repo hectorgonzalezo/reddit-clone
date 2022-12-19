@@ -8,8 +8,6 @@ import ImageUpload from '../ImageUpload';
 import defaultIcon from '../../assets/default_subreddit_icon.svg';
 import loadingIcon from '../../assets/loading.gif';
 import { createSubreddit, getSubreddit } from '../../api/communities';
-import SubredditAbout from './SubredditAbout';
-import defaultCommunityIcon from '../../defaultCommunityIcon';
 
 
 interface CreateCommunityModalProps {

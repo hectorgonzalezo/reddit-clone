@@ -35,7 +35,7 @@ function UserDisplay(): JSX.Element {
       getUser(id as string)
       .then((data) => {
         if (data !== undefined) {
-          setUser(data);
+          setUser(data.user);
         }
       })
       .catch((error) => console.log(error));

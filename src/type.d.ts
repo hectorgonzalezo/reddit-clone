@@ -17,7 +17,7 @@ interface IUser {
   email: string;
   permission: "regular" | "admin";
   icon?: string;
-  communities: [] | ObjectId[] | ICommunity[];
+  communities: [] | string[] | ObjectId[] | ICommunity[];
   subreddits: string[];
   _id: string | ObjectId;
   createdAt: string;

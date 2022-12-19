@@ -1,9 +1,11 @@
 import BASEURL from './baseurl';
 import uploadImage from './uploadImage';
 
-export async function getUser(userId: string): Promise<IUser> {
+export async function getUser(
+  userId: string
+): Promise<{ user: IUser; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/users/${userId}`, {
-    method: "POST",
+    method: "GET",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
   });
@@ -75,7 +77,7 @@ export async function saveUserIcon(file: File, user: IUser): Promise<string> {
 export async function subscribeToSubreddit(
   subredditId: string,
   user: IUser
-): Promise<void> {
+): Promise<{ user: IUser; errors?: BackendErrors }> {
   const response = await fetch(
     `${BASEURL}/communities/${subredditId}/subscription/${user._id as string}`,
     {
@@ -86,12 +88,14 @@ export async function subscribeToSubreddit(
       },
     }
   );
+  const json = await response.json();
+  return json;
 }
 
 export async function unsubscribeFromSubreddit(
   subredditId: string,
   user: IUser
-): Promise<void> {
+): Promise<{ user: IUser; errors?: BackendErrors }> {
   const response = await fetch(
     `${BASEURL}/communities/${subredditId}/subscription/${user._id as string}`,
     {
@@ -102,4 +106,6 @@ export async function unsubscribeFromSubreddit(
       },
     }
   );
+  const json = await response.json();
+  return json;
 }

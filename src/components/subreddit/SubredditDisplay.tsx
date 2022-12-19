@@ -16,6 +16,7 @@ import '../../styles/subredditStyle.scss';
 function SubredditDisplay(): JSX.Element {
   const subredditsData = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
+  const userCommunities = user.communities as string[];
   const params = useParams();
   const name = params.name as string;
   
@@ -39,11 +40,10 @@ function SubredditDisplay(): JSX.Element {
         <SubredditBanner subreddit={chosenSubreddit} />
       ) : null}
       <div id="left-side">
-        {user.communities?.find(
-          (community: ICommunity) => community.name === name
-        ) !== undefined ? (
+        {
+        chosenSubreddit !== undefined && userCommunities.includes(chosenSubreddit._id) ?
           <CreatePostPreview />
-        ) : null}
+        : null}
         <PopularPostsBar changeOrder={changeOrder} />
         {chosenSubreddit !== undefined ? (
           <PostsArea

@@ -2,9 +2,9 @@ import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { subscribeToSubreddit, unsubscribeFromSubreddit } from '../../api/users';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser, addUser } from '../../store/userSlice';
-import { getUser } from '../../api/users';
 import Button from '../Button';
 import { selectSubreddits } from '../../store/subredditsSlice';
+import loadingIcon from '../../assets/loading.gif';
 
 interface JoinButtonProps {
   subreddit: string;
@@ -18,23 +18,25 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   // so as to update the "join" button.
   const [userSubreddits, setUserSubreddits] = useState<string[]>([]);
   const [joinedText, setJoinedText] = useState('Joined');
+  const [loadingData, setLoadingData] = useState(false);
   const dispatch = useDispatch();
+  const subredditId = subreddits[subreddit]._id;
 
-  async function updateUserStore(): Promise<void> {
-    const updatedUser = await getUser(user._id);
-    dispatch(addUser({ user: updatedUser }));
+  async function updateUserStore(updatedUser: IUser): Promise<void> {
+    dispatch(addUser({ user: updatedUser, token: user.token }));
+    setLoadingData(false);
   }
 
   async function changeSubscription(e: SyntheticEvent): Promise<void> {
-    const subredditId = subreddits[subreddit]._id;
-    if (userSubreddits.includes(subreddit)) {
+    setLoadingData(true);
+    if (userSubreddits.includes(subredditId)) {
       setUserSubreddits((prev) => {
         const newList = prev.filter((sub) => sub !== subreddit);
         return newList;
       });
       unsubscribeFromSubreddit(subredditId, user)
         .then((data) => {
-          updateUserStore()
+          updateUserStore(data.user)
             .then()
             .catch((error) => console.log(error));
         })
@@ -43,7 +45,7 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
       setUserSubreddits((prev) => prev.concat(subreddit));
       subscribeToSubreddit(subredditId, user)
         .then((data) => {
-          updateUserStore()
+          updateUserStore(data.user)
             .then()
             .catch((error) => console.log(error));
         })
@@ -52,14 +54,13 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
   }
 
   useEffect(() => {
-    if (user.subreddits !== undefined) {
-      setUserSubreddits(user.subreddits);
+    if (user.communities !== undefined) {
+      setUserSubreddits(user.communities as string[]);
     }
   }, [user]);
 
-  return  userSubreddits.includes(subreddit) ? (
+  return userSubreddits.includes(subredditId) ? (
     <Button
-      text={joinedText}
       onClick={changeSubscription}
       onMouseEnter={() => {
         setJoinedText("Leave");
@@ -68,9 +69,13 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
         setJoinedText("Joined");
       }}
       light
-    />
-    ) : (
-    <Button onClick={changeSubscription}>Join</Button>
+    >
+      {loadingData ? <img src={loadingIcon} alt="" /> : joinedText}
+      </Button>
+  ) : (
+    <Button onClick={changeSubscription}>
+      {loadingData ? <img src={loadingIcon} alt="" /> : "Join"}
+    </Button>
   );
 }
 

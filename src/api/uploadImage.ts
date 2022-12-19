@@ -29,7 +29,6 @@ export default async function uploadImage(
       const filePath = `${path}${file.name}`;
       const newImageRef = ref(getStorage(firebaseApp), filePath);
       const fileSnapshot = await uploadBytesResumable(newImageRef, file);
-      console.log({fileSnapshot})
       // Generate a public URL for the file.
       const publicImageUrl = await getDownloadURL(newImageRef);
       return publicImageUrl;

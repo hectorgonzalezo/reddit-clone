@@ -36,9 +36,9 @@ function Comment({
   useEffect(() => {
     getUser(comment.user.toString()).then((fetchedUser) => {
       // if theres an icon, add it to state
-      if (fetchedUser?.icon !== undefined) {
+      if (fetchedUser.user?.icon !== undefined) {
         // console.log()
-        setUserIcon(fetchedUser.icon);
+        setUserIcon(fetchedUser.user.icon);
       }
     })
     .catch((error) => console.log(error));
