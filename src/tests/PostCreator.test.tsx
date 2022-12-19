@@ -8,14 +8,28 @@ import store from '../store/store';
 import PostCreator from '../components/post/PostCreator';
 
 const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
+
+// Add user
+beforeEach(async () => {
+  await act(async () => {
+    store.dispatch({
+      type: "user/addUser",
+      payload: {
+        user: {
+          username: "juan",
+          email: "mock@mock.com",
+          icon,
+          _id: "123456789a123456789b1234",
+          communities: ['aww'],
+        },
+        token: "1234701923491273401243",
+      },
+    });
+  });
+})
+
 describe('Post creator page', () => {
   test('Post starts highlighted', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
 
     render(
       <Provider store={store}>
@@ -33,12 +47,7 @@ describe('Post creator page', () => {
   });
 
   test('Pressing on media button highlights it and deselects the rest', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
+
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -59,12 +68,7 @@ describe('Post creator page', () => {
   });
 
   test('By default shows text area with text placeholder', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
+
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -80,12 +84,6 @@ describe('Post creator page', () => {
   });
 
   test('Pressing on images button shows file input', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
 
     render(
       <Provider store={store}>
@@ -105,12 +103,6 @@ describe('Post creator page', () => {
   });
 
   test('Pressing on link button shows link textarea', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
 
     render(
       <Provider store={store}>
@@ -132,12 +124,6 @@ describe('Post creator page', () => {
   });
 
   test('Pressing on "choose a community" shows drop down', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: [] },
-      });
-    });
 
     render(
       <Provider store={store}>
@@ -158,20 +144,14 @@ describe('Post creator page', () => {
   });
 
   test('Choosing a subreddit displays its icon and name', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon, subreddits: ['aww'] },
-      });
-    });
 
     await act(async () => {
       store.dispatch({
         type: "subreddits/addSubreddit",
         payload: [
           {
+            _id: "123456789b123456789c1234",
             name: "aww",
-            icon: "https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/aww_icon.jpeg?alt=media&token=b6bc425f-f335-4b73-8c36-df3df45bacd6",
           },
         ],
       });

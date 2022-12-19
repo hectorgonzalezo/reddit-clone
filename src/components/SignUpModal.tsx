@@ -125,7 +125,12 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
     <div id="signUp-outer" className="modal-outer">
       <div id="signUp-inner" className="modal-inner">
         <div>
-          <button type="button" className="close-button" onClick={closeFunc} aria-label="close button">
+          <button
+            type="button"
+            className="close-button"
+            onClick={closeFunc}
+            aria-label="close button"
+          >
             x
           </button>
           <h1>Sign Up</h1>
@@ -142,7 +147,7 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
           </p>
         </div>
 
-        <div className="division"/>
+        <div className="division" />
         <form action="" ref={formRef}>
           <div className="input-wrap">
             <span />
@@ -211,7 +216,12 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
             onClick={submitSignUp}
           >
             {loadingData ? (
-              <img src={loadingIcon} alt="loading" data-testid="loading-icon" className="loading-icon" />
+              <img
+                src={loadingIcon}
+                alt="loading"
+                data-testid="loading-icon"
+                className="loading-icon"
+              />
             ) : (
               ["Sign Up"]
             )}

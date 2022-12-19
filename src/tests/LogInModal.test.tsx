@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import LogInModal from '../components/LogInModal';
 import store from '../store/store';
 
-jest.mock('../firebase/firebase');
+jest.mock('../api/users');
 
 describe('Styled button works', () => {
   test('Filling in with fake data shows error message', async () => {

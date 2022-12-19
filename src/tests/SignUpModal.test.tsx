@@ -6,7 +6,7 @@ import SignUpModal from '../components/SignUpModal';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 
-jest.mock('../firebase/firebase');
+jest.mock('../api/users');
 
 describe('Sign up modal', () => {
   test('Renders with sign up button disabled', () => {
@@ -120,22 +120,24 @@ describe('Sign up modal', () => {
     expect(container).toMatchSnapshot();
   });
 
-  test('Filling the form correctly and pressing the button calls close function', async () => {
+  test("Filling the form correctly and pressing the button calls close function", async () => {
     const mockCloseFunc = jest.fn();
-    render(<Provider store={store}>
-            <SignUpModal closeFunc={mockCloseFunc} />
-          </Provider>);
-    const textInputs = screen.queryAllByRole('textbox');
+    render(
+      <Provider store={store}>
+        <SignUpModal closeFunc={mockCloseFunc} />
+      </Provider>
+    );
+    const textInputs = screen.queryAllByRole("textbox");
     const passwordInputs = screen.queryAllByLabelText(/password/i);
 
     // Fill in form
-    userEvent.type(textInputs[0], 'mockUser');
-    userEvent.type(textInputs[1], 'mock@mock.com');
-    passwordInputs.forEach((input) => userEvent.type(input, 'password'));
+    userEvent.type(textInputs[0], "mockUser");
+    userEvent.type(textInputs[1], "mock@mock.com");
+    passwordInputs.forEach((input) => userEvent.type(input, "password"));
     // Press button
-    const button = screen.getByRole('button', { name: 'Sign Up' });
+    const button = screen.getByRole("button", { name: "Sign Up" });
     await act(async () => {
-      userEvent.click(button)
+      userEvent.click(button);
     });
 
     expect(mockCloseFunc).toBeCalled();

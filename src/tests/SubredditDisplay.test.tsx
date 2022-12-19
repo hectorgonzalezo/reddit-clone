@@ -16,16 +16,16 @@ jest.mock('react-router-dom', () => ({
 
 const mockSubreddit = {
   name: 'aww',
-  dateCreated: (new Date()).toString(),
+  createdAt: (new Date()).toString(),
   description:
       'Things that make you go AWW! Like puppies, bunnies, babies, and so on... A place for really cute pictures and videos!',
   icon: 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/subredditIcons%2Faww_icon.jpeg?alt=media&token=2e8d3f04-c62e-44a2-86e9-daf26d307afc',
-  members: 0,
+  membersQuantity: 0,
   postQuantity: 3,
   subtitle: 'A subreddit for cute and cuddly pictures',
 };
 
-const { name, dateCreated, description, icon, members, postQuantity, subtitle } = mockSubreddit;
+const { name, createdAt, description, icon, membersQuantity, postQuantity, subtitle } = mockSubreddit;
 
 describe('Subreddit display', () => {
   test('Render subreddit info', async () => {
@@ -48,7 +48,9 @@ describe('Subreddit display', () => {
     expect(screen.getByText(`r/${name}`)).toBeInTheDocument();
     expect(screen.getByText(subtitle)).toBeInTheDocument();
     expect(screen.getByText(description)).toBeInTheDocument();
-    expect(screen.getByTestId('members-num')).toHaveTextContent(members);
+    expect(screen.getByTestId("members-num")).toHaveTextContent(
+      membersQuantity.toString()
+    );
     expect(container).toMatchSnapshot();
   });
 });

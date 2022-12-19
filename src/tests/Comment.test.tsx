@@ -170,7 +170,6 @@ describe('Comment', () => {
       )
     );
     
-    screen.debug();
     expect(screen.queryByTestId("edit-button")).toBeInTheDocument();
 
   });

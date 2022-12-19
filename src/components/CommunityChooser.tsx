@@ -25,10 +25,8 @@ function CommunityChooser({
 
   // chooses subreddit from dropdown
   function chooseFromDropdown(e: SyntheticEvent): void {
-
     const target = e.target as HTMLAnchorElement;
-
-    const subredditName = target.getAttribute("data") as string;
+    const subredditName = target.getAttribute("data-name") as string;
     setChosenSubreddit(subredditName);
     onChoosing(subredditName);
   }

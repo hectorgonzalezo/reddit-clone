@@ -19,15 +19,7 @@ export async function vote(
   voteType: Vote,
   token: string,
 ): Promise<void> {
-  const response = await fetch(`${BASEURL}/${userId}/vote/${postId}`, {
-    method: "PUT",
-    mode: 'cors',
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ vote: voteType }),
-  });
+  const response = await Promise.resolve();
 }
 
 export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]> {

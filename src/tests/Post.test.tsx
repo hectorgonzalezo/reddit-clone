@@ -7,25 +7,27 @@ import userEvent from '@testing-library/user-event';
 import Post from '../components/post/Post';
 import store from '../store/store';
 
-jest.mock('../firebase/firebase');
+jest.mock('../api/users');
+jest.mock('../api/posts');
 
 const mockPost = {
+  community: '123456789b123456789c1234',
   subredditName: 'aww',
-  subredditIcon: undefined,
-  poster: 'yo',
+  subredditIcon: '',
+  user: '123456789a123456789b1234',
   title: 'Title',
   text: 'Hey!',
   url:
     'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/postImages%2Fbar%2Fimages58b82c35dcf6e61433da9494.png?alt=media&token=c77db72a-07d3-4c61-9a2c-cfc86e8e4bb1',
   postId: '0',
   upVotes: 10,
-  timePosted: new Date().toString(),
+  createdAt: new Date().toString(),
   comments: [
     {
-      content: 'content',
-      timePosted: (new Date()).toString(),
+      text: 'content',
+      createdAt: (new Date()).toString(),
       upVotes: 10,
-      user: 'juan',
+      user: '123456789a123456789b1234',
     },
   ],
 };
@@ -33,17 +35,32 @@ const mockPost = {
 const {
   subredditName,
   subredditIcon,
-  poster,
+  user,
   title,
   text,
   url,
   upVotes,
-  timePosted,
+  createdAt,
   comments,
   postId,
 } = mockPost;
 
-const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
+beforeEach(async () =>{
+  await act(async () => {
+    store.dispatch({
+      type: "subreddits/addSubreddit",
+      payload: [
+        {
+          _id: "123456789b123456789c1234",
+          name: "aww",
+        },
+      ],
+    });
+  });
+})
+
+
+const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/poster_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
 describe('Post previews', () => {
   test('Render title and basic info', () => {
     // render mock post preview
@@ -55,8 +72,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -69,11 +86,11 @@ describe('Post previews', () => {
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
 
     expect(
-      screen.getByRole("link", { name: `u/${poster}` })
+      screen.getByRole("link", { name: `u/${user}` })
     ).toBeInTheDocument();
     expect(screen.getByText("10")).toBeInTheDocument();
     expect(screen.getByText(`r/${subredditName}`)).toBeInTheDocument();
-    expect(screen.getByText(`u/${poster}`)).toBeInTheDocument();
+    expect(screen.getByText(`u/${user}`)).toBeInTheDocument();
     expect(screen.getByText("1 Comments")).toBeInTheDocument();
 
     // dont render comments display
@@ -93,8 +110,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             text={text}
             postId={postId}
@@ -124,8 +141,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             img={url}
             postId={postId}
@@ -145,7 +162,7 @@ describe('Post previews', () => {
     expect(container).toMatchSnapshot();
   });
 
-  test('Pressing upvote and downvote buttons disabled if no user is logged in', () => {
+  test('Pressing upvote and downvote buttons disabled if no poster is logged in', () => {
     // render mock post preview
     render(
       <Provider store={store}>
@@ -155,8 +172,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -184,7 +201,15 @@ describe('Post previews', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: {
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+          },
+          token: "1234701923491273401243",
+        },
       });
     });
 
@@ -196,8 +221,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -222,7 +247,15 @@ describe('Post previews', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: {
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+          },
+          token: "1234701923491273401243",
+        },
       });
     });
 
@@ -234,8 +267,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -257,10 +290,19 @@ describe('Post previews', () => {
     expect(downVoteImage).toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg)');
   });
   test('Pressing upvote twice removes previous vote', async () => {
+
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: {
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+          },
+          token: "1234701923491273401243",
+        },
       });
     });
 
@@ -272,8 +314,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -299,7 +341,15 @@ describe('Post previews', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: {
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+          },
+          token: "1234701923491273401243",
+        },
       });
     });
 
@@ -311,8 +361,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -338,7 +388,15 @@ describe('Post previews', () => {
     await act(async () => {
       store.dispatch({
         type: "user/addUser",
-        payload: { username: "juan", email: "mock@mock.com", icon },
+        payload: {
+          user: {
+            username: "juan",
+            email: "mock@mock.com",
+            icon,
+            _id: "123456789a123456789b1234",
+          },
+          token: "1234701923491273401243",
+        },
       });
     });
 
@@ -350,8 +408,8 @@ describe('Post previews', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}
@@ -390,8 +448,8 @@ describe('Post with comments', () => {
             key={title}
             subredditName={subredditName}
             subredditIcon={subredditIcon}
-            poster={poster}
-            timePosted={timePosted}
+            poster={user}
+            timePosted={createdAt}
             title={title}
             postId={postId}
             upVotes={upVotes}

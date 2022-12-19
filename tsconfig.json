@@ -19,5 +19,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "exclude": ["src/tests/**/*", "src/tests/*",  "node_modules", ".vscode"]
+  "exclude": ["src/tests/**/*", "src/tests/__mocks__/*", "src/tests/*",  "node_modules", ".vscode"]
 }

@@ -15,7 +15,7 @@ function SearchBar(): JSX.Element {
 
   function navigateToSubreddit(e: SyntheticEvent): void {
     const target = e.target as HTMLAnchorElement;
-    const chosenSubreddit = target.getAttribute('data') as string;
+    const chosenSubreddit = target.getAttribute('data-name') as string;
     navigate(`/r/${chosenSubreddit}`);
     toggleDropdown();
   }

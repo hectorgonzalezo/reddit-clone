@@ -1,14 +1,22 @@
 import BASEURL from './baseurl';
 import uploadImage from './uploadImage';
 
-interface MockUser {
-username: string;
-subreddits: string[];
-}
 
-let mockUser = { username: 'juan', subreddits: [] };
+let mockUser: { username: string; subreddits: string[] } = {
+  username: "juan",
+  subreddits: [],
+};
 
-export async function getUser(userId: string): Promise<IUser> {
+const mockUserData ={
+  user: {
+    username: "juan",
+    email: "mock@mock.com",
+    _id: "123456789a123456789b1234",
+  },
+  token: "123456789012345678901234",
+};
+
+export async function getUser(userId: string): Promise<any> {
   const userCredential = await Promise.resolve(mockUser);
   // if (username === 'fakefake') {
   //   throw 'Fake username';
@@ -21,59 +29,28 @@ export async function signUp(user: {
   email: string;
   password: string;
   passwordConfirm: string;
-}): Promise<IUser> {
-  const response = await fetch(`${BASEURL}/users/sign-up`, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
-  });
+}): Promise<any> {
+  mockUserData.user = {
+    username: "juan",
+    email: "mock@mock.com",
+    _id: "123456789a123456789b1234",
+  };
 
-  const createdUser = await response.json();
-
-  return createdUser;
+  const userCredential = await Promise.resolve(mockUserData);
+  return userCredential;
 };
 
-// export async function logIn(user: {
-//   username: string;
-//   password: string;
-// }): Promise<IUser> {
-//   const response = await fetch(`${BASEURL}/users/log-in`, {
-//     method: "POST",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(user),
-//   });
+export async function logIn(user: {
+  username: string;
+  password: string;
+}): Promise<any> {
+  const userCredential = await Promise.resolve({ user: mockUserData });
+  if (user.username === 'fakefake') {
+    throw 'Fake username';
+  }
+  return userCredential.user;
+};
 
-//   const createdUser = await response.json();
-
-//   return createdUser;
-// };
-
-
-// export async function saveUserIcon(file: File, user: IUser): Promise<string> {
-//     try {
-//       // host image
-//       const icon = await uploadImage(file, `users/${user._id as string}/icon`);
-
-//       // update user's icon with url
-//       const response = await fetch(`${BASEURL}/users/${user._id as string}`, {
-//         method: "PUT",
-//         mode: "cors",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${user.token}`,
-//         },
-//         body: JSON.stringify({ icon }),
-//       });
-
-//       const returnedUser = await response.json();
-//       return returnedUser.user;
-//     } catch (error) {
-//       console.error('There was an error uploading a file to Cloud Storage:', error);
-//       throw error;
-//     }
-//   }
 
 export async function subscribeToSubreddit(
   subredditId: string,

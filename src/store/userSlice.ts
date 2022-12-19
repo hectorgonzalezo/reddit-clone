@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import defaultUserIcon from '../defaultUserIcon';
 
-const initialState = {} as UserInState;
+const initialState: UserInState = {} as UserInState;
 
 export const userSlice = createSlice({
   name: 'user',
@@ -9,15 +9,16 @@ export const userSlice = createSlice({
   reducers: {
     addUser: (state, action) => {
       const { user } = action.payload;
-      if(user.icon === undefined){
+
+      if(user.icon === undefined) {
         user.icon = defaultUserIcon;
       }
 
       user.token = action.payload.token;
 
-      return user;
-      
       localStorage.setItem("whoAmI", JSON.stringify(action.payload));
+
+      return user;
     },
     removeUser: (state) => {
       localStorage.removeItem("whoAmI");

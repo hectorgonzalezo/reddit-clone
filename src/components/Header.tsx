@@ -44,15 +44,8 @@ function Header({
 
   async function navigateToSubreddit(e: SyntheticEvent): Promise<void> {
     const target = e.target as HTMLAnchorElement;
-    const subredditId = target.getAttribute("data-id") as string;
+    const subredditName = target.getAttribute("data-name") as string;
 
-    // get subreddit icon
-    const subredditData = await getSubreddit(subredditId);
-    if (subredditData.icon !== undefined) {
-    setSubredditIcon(subredditData.icon);
-  }
-
-   const subredditName: string = subredditData.name;
     dispatch(changeCurrentSubreddit(subredditName));
     navigate(`/r/${subredditName}`);
   }
