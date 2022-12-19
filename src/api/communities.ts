@@ -1,10 +1,14 @@
 import BASEURL from './baseurl';
+import uploadImage from './uploadImage';
 
-export async function getSubreddits(): Promise<ICommunity[]> {
+export async function getSubreddits(): Promise<{
+  communities: ICommunity[];
+  errors?: BackendErrors;
+}> {
   const response = await fetch(`${BASEURL}/communities`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
     mode: "cors",
+    headers: { "Content-Type": "application/json" },
   });
   const subreddits = await response.json();
 
@@ -13,11 +17,14 @@ export async function getSubreddits(): Promise<ICommunity[]> {
 
 export async function getSubreddit(
   subredditId: string
-): Promise<ICommunity> {
+): Promise<{
+  community: ICommunity;
+  errors?: BackendErrors;
+}> {
   const response = await fetch(`${BASEURL}/communities/${subredditId}`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
     mode: "cors",
+    headers: { "Content-Type": "application/json" },
   });
   const subreddit = await response.json();
 
@@ -29,13 +36,20 @@ export async function createSubreddit(
     name: string;
     subtitle: string;
     description: string;
-    icon?: File;
+    icon?: File | string;
   },
   token: string
-): Promise<ICommunity> {
-  // upload file first!
-  // todo
-  const { name, subtitle, description, icon } = subreddit;
+): Promise<{
+  community: ICommunity;
+  errors?: BackendErrors;
+}> {
+  const community = { ...subreddit};
+  // upload icon if there's one
+  if (community.icon !== undefined && typeof community.icon !== 'string') {
+    const iconUrl = await uploadImage(community.icon, 'comunityIcons/');
+    // add the url to community object
+    community.icon = iconUrl;
+  }
   const response = await fetch(`${BASEURL}/communities`, {
     method: "POST",
     mode: "cors",
@@ -43,9 +57,10 @@ export async function createSubreddit(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(subreddit),
+    body: JSON.stringify(community),
   });
   const createdSubreddit = await response.json();
 
   return createdSubreddit;
-} 
+
+} ;

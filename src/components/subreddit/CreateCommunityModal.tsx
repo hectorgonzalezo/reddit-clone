@@ -107,12 +107,26 @@ function CreateCommunityModal({
           { name, subtitle, description, icon },
           user.token
         );
-        // get subreddit data from database and update redux store
-        dispatch(addSubreddit([newSubreddit]));
-        closeFunc(e);
-        // go to subreddit display
-        navigate(`/r/${name}`);
+        // Check if newSubreddit has errors
+        if(newSubreddit.errors !== undefined) {
+          // if the error is that the community already exists, display it
+          if (
+            newSubreddit.errors[0].msg === "Community name already exists" &&
+            subNameRef.current?.parentNode !== null
+          ) {
+            setLoadingData(false);
+            const display = subNameRef.current.parentNode.firstChild as HTMLSpanElement;
+            display.innerText = "Community name already exists";
+          }
+        } else {
+          // get subreddit data from database and update redux store
+          dispatch(addSubreddit([newSubreddit.community]));
+          closeFunc(e);
+          // go to subreddit display
+          navigate(`/r/${name}`);
+        }
       } catch (error) {
+        console.log(error);
         // If email already exists
         setLoadingData(false);
       }

@@ -66,8 +66,8 @@ function Header({
       const currentSubredditId = subreddits[currentSubreddit]._id.toString();
       getSubreddit(currentSubredditId)
         .then((data) => {
-          if (data.icon !== undefined) {
-            setSubredditIcon(data.icon);
+          if (data.community.icon !== undefined) {
+            setSubredditIcon(data.community.icon);
           }
         })
         .catch((error) => console.log(error));

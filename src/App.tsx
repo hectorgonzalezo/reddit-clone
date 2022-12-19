@@ -41,14 +41,15 @@ function App(): JSX.Element {
   // Populate subreddits redux store
   useEffect(() => {
     async function getNames(): Promise<void> {
-      let data: ICommunity[];
+      let communities: ICommunity[];
       try {
-        data = await getSubreddits();
+        const response = await getSubreddits();
+        communities = response.communities;
       } catch {
         console.log("Couldn't get subreddit data");
-        data = [];
+        communities = [];
       }
-      dispatch(addSubreddit(data));
+      dispatch(addSubreddit(communities));
     }
     getNames().catch((error) => console.log(error));
   }, []);

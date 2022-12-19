@@ -50,7 +50,7 @@ function ImageUpload({
         id={id}
         className="inputfile"
         onChange={onChange}
-        accept="image/png, image/jpeg image/gif"
+        accept="image/png, image/jpeg, image/gif"
         required={required}
       />
       <label htmlFor={id} className="image-input">

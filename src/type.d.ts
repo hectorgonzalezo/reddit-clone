@@ -1,3 +1,4 @@
+
 // Three ways to orders posts by
 type PostOrder = 'hot' | 'new' | 'top';
 
@@ -6,6 +7,8 @@ type Vote = "upVote" | "downVote" | '';
 interface Votes {
   [index: string]: Vote;
 }
+
+type BackendErrors = Array<{ msg: string}>;
 
 interface IUser {
   username: string;
@@ -100,6 +103,8 @@ interface UserInState {
   votes: Votes;
   token: string;
 }
+
+
 
 
 

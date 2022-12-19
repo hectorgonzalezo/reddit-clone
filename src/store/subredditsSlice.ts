@@ -9,7 +9,7 @@ export const subredditsSlice = createSlice({
   reducers: {
     addSubreddit: (state, action) => {
       const updatedSubreedits = action.payload;
-      const stateToUpdate: SubredditsObject = {};
+      const stateToUpdate: SubredditsObject = {...state};
       updatedSubreedits.forEach((subreddit: ICommunity) => {
         if(subreddit.icon === undefined){
           subreddit.icon = defaultCommunityIcon;

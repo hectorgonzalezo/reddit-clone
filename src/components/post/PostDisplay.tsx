@@ -44,7 +44,7 @@ function PostDisplay(): JSX.Element {
   useEffect(() => {
     const subredditId = subreddits[name]._id;
     getSubreddit(subredditId)
-      .then((data) => setChosenSubreddit(data))
+      .then((data) => setChosenSubreddit(data.community))
       .catch((error) => console.log(error));
 
     getPost(postId)
