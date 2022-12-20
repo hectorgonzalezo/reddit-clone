@@ -26,7 +26,10 @@ function PostDisplay(): JSX.Element {
 
   function isPostUrlImage(url: string | undefined): boolean {
     if (url !== undefined) {
-      const extension = url.split('.').pop() as string;
+      const urlObj = new URL(url);
+      
+      const extension = urlObj.pathname.split('.').pop() as string;
+      // remove queries
       const possibleImageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
       return possibleImageExtensions.includes(extension);
     }
@@ -36,21 +39,23 @@ function PostDisplay(): JSX.Element {
   function reloadPost(): void {
     setPost(false);
     getPost(postId)
-      .then((data) => setPost(data))
+      .then((data) => setPost(data.post))
       .catch((error) => console.log(error));
   }
 
   // get post from database on mount
   useEffect(() => {
+    if(subreddits[name] !== undefined) {
     const subredditId = subreddits[name]._id;
     getSubreddit(subredditId)
       .then((data) => setChosenSubreddit(data.community))
       .catch((error) => console.log(error));
 
     getPost(postId)
-      .then((data) => setPost(data))
+      .then((data) => setPost(data.post))
       .catch((error) => console.log(error));
-  }, []);
+    }
+  }, [subreddits]);
 
   useEffect(() => {
     if (chosenSubreddit !== false) {
@@ -65,8 +70,9 @@ function PostDisplay(): JSX.Element {
           <Post
             postId={postId}
             subredditName={name}
+            subredditId={chosenSubreddit._id}
             subredditIcon={chosenSubreddit.icon}
-            poster={post.user}
+            poster={post.user.username}
             timePosted={post.createdAt}
             voteType={
               user.username !== undefined && user.votes[postId] !== undefined
@@ -76,7 +82,7 @@ function PostDisplay(): JSX.Element {
             text={post.text}
             title={post.title}
             img={isPostUrlImage(post.url) ? post.url : ""}
-            url={post.url}
+            url={isPostUrlImage(post.url) ? "" : post.url}
             upVotes={post.upVotes}
             comments={post.comments}
             reloadPost={reloadPost}

@@ -8,11 +8,13 @@ import SubredditsDropDown from './subreddit/SubredditsDropDown';
 interface CommunityChooserProps {
   onChoosing: (arg0: string) => void;
   header?: boolean;
+  error?: boolean;
 };
 
 function CommunityChooser({
   onChoosing,
   header= false,
+  error= false,
 }: CommunityChooserProps): JSX.Element {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const subreddits = useSelector(selectSubreddits);
@@ -35,18 +37,20 @@ function CommunityChooser({
     <div className="main-child" id="community-chooser">
       <button
         type="button"
-        className="button-show-drop-down"
+        className={
+          error ? "button-show-drop-down--error" : "button-show-drop-down"
+        }
         onClick={toggleDropdown}
       >
-        <img
-          src={
-            chosenSubreddit !== null ? subreddits[chosenSubreddit].icon : ''
-          }
-          alt=""
-          className={
-            chosenSubreddit !== null ? 'user-icon' : 'user-icon-hidden'
-          }
-        />
+        {chosenSubreddit !== null ? (
+          <img
+            className="user-icon"
+            src={subreddits[chosenSubreddit].icon}
+            alt=""
+          />
+        ) : (
+          <div className="user-icon-hidden" />
+        )}
         <h1 data-testid="community-chooser-title">
           {chosenSubreddit !== null
             ? subreddits[chosenSubreddit].name

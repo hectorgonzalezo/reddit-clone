@@ -20,7 +20,7 @@ export async function signUp(user: {
   email: string;
   password: string;
   passwordConfirm: string;
-}): Promise<IUser> {
+}): Promise<{ user: IUser; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/users/sign-up`, {
     method: "POST",
     mode: "cors",
@@ -36,7 +36,7 @@ export async function signUp(user: {
 export async function logIn(user: {
   username: string;
   password: string;
-}): Promise<IUser> {
+}): Promise<{ user: IUser; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/users/log-in`, {
     method: "POST",
     mode: "cors",
@@ -50,29 +50,35 @@ export async function logIn(user: {
 };
 
 
-export async function saveUserIcon(file: File, user: IUser): Promise<string> {
-    try {
-      // host image
-      const icon = await uploadImage(file, `users/${user._id as string}/icon`);
+export async function saveUserIcon(
+  file: File,
+  user: IUser
+): Promise<{ user: IUser; errors?: BackendErrors }> {
+  try {
+    // host image
+    const icon = await uploadImage(file, `users/${user._id as string}/icon`);
 
-      // update user's icon with url
-      const response = await fetch(`${BASEURL}/users/${user._id as string}`, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({ icon }),
-      });
+    // update user's icon with url
+    const response = await fetch(`${BASEURL}/users/${user._id as string}`, {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({ icon }),
+    });
 
-      const returnedUser = await response.json();
-      return returnedUser.user;
-    } catch (error) {
-      console.error('There was an error uploading a file to Cloud Storage:', error);
-      throw error;
-    }
+    const returnedUser = await response.json();
+    return returnedUser;
+  } catch (error) {
+    console.error(
+      "There was an error uploading a file to Cloud Storage:",
+      error
+    );
+    throw error;
   }
+}
 
 export async function subscribeToSubreddit(
   subredditId: string,

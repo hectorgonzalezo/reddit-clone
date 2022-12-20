@@ -24,6 +24,7 @@ interface PostProps {
   preview?: boolean;
   onClick?: (arg0: SyntheticEvent) => void;
   subredditName: string;
+  subredditId: string;
   subredditIcon?: string;
   postId: string;
   voteType?: Vote;
@@ -88,6 +89,7 @@ function Post({
   preview = false,
   onClick = (e: SyntheticEvent) => {},
   subredditName,
+  subredditId,
   subredditIcon = defaultCommunityIcon,
   postId,
   voteType = '',
@@ -104,13 +106,12 @@ function Post({
   const [previousVote, setPreviousVote] = useState(voteType);
   const [votes, setVotes] = useState(upVotes);
   const user = useSelector(selectUser);
-  const subreddts = useSelector(selectSubreddits);
+  const subreddits = useSelector(selectSubreddits);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // updates number of upvotes in post
   function updateVotes(e: SyntheticEvent): void {
-    const subredditId = subreddts[subredditName]._id;
     const target = e.target as HTMLAnchorElement;
     const newVoteType = target.getAttribute('data') as Vote;
     e.stopPropagation();

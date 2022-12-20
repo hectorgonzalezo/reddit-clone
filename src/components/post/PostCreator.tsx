@@ -17,6 +17,7 @@ import { selectSubreddits } from '../../store/subredditsSlice';
 function PostCreator(): JSX.Element {
   const user = useSelector(selectUser);
   const subreddits = useSelector(selectSubreddits);
+  const [noCommunity, setNoCommunity] = useState(false);
   const navigate = useNavigate();
   const selectedButton = useRef<HTMLButtonElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
@@ -97,6 +98,7 @@ function PostCreator(): JSX.Element {
   function selectMedia(e: SyntheticEvent): void {
     const target = e.target as HTMLButtonElement;
     if (selectedButton.current !== null) {
+      console.log({selectedButton, target})
       selectedButton.current.classList.remove('selected');
       target.classList.add('selected');
       selectedButton.current = target;
@@ -109,7 +111,15 @@ function PostCreator(): JSX.Element {
     const { username } = user;
     if ( titleRef.current !== null) {
     const title = titleRef.current.value;
-    const community = subreddits[selectedSubreddit as string]._id;
+    // throw error if no community is selected
+    if (selectedSubreddit === undefined) {
+      setNoCommunity(true);
+      setIsLoading(false);
+      setTimeout(() => {
+       setNoCommunity(false);
+      }, 2000);
+    } else {
+    const community = subreddits[selectedSubreddit]._id;
     const text = textContent;
     const image = fileToUpload;
     let id;
@@ -119,6 +129,7 @@ function PostCreator(): JSX.Element {
 
     // depending on the type of media to be upload, choose an appropriate database method
     // extract the id of the element to identify the type
+      try {
     switch (mediaType.props.id) {
       case 'text-area':
         id = await createPost({ title, community, text }, user.token);
@@ -138,7 +149,11 @@ function PostCreator(): JSX.Element {
         setIsLoading(false);
         break;
     }
+  } catch (error){
+    setIsLoading(false);
   }
+  }
+}
   }
 
   function loadPost(id: string): void {
@@ -152,7 +167,7 @@ function PostCreator(): JSX.Element {
     <>
       <div id="left-side">
         <h1 id="create-post-title">Create a post</h1>
-        <CommunityChooser onChoosing={setSelectedSubreddit} />
+        <CommunityChooser onChoosing={setSelectedSubreddit} error={noCommunity}/>
         <div id="post-creator" className="main-child">
           <div id="buttons-div" data-testid="buttons-div">
             <button

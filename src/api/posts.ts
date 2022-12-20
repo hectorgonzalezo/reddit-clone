@@ -1,7 +1,10 @@
 import BASEURL from './baseurl';
 import uploadImage from './uploadImage';
 
-export async function getPost(postId: string): Promise<IPost> {
+export async function getPost(postId: string): Promise<{
+  post: IPost;
+  errors?: BackendErrors;
+}> {
   const response = await fetch(`${BASEURL}/posts/${postId}`, {
     method: "GET",
     mode: 'cors',
@@ -30,15 +33,18 @@ export async function vote(
   });
 }
 
-export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]> {
+export async function getPostsInSubreddit(
+  subredditId: string
+): Promise<{ posts: IPost[]; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/posts/?community=${subredditId}`, {
     method: "GET",
-    mode: 'cors',
+    mode: "cors",
     headers: {
       "Content-Type": "application/json",
-    }});
-    const posts = await response.json();
-    return posts.posts;
+    },
+  });
+  const posts = await response.json();
+  return posts;
 }
 
 
@@ -48,7 +54,8 @@ export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]>
     post: { title: string; community: string; text?: string, url?: string},
     token: string
   ): Promise<string> {
-    const response = await fetch(`${BASEURL}/posts}`, {
+    console.log({post})
+    const response = await fetch(`${BASEURL}/posts`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -68,17 +75,17 @@ export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]>
     user: IUser,
     image: File,
   ): Promise<string> {
-    const imageUrl = await uploadImage(image, `postImages/${user._id as string}/images`);
+    const url = await uploadImage(image, `postImages/${user._id as string}/images`);
 
     const { title, community } = post;
-    const response = await fetch(`${BASEURL}/posts}`, {
+    const response = await fetch(`${BASEURL}/posts`, {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
       },
-      body: JSON.stringify({ title, community, imageUrl }),
+      body: JSON.stringify({ title, community, url }),
     });
 
     const data = await response.json();

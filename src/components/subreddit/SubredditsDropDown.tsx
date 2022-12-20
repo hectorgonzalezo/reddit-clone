@@ -24,7 +24,6 @@ function SubredditsDropDown({
   const subreddits = useSelector(selectSubreddits);
   const user = useSelector(selectUser);
   const userCommunities = user.communities as string[];
-  console.log({userCommunities})
   const [chosenSubreeddits, setChosenSubreddits] = useState(
     Object.values(subreddits)
   );

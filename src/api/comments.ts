@@ -4,7 +4,7 @@ export async function createComment(
   postId: string,
   comment: IComment,
   parent: string
-): Promise<IComment | Error> {
+): Promise<{ comment: IComment ; errors?: BackendErrors }>{
   const response = await fetch(`${BASEURL}/posts/${postId}/comments`, {
     method: "POST",
     mode: 'cors',
@@ -22,7 +22,7 @@ export async function updateComment(
   commentId: string,
   comment: IComment,
   token: string,
-): Promise<IComment> {
+): Promise<{ comment: IComment ; errors?: BackendErrors }> {
 
   const response = await fetch(`${BASEURL}/posts/${postId}/comments/${commentId}`, {
     method: "PUT",

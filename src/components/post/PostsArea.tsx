@@ -38,9 +38,9 @@ function PostsArea({
     subredditIcon: string
   ): Promise<IPost[]> {
     const subredditId = currentSubreddits[subredditName]._id;
-    let topPosts = await getPostsInSubreddit(subredditId);
+    const response = await getPostsInSubreddit(subredditId);
     // add subreddit name and icon to post
-    topPosts = topPosts.map((post) => ({
+    const topPosts = response.posts.map((post) => ({
       ...post,
       subredditName,
       subredditIcon,
@@ -50,8 +50,11 @@ function PostsArea({
 
   function isPostUrlImage(url: string | undefined): boolean {
     if (url !== undefined) {
-      const extension = url.split(".").pop() as string;
-      const possibleImageExtensions = ["jpeg", "jpg", "png", "gif"];
+      const urlObj = new URL(url);
+      
+      const extension = urlObj.pathname.split('.').pop() as string;
+      // remove queries
+      const possibleImageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
       return possibleImageExtensions.includes(extension);
     }
     return false;
@@ -123,7 +126,6 @@ function PostsArea({
   return (
     <PostsDiv id="posts">
       {posts.map((post) => {
-        const imageUrl = isPostUrlImage(post.url) ? post.url : '';
         return (
           <Post
             preview
@@ -133,9 +135,10 @@ function PostsArea({
             }`}
             postId={post._id}
             subredditName={post.community.name}
+            subredditId={post.community._id}
             subredditIcon={post.community.icon}
-            poster={post.user}
-            timePosted={post.user}
+            poster={post.user.username}
+            timePosted={post.createdAt}
             voteType={
               user.username !== undefined && user.votes[post._id] !== undefined
                 ? user.votes[post._id]
@@ -143,8 +146,8 @@ function PostsArea({
             }
             text={post.text}
             title={post.title}
-            img={imageUrl}
-            url={post.url}
+            img={isPostUrlImage(post.url) ? post.url : ""}
+            url={isPostUrlImage(post.url) ? "" : post.url}
             upVotes={post.upVotes}
             comments={post.comments}
           />
