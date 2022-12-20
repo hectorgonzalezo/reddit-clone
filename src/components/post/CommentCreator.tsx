@@ -9,6 +9,7 @@ import Button from '../Button';
 interface CommentCreatorProps {
   commentsList?: IComment[];
   index?: number[];
+  parentId: undefined | string;
   subreddit: string;
   postId: string;
   value?: string;
@@ -19,6 +20,7 @@ interface CommentCreatorProps {
 function CommentCreator({
   commentsList = [],
   index= [],
+  parentId,
   subreddit,
   postId,
   value = '',
@@ -29,10 +31,6 @@ function CommentCreator({
   const [textContent, setTextContent] = useState(value);
   const [isloadingg, setIsLoading] = useState(false);
 
-  // Typecheck locationToAdd
-  function isComment(location: IComment | []): location is IComment {
-    return (location as IComment).text !== undefined;
-  }
 
   function addComment(): void {
     setIsLoading(true);
@@ -44,34 +42,32 @@ function CommentCreator({
       indexesList = index;
     }
     // access specific location where comment should be in commentsList
-    // const locationToAdd= indexesList.reduce(
-    //   (prev: IComment[], curr, i) => {
-    //   // dont acces responses if its the last element and it's editing the post
-    //   if (i === indexesList.length - 1 && edit) {
-    //     return prev[curr] as IComment;
-    //   }
-    //   return prev[curr].responses;
-    // }, copiedComments);
+    const locationToAdd= indexesList.reduce(
+      (prev: any, curr, i) => {
+      // dont acces responses if its the last element and it's editing the post
+      if (i === indexesList.length - 1 && edit) {
+        return prev[curr] as IComment;
+      }
+      return prev[curr].responses;
+    }, copiedComments);
 
-    // // if you're editing a previous post, just update its text content
-    // if (edit && isComment(locationToAdd)) {
-    //   locationToAdd.text = textContent;
-    // } else if(!isComment(locationToAdd)){
-    //   // add comment to that location;
-    //   locationToAdd.push({
-    //     content: textContent,
-    //     user: user.username,
-    //     responses: [],
-    //   });
-    // }
+    // if you're editing a previous post, just update its text content
+    if (edit) {
+      locationToAdd.text = textContent;
+    } else {
+          // Add comment to database
+    createComment(postId, {
+      text: textContent,
+      user: user._id,
+      parent: parentId,
+    }, user.token)
+      .then((result) => {
+        setIsLoading(false);
+        reloadPost();
+      })
+      .catch((error) => console.log(error));
+    }
 
-    // // Add comment to database
-    // createComment(subreddit, postId, comment, parent)
-    //   .then((result) => {
-    //     setIsLoading(false);
-    //     reloadPost();
-    //   })
-    //   .catch((error) => console.log(error));
 
   }
 

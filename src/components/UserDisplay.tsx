@@ -26,16 +26,16 @@ const UserInfo = styled.div`
 `;
 
 function UserDisplay(): JSX.Element {
-  const { id } = useParams();
+  const { userId } = useParams();
   const subreddits = useSelector(selectSubreddits);
-  const [user, setUser] = useState<IUser | false>(false);
+  const [user, setUser] = useState<IUser>();
 
   // get Info about user
   useEffect(() => {
-      getUser(id as string)
+      getUser(userId as string)
       .then((data) => {
         if (data !== undefined) {
-          setUser(data.user);
+        setUser(data.user);
         }
       })
       .catch((error) => console.log(error));
@@ -48,7 +48,7 @@ function UserDisplay(): JSX.Element {
       </div>
       <div id="right-side">
         <UserInfo className="main-child">
-          {user !== false ? (
+          {user !== undefined ? (
             <>
               <img src={user.icon} alt="" />
               <h1>{user.username}</h1>

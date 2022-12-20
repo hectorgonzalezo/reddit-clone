@@ -52,7 +52,7 @@ function PostDisplay(): JSX.Element {
       .catch((error) => console.log(error));
 
     getPost(postId)
-      .then((data) => setPost(data.post))
+      .then((data) => {setPost(data.post); console.log(data.post);})
       .catch((error) => console.log(error));
     }
   }, [subreddits]);
@@ -72,7 +72,7 @@ function PostDisplay(): JSX.Element {
             subredditName={name}
             subredditId={chosenSubreddit._id}
             subredditIcon={chosenSubreddit.icon}
-            poster={post.user.username}
+            poster={post.user}
             timePosted={post.createdAt}
             voteType={
               user.username !== undefined && user.votes[postId] !== undefined

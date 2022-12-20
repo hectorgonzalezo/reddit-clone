@@ -47,8 +47,8 @@ interface IComment {
   user: ObjectId | IUser;
   upVotes: number;
   responses: [] | ObjectId[] | IComment[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ICommunity {

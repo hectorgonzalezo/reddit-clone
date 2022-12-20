@@ -62,7 +62,10 @@ function Header({
 
   useEffect(() => {
     // change subreddit icon
-    if (currentSubreddit !== null) {
+    if (
+      currentSubreddit !== null &&
+      subreddits[currentSubreddit] !== undefined
+    ) {
       const currentSubredditId = subreddits[currentSubreddit]._id.toString();
       getSubreddit(currentSubredditId)
         .then((data) => {
@@ -74,7 +77,7 @@ function Header({
     } else {
       setSubredditIcon(homeIcon);
     }
-  }, [currentSubreddit]);
+  }, [currentSubreddit, subreddits]);
 
   return (
     <header className={opaque ? "opaque" : ""} onMouseLeave={closeAllDropDowns}>

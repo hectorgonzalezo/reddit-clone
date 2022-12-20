@@ -28,7 +28,7 @@ interface PostProps {
   subredditIcon?: string;
   postId: string;
   voteType?: Vote;
-  poster: string;
+  poster: IUser;
   title: string;
   text?: string;
   url?: string;
@@ -116,7 +116,7 @@ function Post({
     const newVoteType = target.getAttribute('data') as Vote;
     e.stopPropagation();
     // Only allow vote if user is authorized
-    if (user.username !== undefined && newVoteType !== null) {
+    if (user._id !== undefined && newVoteType !== null) {
       // can be 'upVote' or 'downVote'
       switch (true) {
         // previously clicked vote => new vote
@@ -226,7 +226,7 @@ function Post({
         <p>&nbsp;•&nbsp;</p>
         <p>
           {" "}
-          Posted by <Link to={`/u/${poster}`}>u/{poster}</Link>{" "}
+          Posted by <Link to={`/u/${poster._id}`}>u/{poster.username}</Link>{" "}
           {formatDistanceToNow(new Date(timePosted))}
           &nbsp;ago
         </p>
@@ -253,6 +253,7 @@ function Post({
         <>
           {user.username !== undefined ?
           <CommentCreator
+            parentId={undefined}
             subreddit={subredditName}
             postId={postId}
             commentsList={comments}

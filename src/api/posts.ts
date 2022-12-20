@@ -47,6 +47,20 @@ export async function getPostsInSubreddit(
   return posts;
 }
 
+export async function getPostsByUSer(
+  userId: string
+): Promise<{ posts: IPost[]; errors?: BackendErrors }> {
+  const response = await fetch(`${BASEURL}/posts/?user=${userId}`, {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const posts = await response.json();
+  return posts;
+}
+
 
 // Both create posts return the post id
   // adds a post in the specified subreddit

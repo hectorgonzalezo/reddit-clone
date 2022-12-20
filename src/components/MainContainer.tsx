@@ -14,14 +14,12 @@ interface MainContainerProps {
 };
 
 function MainContainer({ opaque= false }: MainContainerProps): JSX.Element {
-  const homepage = <HomePage />;
-
   return (
     <main className={opaque ? 'opaque' : ''}>
       <Routes>
         <Route
           path="/"
-          element={homepage}
+          element={<HomePage />}
         />
         <Route
           path="/create-post/:initialType"
@@ -29,7 +27,7 @@ function MainContainer({ opaque= false }: MainContainerProps): JSX.Element {
         />
         <Route path="r/:name" element={<SubredditDisplay />}/>
         <Route path="r/:name/:postId" element={<PostDisplay />} />
-        <Route path="u/:name" element={<UserDisplay />} />
+        <Route path="u/:userId" element={<UserDisplay />} />
         <Route path="allSubreddits" element={<AllSubreddits />} />
       </Routes>
     </main>

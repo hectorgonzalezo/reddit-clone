@@ -19,7 +19,6 @@ function SubredditDisplay(): JSX.Element {
   const userCommunities = user.communities as string[];
   const params = useParams();
   const name = params.name as string;
-  
   const [chosenSubreddit, setChosenSubreddit] = useState<ICommunity>();
   const [postsOrder, setPostsOrder] = useState<PostOrder>('hot');
   const dispatch = useDispatch();
@@ -32,7 +31,7 @@ function SubredditDisplay(): JSX.Element {
     setChosenSubreddit(subredditsData[name]);
     dispatch(changeCurrentSubreddit(name));
     setPostsOrder(postsOrder);
-  }, [subredditsData, name]);
+  }, [subredditsData]);
 
   return (
     <>
@@ -40,10 +39,11 @@ function SubredditDisplay(): JSX.Element {
         <SubredditBanner subreddit={chosenSubreddit} />
       ) : null}
       <div id="left-side">
-        {
-        chosenSubreddit !== undefined && userCommunities.includes(chosenSubreddit._id) ?
+        {chosenSubreddit !== undefined &&
+        user.communities !== undefined &&
+        userCommunities.includes(chosenSubreddit._id) ? (
           <CreatePostPreview />
-        : null}
+        ) : null}
         <PopularPostsBar changeOrder={changeOrder} />
         {chosenSubreddit !== undefined ? (
           <PostsArea

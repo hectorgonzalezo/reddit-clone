@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { selectUser } from '../../store/userSlice';
 import CommentCreator from './CommentCreator';
 import commentIcon from '../../assets/comments_icon.svg';
-import { getUser } from '../../api/users';
+import { Link } from 'react-router-dom';
 import defaultUserIcon from '../../assets/user_icon.svg';
 
 interface CommentProps {
@@ -26,33 +26,20 @@ function Comment({
   reloadPost,
 }: CommentProps): JSX.Element {
   const user = useSelector(selectUser);
-  const [userIcon, setUserIcon] = useState(defaultUserIcon);
   const [visibleCreator, setVisibleCreator] = useState(false);
   const [visibleEditor, setVisibleEditor] = useState(false);
   // commentIndex contains the index to find the comment in the nested
   // hierarchy of comments in the database
 
-  // get user icon from database
-  useEffect(() => {
-    getUser(comment.user.toString()).then((fetchedUser) => {
-      // if theres an icon, add it to state
-      if (fetchedUser.user?.icon !== undefined) {
-        // console.log()
-        setUserIcon(fetchedUser.user.icon);
-      }
-    })
-    .catch((error) => console.log(error));
-  }, []);
-
   return (
     <div className="comment-inside" data-testid="comment">
       <div className="comment">
         <div className="poster-area">
-          <img src={userIcon} className="user-icon" alt="user icon" />
-          <a href="">{comment.user}</a>
+          <img src={comment.user.icon} className="user-icon" alt="user icon" />
+          <Link to ={`/u/${comment.user._id}`}>{comment.user.username}</Link>
           <p>
             &nbsp;•&nbsp;
-            {formatDistanceToNow(new Date(comment.createdAt))}
+            {formatDistanceToNow(new Date(comment.createdAt as string))}
             &nbsp;ago
           </p>
         </div>
@@ -60,6 +47,7 @@ function Comment({
           <CommentCreator
             commentsList={commentsList}
             value={comment.text}
+            parentId={comment._id}
             index={commentIndex}
             subreddit={subreddit}
             postId={postId}
@@ -69,6 +57,7 @@ function Comment({
         ) : (
           <p>{comment.text}</p>
         )}
+        { user._id !== undefined ?
         <div>
           <button
             type="button"
@@ -88,10 +77,12 @@ function Comment({
             </button>
           ) : null}
         </div>
+        : null}
         {visibleCreator ? (
           <CommentCreator
             commentsList={commentsList}
             index={commentIndex}
+            parentId={comment._id}
             subreddit={subreddit}
             postId={postId}
             reloadPost={reloadPost}

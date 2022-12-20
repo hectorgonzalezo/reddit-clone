@@ -70,7 +70,8 @@ export async function saveUserIcon(
     });
 
     const returnedUser = await response.json();
-    return returnedUser;
+
+    return {...returnedUser, token: user.token};
   } catch (error) {
     console.error(
       "There was an error uploading a file to Cloud Storage:",

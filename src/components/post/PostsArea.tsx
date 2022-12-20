@@ -2,7 +2,7 @@ import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPostsInSubreddit } from '../../api/posts';
+import { getPostsByUSer, getPostsInSubreddit } from '../../api/posts';
 import defaultCommunityIcon from '../../defaultCommunityIcon';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
@@ -31,7 +31,7 @@ function PostsArea({
   const currentSubreddits = useSelector(selectSubreddits);
   const navigate = useNavigate();
   let rendered = false;
-  const UserDisplayName = useParams().name;
+  const { userId } = useParams();
 
   async function getTop(
     subredditName: string,
@@ -81,52 +81,46 @@ function PostsArea({
     // if only displaying a particular user posts
     if (onlyUser) {
       setPosts([]);
-      let userPosts: IPost[] = [];
       Object.values(subreddits).forEach((subreddit: ICommunity) => {
-        getTop(
-          subreddit.name,
-          subreddit.icon || defaultCommunityIcon
-        ).then((allPosts) => {
-          // only get posts authored by user
-          const newAllPosts = allPosts.filter((post) => post.user === UserDisplayName);
-          userPosts = userPosts.concat(newAllPosts);
-          setPosts(reorderPosts(userPosts, order));
-        }
-        )
-        .catch((error) => console.log(error));
+        getPostsByUSer(userId as string)
+          .then((userPosts) => {
+            // only get posts authored by user
+            setPosts(reorderPosts(userPosts.posts, order));
+          })
+          .catch((error) => console.log(error));
       });
     } else if (Object.values(subreddits).length === 1 && !rendered) {
       // for subreddit display
       setPosts([]);
-      Object.values(subreddits).forEach(async (subreddit) => {
+      Object.values(subreddits).forEach((subreddit) => {
         // If there's no icon, show the default one
-        const subPosts = await getTop(
+        getTop(
           subreddit.name,
           subreddit.icon || defaultCommunityIcon
-        );
+        ).then((subPosts) => {
         newPosts = newPosts.concat(subPosts);
         setPosts(reorderPosts(newPosts, order));
+        }).catch((error) => console.log(error));
       });
       rendered = false;
-    } else if (Object.values(subreddits).length > 2) {
+    } else if (Object.values(subreddits).length > 1) {
       // for homepage without user
       setPosts([]);
-      Object.values(subreddits).forEach(async (subreddit) => {
+      Object.values(subreddits).forEach((subreddit) => {
         // If there's no icon, show the default one
-        const subPosts = await getTop(
-          subreddit.name,
-          subreddit.icon || defaultCommunityIcon
-        );
-        newPosts = newPosts.concat(subPosts);
-        setPosts(reorderPosts(newPosts, order));
+        getTop(subreddit.name, subreddit.icon || defaultCommunityIcon)
+          .then((subPosts) => {
+            newPosts = newPosts.concat(subPosts);
+            setPosts(reorderPosts(newPosts, order));
+          })
+          .catch((error) => console.log(error));
       });
     }
   }, [subreddits, user]);
 
   return (
     <PostsDiv id="posts">
-      {posts.map((post) => {
-        return (
+      {posts.map((post) => (
           <Post
             preview
             onClick={(e) => gotToPost(e, post.community.name, post._id)}
@@ -137,7 +131,7 @@ function PostsArea({
             subredditName={post.community.name}
             subredditId={post.community._id}
             subredditIcon={post.community.icon}
-            poster={post.user.username}
+            poster={post.user}
             timePosted={post.createdAt}
             voteType={
               user.username !== undefined && user.votes[post._id] !== undefined
@@ -151,8 +145,8 @@ function PostsArea({
             upVotes={post.upVotes}
             comments={post.comments}
           />
-        );
-      })}
+        )
+      )}
     </PostsDiv>
   );
 }
