@@ -30,7 +30,7 @@ export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]>
       "Content-Type": "application/json",
     }});
     const posts = await response.json();
-    return posts.posts;
+    return posts;
 }
 
 

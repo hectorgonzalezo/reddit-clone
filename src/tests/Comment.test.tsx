@@ -33,8 +33,8 @@ describe('Comment', () => {
   test('Display basic comment data', async () => {
     const mockComment = {
       createdAt: new Date().toString(),
-      text: 'mocktext',
-      user: 'mockUser',
+      text: "mocktext",
+      user: { username: "mockUser" },
       upVotes: 10,
     };
     await act(async () =>
@@ -46,7 +46,8 @@ describe('Comment', () => {
             postId="1"
             reloadPost={mockReload}
           />
-        </Provider>
+        </Provider>,
+        { wrapper: MemoryRouter }
       )
     );
 
@@ -78,7 +79,8 @@ describe('Comment', () => {
             postId="1"
             reloadPost={mockReload}
           />
-        </Provider>
+        </Provider>,
+        { wrapper: MemoryRouter }
       )
     );
 
@@ -139,7 +141,8 @@ describe('Comment', () => {
             postId="1"
             reloadPost={mockReload}
           />
-        </Provider>
+        </Provider>,
+        { wrapper: MemoryRouter }
       )
     );
     

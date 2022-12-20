@@ -14,7 +14,7 @@ const mockPost = {
   community: '123456789b123456789c1234',
   subredditName: 'aww',
   subredditIcon: '',
-  user: '123456789a123456789b1234',
+  user: {_id: '123456789a123456789b1234', username: "juan" },
   title: 'Title',
   text: 'Hey!',
   url:
@@ -86,11 +86,11 @@ describe('Post previews', () => {
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
 
     expect(
-      screen.getByRole("link", { name: `u/${user}` })
+      screen.getByRole("link", { name: `u/${user.username}` })
     ).toBeInTheDocument();
     expect(screen.getByText("10")).toBeInTheDocument();
     expect(screen.getByText(`r/${subredditName}`)).toBeInTheDocument();
-    expect(screen.getByText(`u/${user}`)).toBeInTheDocument();
+    expect(screen.getByText(`u/${user.username}`)).toBeInTheDocument();
     expect(screen.getByText("1 Comments")).toBeInTheDocument();
 
     // dont render comments display

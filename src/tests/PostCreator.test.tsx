@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import store from '../store/store';
 import PostCreator from '../components/post/PostCreator';
+import { getStorage } from 'firebase/storage';
 
 const icon = 'https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1';
 
@@ -20,7 +21,7 @@ beforeEach(async () => {
           email: "mock@mock.com",
           icon,
           _id: "123456789a123456789b1234",
-          communities: ['aww'],
+          communities: ["123456789b123456789c1234"],
         },
         token: "1234701923491273401243",
       },
