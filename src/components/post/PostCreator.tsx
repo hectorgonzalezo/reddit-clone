@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../store/userSlice';
+import { addPost } from '../../store/postsSlice';
 import { createPost, createImagePost } from '../../api/posts';
 import CommunityChooser from '../CommunityChooser';
 import PostingRules from './PostingRules';
@@ -13,12 +14,14 @@ import linkIcon from '../../assets/link_icon.svg';
 import loadingIcon from '../../assets/loading.gif';
 import '../../styles/postCreatorStyle.scss';
 import { selectSubreddits } from '../../store/subredditsSlice';
+import { useDispatch } from 'react-redux';
 
 function PostCreator(): JSX.Element {
   const user = useSelector(selectUser);
   const subreddits = useSelector(selectSubreddits);
   const [noCommunity, setNoCommunity] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectedButton = useRef<HTMLButtonElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const [textContent, setTextContent] = useState('');
@@ -26,6 +29,7 @@ function PostCreator(): JSX.Element {
   const [fileToUpload, setFileToUpload] = useState<File>();
   const [isLoading, setIsLoading] = useState(false);
   let { initialType } = useParams<string>();
+
   // by default should be textArea
   if (initialType === undefined) {
     initialType = 'textArea';
@@ -98,7 +102,6 @@ function PostCreator(): JSX.Element {
   function selectMedia(e: SyntheticEvent): void {
     const target = e.target as HTMLButtonElement;
     if (selectedButton.current !== null) {
-      console.log({selectedButton, target})
       selectedButton.current.classList.remove('selected');
       target.classList.add('selected');
       selectedButton.current = target;
@@ -108,7 +111,6 @@ function PostCreator(): JSX.Element {
 
   // adds a post to database
   async function submitPost(): Promise<void> {
-    const { username } = user;
     if ( titleRef.current !== null) {
     const title = titleRef.current.value;
     // throw error if no community is selected
@@ -122,7 +124,7 @@ function PostCreator(): JSX.Element {
     const community = subreddits[selectedSubreddit]._id;
     const text = textContent;
     const image = fileToUpload;
-    let id;
+    let createdPost;
 
     // add loading animation to button
     setIsLoading(true);
@@ -132,22 +134,25 @@ function PostCreator(): JSX.Element {
       try {
     switch (mediaType.props.id) {
       case 'text-area':
-        id = await createPost({ title, community, text }, user.token);
-        loadPost(id);
+        createdPost = await createPost({ title, community, text }, user.token);
+        loadPost(createdPost._id);
         break;
       case 'img-area':
         if (image !== undefined){
-          id = await createImagePost({ title, community}, user, image);
-          loadPost(id);
+          createdPost = await createImagePost({ title, community}, user, image);
+          loadPost(createdPost._id);
         }
         break;
       case 'url-area':
-        id = await createPost({ title, community, url: text }, user.token);
-        loadPost(id);
+        createdPost = await createPost({ title, community, url: text }, user.token);
+        loadPost(createdPost._id);
         break;
       default:
         setIsLoading(false);
         break;
+    }
+    if (createdPost !== undefined) {
+      dispatch(addPost(createdPost));
     }
   } catch (error){
     setIsLoading(false);

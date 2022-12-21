@@ -2,12 +2,13 @@ import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPostsByUSer, getPostsInSubreddit } from '../../api/posts';
-import defaultCommunityIcon from '../../defaultCommunityIcon';
+import { getAllPosts, getPostsByUSer, getPostsInSubreddit } from '../../api/posts';
 import Post from './Post';
 import reorderPosts from '../../utils/reorderPosts';
 import { selectUser } from '../../store/userSlice';
+import { selectPosts, addPosts } from '../../store/postsSlice';
 import { selectSubreddits } from '../../store/subredditsSlice';
+import { useDispatch } from 'react-redux';
 
 interface PostsAreaProps {
   subreddits: SubredditsObject;
@@ -26,27 +27,15 @@ function PostsArea({
   order = "hot",
   onlyUser = false,
 }: PostsAreaProps): JSX.Element {
-  const [posts, setPosts] = useState<IPost[]>([]);
   const user = useSelector(selectUser);
+  const currentPosts = useSelector(selectPosts);
+  const [posts, setPosts] = useState<IPost[]>(currentPosts);
   const currentSubreddits = useSelector(selectSubreddits);
+  const [rendered, setRendered] = useState(false);
   const navigate = useNavigate();
-  let rendered = false;
+  const dispatch = useDispatch();
   const { userId } = useParams();
 
-  async function getTop(
-    subredditName: string,
-    subredditIcon: string
-  ): Promise<IPost[]> {
-    const subredditId = currentSubreddits[subredditName]._id;
-    const response = await getPostsInSubreddit(subredditId);
-    // add subreddit name and icon to post
-    const topPosts = response.posts.map((post) => ({
-      ...post,
-      subredditName,
-      subredditIcon,
-    }));
-    return topPosts;
-  }
 
   function isPostUrlImage(url: string | undefined): boolean {
     if (url !== undefined) {
@@ -76,47 +65,63 @@ function PostsArea({
     setPosts(reorderPosts(posts, order));
   }, [order]);
 
+
   useEffect(() => {
     let newPosts: IPost[] = [];
-    // if only displaying a particular user posts
-    if (onlyUser) {
-      setPosts([]);
-      Object.values(subreddits).forEach((subreddit: ICommunity) => {
+    // fetch posts from database
+    // only fetch posts after getting all subreddits from store and if posts are empty
+    if (
+      posts.length === 0 &&
+      Object.values(subreddits).length > 0 &&
+      !rendered
+    ) {
+      // if only displaying a particular user posts
+      if (onlyUser) {
         getPostsByUSer(userId as string)
           .then((userPosts) => {
             // only get posts authored by user
             setPosts(reorderPosts(userPosts.posts, order));
           })
           .catch((error) => console.log(error));
-      });
-    } else if (Object.values(subreddits).length === 1 && !rendered) {
-      // for subreddit display
-      setPosts([]);
-      Object.values(subreddits).forEach((subreddit) => {
-        // If there's no icon, show the default one
-        getTop(
-          subreddit.name,
-          subreddit.icon || defaultCommunityIcon
-        ).then((subPosts) => {
-        newPosts = newPosts.concat(subPosts);
-        setPosts(reorderPosts(newPosts, order));
-        }).catch((error) => console.log(error));
-      });
-      rendered = false;
-    } else if (Object.values(subreddits).length > 1) {
-      // for homepage without user
-      setPosts([]);
-      Object.values(subreddits).forEach((subreddit) => {
-        // If there's no icon, show the default one
-        getTop(subreddit.name, subreddit.icon || defaultCommunityIcon)
+      } else if (Object.values(subreddits).length === 1) {
+        // for subreddit display
+        const subredditId = currentSubreddits[Object.keys(subreddits)[0]]._id;
+        // get posts only in particular subreddit
+        getPostsInSubreddit(subredditId)
           .then((subPosts) => {
-            newPosts = newPosts.concat(subPosts);
+            newPosts = newPosts.concat(subPosts.posts);
             setPosts(reorderPosts(newPosts, order));
           })
           .catch((error) => console.log(error));
-      });
+      } else if (Object.values(subreddits).length > 1) {
+        // for homepage without user
+        Object.values(subreddits).forEach((subreddit) => {
+          // get all posts in every subreddit
+          getAllPosts()
+            .then((fetchedPosts) => {
+              setPosts(reorderPosts(fetchedPosts.posts, order));
+              dispatch(addPosts(fetchedPosts.posts));
+            })
+            .catch((error) => console.log(error));
+        });
+      }
+      setRendered(true);
+      // if posts are already in store, select only the ones from the user or subreddit
+    } else if (onlyUser && !rendered) {
+      // filter by posts authored by user
+      const onlyUserPosts = posts.filter((post) => post.user._id === userId);
+      setPosts(reorderPosts(onlyUserPosts, order));
+      setRendered(true);
+    } else if (Object.values(subreddits).length === 1 && !rendered) {
+      const subredditId = currentSubreddits[Object.keys(subreddits)[0]]._id;
+      // filter by posts in community
+      const onlySubredditPosts = posts.filter(
+        (post) => post.community._id === subredditId
+      );
+      setPosts(reorderPosts(onlySubredditPosts, order));
+      setRendered(true);
     }
-  }, [subreddits, user]);
+  }, [subreddits]);
 
   return (
     <PostsDiv id="posts">

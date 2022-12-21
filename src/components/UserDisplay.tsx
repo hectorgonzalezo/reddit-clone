@@ -29,13 +29,14 @@ function UserDisplay(): JSX.Element {
   const { userId } = useParams();
   const subreddits = useSelector(selectSubreddits);
   const [user, setUser] = useState<IUser>();
+  console.log(user)
 
   // get Info about user
   useEffect(() => {
       getUser(userId as string)
       .then((data) => {
         if (data !== undefined) {
-        setUser(data.user);
+          setUser(data.user);
         }
       })
       .catch((error) => console.log(error));
@@ -44,7 +45,9 @@ function UserDisplay(): JSX.Element {
   return (
     <>
       <div id="left-side">
+        {user !== undefined && subreddits? 
         <PostsArea subreddits={subreddits} order="new" onlyUser />
+        :null}
       </div>
       <div id="right-side">
         <UserInfo className="main-child">

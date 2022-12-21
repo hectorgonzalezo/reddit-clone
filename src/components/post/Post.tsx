@@ -106,7 +106,6 @@ function Post({
   const [previousVote, setPreviousVote] = useState(voteType);
   const [votes, setVotes] = useState(upVotes);
   const user = useSelector(selectUser);
-  const subreddits = useSelector(selectSubreddits);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

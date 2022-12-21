@@ -70,6 +70,10 @@ interface SubredditsObject {
   [index?: string]: ICommunity
 }
 
+interface PostsObject {
+  [index?: number]: IPost
+}
+
 interface LoginModalState {
   loginModalVisible: boolean;
 }
@@ -103,24 +107,6 @@ interface UserInState {
   votes: Votes;
   token: string;
 }
-
-
-
-
-
-// interface UserAction {
-//   type: string;
-//   user: IUser | null;
-// }
-
-// type DispatchUser = (args: UserAction) => UserAction;
-
-// interface SignUpError {
-//   location: string;
-//   msg: string;
-//   param: string;
-//   value: string;
-// }
 
 declare module "*.jpg";
 declare module "*.png";

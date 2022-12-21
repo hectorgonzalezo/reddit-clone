@@ -5,7 +5,6 @@ import { selectUser } from '../../store/userSlice';
 import CommentCreator from './CommentCreator';
 import commentIcon from '../../assets/comments_icon.svg';
 import { Link } from 'react-router-dom';
-import defaultUserIcon from '../../assets/user_icon.svg';
 
 interface CommentProps {
   commentsList: IComment[];

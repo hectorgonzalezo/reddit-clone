@@ -33,6 +33,21 @@ export async function vote(
   });
 }
 
+export async function getAllPosts(): Promise<{
+  posts: IPost[];
+  errors?: BackendErrors;
+}> {
+  const response = await fetch(`${BASEURL}/posts`, {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const posts = await response.json();
+  return posts;
+}
+
 export async function getPostsInSubreddit(
   subredditId: string
 ): Promise<{ posts: IPost[]; errors?: BackendErrors }> {
@@ -67,8 +82,7 @@ export async function getPostsByUSer(
   export async function createPost(
     post: { title: string; community: string; text?: string, url?: string},
     token: string
-  ): Promise<string> {
-    console.log({post})
+  ): Promise<IPost> {
     const response = await fetch(`${BASEURL}/posts`, {
       method: "POST",
       mode: "cors",
@@ -81,14 +95,14 @@ export async function getPostsByUSer(
 
     const data = await response.json();
 
-    return data.post._id;
+    return data.post;
   }
 
   export async function createImagePost(
     post: { title: string; community: string },
     user: IUser,
     image: File,
-  ): Promise<string> {
+  ): Promise<IPost> {
     const url = await uploadImage(image, `postImages/${user._id as string}/images`);
 
     const { title, community } = post;
@@ -104,5 +118,5 @@ export async function getPostsByUSer(
 
     const data = await response.json();
 
-    return data.post._id;
+    return data.post;
   }
