@@ -2,9 +2,9 @@
 
 by Héctor Gonzalez Orozco
 
-Built as the final project of the front-end javascript path part of [The Odin Project](https://www.theodinproject.com/) curriculum.
+Front end of reddit clone MERN app. Made using React and Redux.
 
-Made using React and Redux, with Firebase providing the backend.
+Code for the REST API can be found [here](https://github.com/hectorgonzalezo/reddit-clone-server)
 
 ## Features
 
@@ -28,5 +28,5 @@ All important components are thoroughly tested. To run tests use:
 
 ## Live Preview
 
-[https://reddit-clone-83ce9.web.app/](https://reddit-clone-83ce9.web.app/)
+[https://reddit-clone-52.netlify.app/](https://reddit-clone-52.netlify.app/)
 
