@@ -70,6 +70,10 @@ interface SubredditsObject {
   [index?: string]: ICommunity
 }
 
+interface PostssObject {
+  [index?: string]: IPost;
+}
+
 interface PostsObject {
   [index?: number]: IPost
 }

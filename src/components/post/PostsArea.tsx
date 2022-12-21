@@ -28,8 +28,9 @@ function PostsArea({
   onlyUser = false,
 }: PostsAreaProps): JSX.Element {
   const user = useSelector(selectUser);
+  const [previousUser, setPreviousUser] = useState(user);
   const currentPosts = useSelector(selectPosts);
-  const [posts, setPosts] = useState<IPost[]>(currentPosts);
+  const [posts, setPosts] = useState<IPost[]>(Object.values(currentPosts));
   const currentSubreddits = useSelector(selectSubreddits);
   const [rendered, setRendered] = useState(false);
   const navigate = useNavigate();
@@ -122,6 +123,19 @@ function PostsArea({
       setRendered(true);
     }
   }, [subreddits]);
+
+  // when logging in or out, update posts
+  // this prevents the user from voting twice
+  useEffect(() => {
+    // if user just logged in or out
+    if (previousUser.username !== user.username) {
+      setPosts([]);
+      setTimeout(() => {
+        setPosts(Object.values(currentPosts));
+      }, 0);
+      setPreviousUser(user);
+    }
+  }, [user]);
 
   return (
     <PostsDiv id="posts">

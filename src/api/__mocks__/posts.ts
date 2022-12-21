@@ -18,8 +18,11 @@ export async function vote(
   postId: string,
   voteType: Vote,
   token: string,
-): Promise<void> {
-  const response = await Promise.resolve();
+): Promise<any> {
+  return await Promise.resolve({
+    user: { _id: "2345", username: "juan", icon: "http://fake.com/fake" },
+    post: { _id: "1234" },
+  });
 }
 
 export async function getPostsInSubreddit(subredditId: string): Promise<IPost[]> {

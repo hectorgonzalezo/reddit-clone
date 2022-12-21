@@ -4,6 +4,7 @@ import { logIn } from '../api/users';
 import { addUser } from '../store/userSlice';
 import Button from './Button';
 import loadingIcon from '../assets/loading.gif';
+import { useNavigate } from 'react-router-dom';
 
 interface LogInModalProps {
   closeFunc: () => void;

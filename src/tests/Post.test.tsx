@@ -162,7 +162,7 @@ describe('Post previews', () => {
     expect(container).toMatchSnapshot();
   });
 
-  test('Pressing upvote and downvote buttons disabled if no poster is logged in', () => {
+  test('Pressing upvote and downvote buttons disabled if no poster is logged in', async () => {
     // render mock post preview
     render(
       <Provider store={store}>
@@ -188,8 +188,8 @@ describe('Post previews', () => {
     const downVoteImage = screen.getByTestId('down-vote-img');
     const votesNumber = screen.getByTestId('votes-display');
 
-    userEvent.click(voteButtons[0]);
-    userEvent.click(voteButtons[1]);
+    await act(() => userEvent.click(voteButtons[0]));
+    await act(() => userEvent.click(voteButtons[1]));
 
     expect(votesNumber).toHaveStyle('color: black');
     expect(upVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
@@ -237,7 +237,7 @@ describe('Post previews', () => {
     const downVoteImage = screen.getByTestId('down-vote-img');
     const votesNumber = screen.getByTestId('votes-display');
 
-    userEvent.click(voteButtons[0]);
+    await act(() => userEvent.click(voteButtons[0]));
 
     expect(votesNumber.textContent).toBe('11');
     expect(upVoteImage).toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
@@ -283,7 +283,7 @@ describe('Post previews', () => {
     const downVoteImage = screen.getByTestId('down-vote-img');
     const votesNumber = screen.getByTestId('votes-display');
 
-    userEvent.click(voteButtons[1]);
+    await act(() => userEvent.click(voteButtons[1]));
 
     expect(votesNumber.textContent).toBe('9');
     expect(upVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
@@ -330,8 +330,8 @@ describe('Post previews', () => {
     const downVoteImage = screen.getByTestId('down-vote-img');
     const votesNumber = screen.getByTestId('votes-display');
 
-    userEvent.click(voteButtons[0]);
-    userEvent.click(voteButtons[0]);
+    await act(() => userEvent.click(voteButtons[0]));
+    await act(() => userEvent.click(voteButtons[0]));
 
     expect(votesNumber.textContent).toBe('10');
     expect(upVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
@@ -377,8 +377,8 @@ describe('Post previews', () => {
     const downVoteImage = screen.getByTestId('down-vote-img');
     const votesNumber = screen.getByTestId('votes-display');
 
-    userEvent.click(voteButtons[1]);
-    userEvent.click(voteButtons[1]);
+    await act(() => userEvent.click(voteButtons[1]));
+    await act(() => userEvent.click(voteButtons[1]));
 
     expect(votesNumber.textContent).toBe('10');
     expect(upVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
@@ -424,14 +424,15 @@ describe('Post previews', () => {
     const downVoteImage = screen.getByTestId('down-vote-img');
     const votesNumber = screen.getByTestId('votes-display');
 
-    userEvent.click(voteButtons[0]);
-    userEvent.click(voteButtons[1]);
+    await act(() => userEvent.click(voteButtons[0]));
+    await act(() => userEvent.click(voteButtons[1]));
 
     expect(votesNumber.textContent).toBe('9');
     expect(upVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
     expect(downVoteImage).toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg)');
 
-    userEvent.click(voteButtons[0]);
+    await act(() => userEvent.click(voteButtons[0]));
+    
     expect(votesNumber.textContent).toBe('11');
     expect(upVoteImage).toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg)');
     expect(downVoteImage).not.toHaveStyle('filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg)');

@@ -1,9 +1,9 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { vote } from '../../api/posts';
 import styled from 'styled-components';
+import { vote } from '../../api/posts';
 import upIcon from '../../assets/upvote_icon.svg';
 import downIcon from '../../assets/downvote_icon.svg';
 import commentsIcon from '../../assets/comments_icon.svg';
@@ -13,11 +13,11 @@ import SubredditIcon from '../SubredditIcon';
 import formatUpVotes from '../../utils/formatUpVotes';
 import CommentsDisplay from './CommentsDisplay';
 import CommentCreator from './CommentCreator';
-import { selectUser } from '../../store/userSlice';
+import { selectUser, addUser } from '../../store/userSlice';
 import { toggleLogInModal } from '../../store/loginModalSlice';
 import countComments from '../../utils/countComents';
 import '../../styles/postStyle.scss';
-import { selectSubreddits } from '../../store/subredditsSlice';
+import { addPost } from '../../store/postsSlice';
 
 
 interface PostProps {
@@ -109,6 +109,23 @@ function Post({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  function sendVote(
+    newVoteType: Vote,
+    increase: number,
+  ): void {
+      const newVoteNumber = votes + increase;
+      setVotes(newVoteNumber);
+    // send request to update user and post
+    vote(user._id, postId, newVoteType, increase, user.token)
+      .then((data) => {
+        // add user to store
+        dispatch(addUser({ user: data.user, token: user.token }));
+        // dispatch posts
+        dispatch(addPost(data.post));
+      })
+      .catch((error) => console.log(error));
+  }
+
   // updates number of upvotes in post
   function updateVotes(e: SyntheticEvent): void {
     const target = e.target as HTMLAnchorElement;
@@ -122,50 +139,32 @@ function Post({
         // upVote => upVote
         case newVoteType === 'upVote' && previousVote === 'upVote':
           setPreviousVote('');
-          setVotes((prevVotes) => prevVotes - 1);
-          vote(user._id, subredditId, '', user.token)
-            .then((result) => {})
-            .catch((error) => console.log(error));
+          sendVote('', -1);
           break;
         // none => upVote
         case newVoteType === 'upVote' && previousVote === '':
           setPreviousVote('upVote');
-          setVotes((prevVotes) => prevVotes + 1);
-          vote(user._id, subredditId, newVoteType, user.token)
-            .then((result) => {})
-            .catch((error) => console.log(error));
+          sendVote(newVoteType, 1);
           break;
         // downVote => downVote
         case newVoteType === 'downVote' && previousVote === 'downVote':
           setPreviousVote('');
-          setVotes((prevVotes) => prevVotes + 1);
-          vote(user._id, subredditId, '', user.token)
-          .then((result) => {})
-          .catch((error) => console.log(error));
+          sendVote('', 1);
           break;
         // none => downVote
         case newVoteType === 'downVote' && previousVote === '':
           setPreviousVote('downVote');
-          setVotes((prevVotes) => prevVotes - 1);
-          vote(user._id, subredditId, newVoteType, user.token)
-            .then((result) => {})
-            .catch((error) => console.log(error));
+          sendVote(newVoteType, -1);
           break;
         // downvote => upvote
         case newVoteType === 'downVote' && previousVote === 'upVote':
           setPreviousVote('downVote');
-          setVotes((prevVotes) => prevVotes - 2);
-          vote(user._id, subredditId, newVoteType, user.token)
-            .then((result) => {})
-            .catch((error) => console.log(error));
+          sendVote(newVoteType, -2);
           break;
         // upvote => downvote
         case newVoteType === 'upVote' && previousVote === 'downVote':
           setPreviousVote('upVote');
-          setVotes((prevVotes) => prevVotes + 2);
-          vote(user._id, subredditId, newVoteType, user.token)
-            .then((result) => {})
-            .catch((error) => console.log(error));
+          sendVote(newVoteType, 2);
           break;
         default:
           break;
