@@ -3,7 +3,7 @@ import uploadImage from './uploadImage';
 
 export async function getUser(
   userId: string
-): Promise<{ user: IUser; errors?: BackendErrors }> {
+): Promise<{ user?: IUser; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/users/${userId}`, {
     method: "GET",
     mode: "cors",
@@ -20,7 +20,7 @@ export async function signUp(user: {
   email: string;
   password: string;
   passwordConfirm: string;
-}): Promise<{ user: IUser; errors?: BackendErrors }> {
+}): Promise<{ user?: IUser; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/users/sign-up`, {
     method: "POST",
     mode: "cors",
@@ -36,7 +36,7 @@ export async function signUp(user: {
 export async function logIn(user: {
   username: string;
   password: string;
-}): Promise<{ user: IUser; errors?: BackendErrors }> {
+}): Promise<{ user?: IUser; errors?: BackendErrors }> {
   const response = await fetch(`${BASEURL}/users/log-in`, {
     method: "POST",
     mode: "cors",
@@ -53,7 +53,7 @@ export async function logIn(user: {
 export async function saveUserIcon(
   file: File,
   user: IUser
-): Promise<{ user: IUser; errors?: BackendErrors }> {
+): Promise<{ user?: IUser; errors?: BackendErrors }> {
   try {
     // host image
     const icon = await uploadImage(file, `users/${user._id as string}/icon`);
@@ -84,7 +84,7 @@ export async function saveUserIcon(
 export async function subscribeToSubreddit(
   subredditId: string,
   user: IUser
-): Promise<{ user: IUser; errors?: BackendErrors }> {
+): Promise<{ user?: IUser; errors?: BackendErrors }> {
   const response = await fetch(
     `${BASEURL}/communities/${subredditId}/subscription/${user._id as string}`,
     {
@@ -102,7 +102,7 @@ export async function subscribeToSubreddit(
 export async function unsubscribeFromSubreddit(
   subredditId: string,
   user: IUser
-): Promise<{ user: IUser; errors?: BackendErrors }> {
+): Promise<{ user?: IUser; errors?: BackendErrors }> {
   const response = await fetch(
     `${BASEURL}/communities/${subredditId}/subscription/${user._id as string}`,
     {

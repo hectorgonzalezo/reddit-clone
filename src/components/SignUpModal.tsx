@@ -1,12 +1,12 @@
 import React, { useState, useRef, SyntheticEvent } from 'react';
-import { signUp } from '../api/users';
 import { useDispatch } from 'react-redux';
+import { signUp } from '../api/users';
 import Button from './Button';
 import { addUser } from '../store/userSlice';
 import loadingIcon from '../assets/loading.gif';
 
 interface SignUpModalProps {
-  closeFunc: () => void;
+  closeFunc?: () => void;
 };
 
 function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
@@ -17,6 +17,7 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
   const password2Ref = useRef<HTMLInputElement>(null);
   const [disableButton, setDisableButton] = useState(true);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+  const [usernameAlreadyExists, setUsernameAlreadyExists] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const dispatch = useDispatch();
 
@@ -85,6 +86,24 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
     setDisableButton(!form.checkValidity());
   }
 
+  // Shows error message on modal if username or email already exists
+  function displayErrorMessage(data: { errors: BackendErrors }): void {
+    switch (data.errors[0].msg) {
+      case 'Username already exists':
+        console.log('user') ;
+        setUsernameAlreadyExists(true);
+        break;
+      case 'Email already exists':
+        console.log('Email') ;
+        setEmailAlreadyExists(true);
+        break;
+      default:
+        break;
+    }
+    // hide loading animaiton
+    setLoadingData(false);
+  }
+
   function submitSignUp(e: SyntheticEvent): void {
     e.preventDefault();
     if (
@@ -100,24 +119,28 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
       const icon =
         "https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1";
       const votes = {};
-      try {
-        // add loading animation
-        setLoadingData(true);
+      // add loading animation
+      setLoadingData(true);
 
-        // Sign up user
-        signUp({ username, email, password, passwordConfirm })
-          .then((data) => {
-            setEmailAlreadyExists(false);
+      // Sign up user
+      signUp({ username, email, password, passwordConfirm })
+        .then((data) => {
+          setEmailAlreadyExists(false);
+          setUsernameAlreadyExists(false);
+          // if theres an error, display the message on modal
+          if(data.hasOwnProperty('errors')){
+            displayErrorMessage(data as { errors: BackendErrors });
+          } else {
             // update redux store
             dispatch(addUser(data));
-            closeFunc();
-          })
-          .catch((err) => console.log(err));
-      } catch (error) {
+          closeFunc();
+          }
+        })
+        .catch((err) =>{
+        console.log(err);
         // If email already exists
-        setEmailAlreadyExists(true);
         setLoadingData(false);
-      }
+        });
     }
   }
 
@@ -151,6 +174,7 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
         <form action="" ref={formRef}>
           <div className="input-wrap">
             <span />
+            {usernameAlreadyExists ? <span>Username is already registered</span> : null}
             <input
               type="text"
               placeholder="0"
@@ -166,6 +190,7 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
           </div>
           <div className="input-wrap">
             <span />
+            {emailAlreadyExists ? <span>Email is already registered</span> : null}
             <input
               type="email"
               placeholder="0"
@@ -208,7 +233,6 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
             />
             <label htmlFor="repeatPassword">Repeat Password</label>
           </div>
-          {emailAlreadyExists ? <span>Email is already registered</span> : null}
           <Button
             text=""
             type="submit"

@@ -36,18 +36,24 @@ function JoinButton({ subreddit }: JoinButtonProps): JSX.Element {
       });
       unsubscribeFromSubreddit(subredditId, user)
         .then((data) => {
-          updateUserStore(data.user)
-            .then()
-            .catch((error) => console.log(error));
+          // Check if data contains a user
+          if(data.user !== undefined){
+            updateUserStore(data.user)
+              .then()
+              .catch((error) => console.log(error));
+          };
         })
         .catch((error) => console.log(error));
     } else {
       setUserSubreddits((prev) => prev.concat(subreddit));
       subscribeToSubreddit(subredditId, user)
         .then((data) => {
-          updateUserStore(data.user)
-            .then()
-            .catch((error) => console.log(error));
+          // Check if data contains a user
+          if(data.user !== undefined){
+            updateUserStore(data.user)
+              .then()
+              .catch((error) => console.log(error));
+          };
         })
         .catch((error) => console.log(error));
     }
