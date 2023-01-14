@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { addUser } from './store/userSlice';
+import { addUser, selectUser} from './store/userSlice';
 import Header from './components/Header';
 import MainContainer from './components/MainContainer';
 import SignUpModal from './components/SignUpModal';
@@ -18,6 +18,7 @@ import { toggleAddCommunityModal, selectAddCommunityModalVisibility } from './st
 
 function App(): JSX.Element {
   const [signUpVisible, setSignUpVisible] = useState(false);
+  const user = useSelector(selectUser);
   const logInVisible = useSelector(selectLoginModalVisibility);
   const changeIconVisible = useSelector(selectChangeIconModalVisibility);
   const addCommunityVisible = useSelector(selectAddCommunityModalVisibility);
@@ -32,7 +33,7 @@ function App(): JSX.Element {
   // this keeps the user logged in even after closing the broswer
   useEffect(() => {
     const previousUser = localStorage.getItem('whoAmI');
-    if (previousUser !== null) {
+    if (previousUser !== null && user._id === undefined) {
       const parsedUser = JSON.parse(previousUser);
       dispatch(addUser(parsedUser));
     }

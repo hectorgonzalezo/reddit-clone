@@ -90,11 +90,9 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
   function displayErrorMessage(data: { errors: BackendErrors }): void {
     switch (data.errors[0].msg) {
       case 'Username already exists':
-        console.log('user') ;
         setUsernameAlreadyExists(true);
         break;
       case 'Email already exists':
-        console.log('Email') ;
         setEmailAlreadyExists(true);
         break;
       default:
@@ -116,9 +114,6 @@ function SignUpModal({ closeFunc= () => {} }: SignUpModalProps): JSX.Element {
       const email = emailRef.current.value;
       const password = password1Ref.current.value;
       const passwordConfirm = password2Ref.current.value;
-      const icon =
-        "https://firebasestorage.googleapis.com/v0/b/reddit-clone-83ce9.appspot.com/o/user_icon.svg?alt=media&token=50e7a9f1-8508-4d51-aac8-4d1ed9dad7a1";
-      const votes = {};
       // add loading animation
       setLoadingData(true);
 

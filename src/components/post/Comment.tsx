@@ -4,6 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { selectUser } from '../../store/userSlice';
 import CommentCreator from './CommentCreator';
 import commentIcon from '../../assets/comments_icon.svg';
+import defaultUserIcon from '../../defaultUserIcon';
 import { Link } from 'react-router-dom';
 
 interface CommentProps {
@@ -27,15 +28,22 @@ function Comment({
   const user = useSelector(selectUser);
   const [visibleCreator, setVisibleCreator] = useState(false);
   const [visibleEditor, setVisibleEditor] = useState(false);
-  // commentIndex contains the index to find the comment in the nested
-  // hierarchy of comments in the database
+  console.log(comment.user)
 
   return (
     <div className="comment-inside" data-testid="comment">
       <div className="comment">
         <div className="poster-area">
-          <img src={comment.user.icon} className="user-icon" alt="user icon" />
-          <Link to ={`/u/${comment.user._id}`}>{comment.user.username}</Link>
+          <img
+            src={
+              comment.user.icon !== undefined
+                ? comment.user.icon
+                : defaultUserIcon
+            }
+            className="user-icon"
+            alt="user icon"
+          />
+          <Link to={`/u/${comment.user._id}`}>{comment.user.username}</Link>
           <p>
             &nbsp;•&nbsp;
             {formatDistanceToNow(new Date(comment.createdAt as string))}
@@ -56,27 +64,27 @@ function Comment({
         ) : (
           <p>{comment.text}</p>
         )}
-        { user._id !== undefined ?
-        <div>
-          <button
-            type="button"
-            onClick={() => setVisibleCreator((prev) => !prev)}
-            data-testid="reply-button"
-          >
-            <img src={commentIcon} alt="" className="icon" />
-            <p>Reply</p>
-          </button>
-          {comment.user === user._id.toString() ? (
+        {user._id !== undefined ? (
+          <div>
             <button
               type="button"
-              onClick={() => setVisibleEditor((prev) => !prev)}
-              data-testid="edit-button"
+              onClick={() => setVisibleCreator((prev) => !prev)}
+              data-testid="reply-button"
             >
-              <p>Edit</p>
+              <img src={commentIcon} alt="" className="icon" />
+              <p>Reply</p>
             </button>
-          ) : null}
-        </div>
-        : null}
+            {comment.user === user._id.toString() ? (
+              <button
+                type="button"
+                onClick={() => setVisibleEditor((prev) => !prev)}
+                data-testid="edit-button"
+              >
+                <p>Edit</p>
+              </button>
+            ) : null}
+          </div>
+        ) : null}
         {visibleCreator ? (
           <CommentCreator
             commentsList={commentsList}
@@ -91,16 +99,16 @@ function Comment({
       {/* show responses if there are any */}
       {comment.responses !== undefined
         ? comment.responses.map((response, newIndex) => (
-          <Comment
-            key={newIndex}
-            commentsList={commentsList}
-            commentIndex={commentIndex.concat(newIndex)}
-            comment={response}
-            subreddit={subreddit}
-            postId={postId}
-            reloadPost={reloadPost}
-          />
-        ))
+            <Comment
+              key={newIndex}
+              commentsList={commentsList}
+              commentIndex={commentIndex.concat(newIndex)}
+              comment={response}
+              subreddit={subreddit}
+              postId={postId}
+              reloadPost={reloadPost}
+            />
+          ))
         : null}
     </div>
   );

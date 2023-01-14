@@ -7,6 +7,7 @@ import { getUser } from '../api/users';
 import Agreements from './Agreements';
 import Button from './Button';
 import PostsArea from './post/PostsArea';
+import defaultUserIcon from '../defaultUserIcon';
 
 const UserInfo = styled.div`
   display: flex;
@@ -29,7 +30,6 @@ function UserDisplay(): JSX.Element {
   const { userId } = useParams();
   const subreddits = useSelector(selectSubreddits);
   const [user, setUser] = useState<IUser>();
-  console.log(user)
 
   // get Info about user
   useEffect(() => {
@@ -53,7 +53,7 @@ function UserDisplay(): JSX.Element {
         <UserInfo className="main-child">
           {user !== undefined ? (
             <>
-              <img src={user.icon} alt="" />
+              <img src={user.icon !== undefined ?  user.icon : defaultUserIcon} alt="" />
               <h1>{user.username}</h1>
             </>
           ) : null}

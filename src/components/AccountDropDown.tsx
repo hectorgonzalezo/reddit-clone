@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../store/userSlice';
 import logoutIcon from '../assets/logout_icon.png';
@@ -15,7 +14,6 @@ interface AccountDropDownProps {
 
 function AccountDropDown({ visible, closeFunc, userIcon }: AccountDropDownProps): JSX.Element {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   // Log out current user
   function logOut(): void {
