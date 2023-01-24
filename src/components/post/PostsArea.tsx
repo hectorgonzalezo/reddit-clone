@@ -9,6 +9,7 @@ import { selectUser } from '../../store/userSlice';
 import { selectPosts, addPosts } from '../../store/postsSlice';
 import { selectSubreddits } from '../../store/subredditsSlice';
 import { useDispatch } from 'react-redux';
+import loadingPacman from '../../assets/loading_pacman.gif';
 
 interface PostsAreaProps {
   subreddits: SubredditsObject;
@@ -139,7 +140,13 @@ function PostsArea({
 
   return (
     <PostsDiv id="posts">
-      {posts.map((post) => (
+      {posts.length === 0?
+      <div className='loading-container'>
+        <h1 className='loading-title'>Loading server - this might take a while</h1>
+        <img src={loadingPacman} className='loading-image' alt="" />
+      </div>
+      :
+      posts.map((post) => (
           <Post
             preview
             onClick={(e) => gotToPost(e, post.community.name, post._id)}
@@ -165,7 +172,8 @@ function PostsArea({
             comments={post.comments}
           />
         )
-      )}
+      )
+    }
     </PostsDiv>
   );
 }

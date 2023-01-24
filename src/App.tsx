@@ -32,7 +32,7 @@ function App(): JSX.Element {
   // look if theres a user stored in local storage
   // this keeps the user logged in even after closing the broswer
   useEffect(() => {
-    const previousUser = localStorage.getItem('whoAmI');
+    const previousUser = localStorage.getItem('whoAmIReddit');
     if (previousUser !== null && user._id === undefined) {
       const parsedUser = JSON.parse(previousUser);
       dispatch(addUser(parsedUser));

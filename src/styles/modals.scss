@@ -134,9 +134,9 @@
     & > button {
       background-color: rgb(255, 106, 0);
       padding: 8px;
-
       img{
-        width: 18px;
+        height: auto;
+        width: auto
       }
     }
   }
@@ -231,8 +231,4 @@
   100% {
     opacity: 100%;
   }
-}
-
-* {
-  // outline: 2px dashed red;
 }

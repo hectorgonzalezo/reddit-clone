@@ -93,6 +93,18 @@ main {
   }
 }
 
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .loading-title{
+    font-size: 2rem;
+    text-align: center;
+  }
+  .loading-image{
+    width: min(60vw, 300px)
+  }
+}
 
 @media  screen and (max-width: 900px) {
   main{

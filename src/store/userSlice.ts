@@ -16,7 +16,7 @@ export const userSlice = createSlice({
 
       user.token = action.payload.token;
 
-      localStorage.setItem("whoAmI", JSON.stringify(action.payload));
+      localStorage.setItem("whoAmIReddit", JSON.stringify(action.payload));
 
       return user;
     },
