@@ -142,7 +142,6 @@ function PostsArea({
     <PostsDiv id="posts">
       {posts.length === 0?
       <div className='loading-container'>
-        <h1 className='loading-title'>Loading server - this might take a while</h1>
         <img src={loadingPacman} className='loading-image' alt="" />
       </div>
       :
