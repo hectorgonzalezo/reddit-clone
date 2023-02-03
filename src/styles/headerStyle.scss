@@ -1,5 +1,4 @@
 .App header {
-  width: 100vw;
   height: auto;
   display: flex;
   align-items: center;
@@ -27,7 +26,7 @@
 
 #logos {
   width: auto;
-  flex:0 0 50px;
+  // flex:0 0 50px;
   width: auto;
   img:first-child{
     height: 32px;
@@ -109,13 +108,24 @@
     display: none;
   }
 
-  #go-to > h1 {
+  #go-to h1 {
     display: none;
   }
 }
 
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 400px){
   .App header{
     gap: 5px;
+  }
+  #go-to{
+    max-width: 70px;
+  }
+  #search-bar{
+    max-width: 200px;
+  }
+  #user-area{
+    &> button > p{
+      display: none;
+    }
   }
 }

@@ -48,6 +48,7 @@ main {
 #left-side {
   height: auto;
   grid-column: 1 / 2;
+  width: auto;
 }
 
 #right-side{
@@ -116,8 +117,8 @@ main {
   }
 }
 
-@media  screen and (max-width: 400px) {
-  main{
+@media (max-width: 600px) {
+  .App main{
     padding: 10px;
   } 
 

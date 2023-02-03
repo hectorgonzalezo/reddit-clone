@@ -13,6 +13,7 @@ article.post{
     padding-right: 10px;
   }
 
+
   em {
     font-weight: bold;
     color: black;
@@ -63,7 +64,7 @@ article.post{
     padding-right: 13px;
     
     img {
-      max-width: 100%;
+      width: 100%;
     }
     p {
       font-size: 0.82rem;
@@ -179,7 +180,7 @@ article.post{
 
   #create-post-area{
     align-items: flex-start;
-    // border-left: 2px solid vr(--reddit-blue-light);
+    // border-left: 2px solid vr(-  -reddit-blue-light);
     margin-left: 15px;
     form{
       width: 80%;
@@ -188,6 +189,17 @@ article.post{
 
 }
 
-* {
-  // outline: 1px dashed red;
+@media (max-width: 500px){
+  article.post{
+    grid-template-areas:
+    "sub sub"
+    "vote main"
+    "vote comm";
+    grid-template-columns: 30px 1fr;
+  }
+  article.post div.top-area-post{
+    em, p, a {
+      font-size: 9px;
+    }
+  }
 }
