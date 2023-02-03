@@ -14,11 +14,14 @@ interface ButtonProps {
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  border: none;
   background-color: ${(props) => props.light ? 'white' : 'var(--reddit-blue)'};
-  outline: ${(props) => props.light ? '0.1rem solid var(--reddit-blue)' : ''};
+  border: ${(props) => props.light ? '0.1rem solid var(--reddit-blue)' : 'none'};
   color: ${(props) => props.light ? 'var(--reddit-blue)' : 'white'};
+  -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
   border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
   padding: 6px 13px 6px 13px;
   font-family: inherit;
   font-weight: bold;

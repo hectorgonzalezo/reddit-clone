@@ -193,9 +193,12 @@ article.post{
   article.post{
     grid-template-areas:
     "sub sub"
-    "vote main"
+    "main main"
     "vote comm";
-    grid-template-columns: 30px 1fr;
+    grid-template-columns: auto 1fr;
+    .vote-area-post{
+    flex-direction: row;
+  }
   }
   article.post div.top-area-post{
     em, p, a {

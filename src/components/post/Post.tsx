@@ -60,7 +60,7 @@ const PostContainer = styled.article<PostContainerProps>`
   &:hover {
     ${(props) => props.preview
           ? `
-    outline: 1px solid grey;
+    box-shadow: 0px 0px 1px 2px grey;
     cursor: pointer;
     `: ""
   }

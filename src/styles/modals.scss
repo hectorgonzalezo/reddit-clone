@@ -94,19 +94,23 @@
       color: red;
       font-size: 0.8rem;
     }
+
     input, textarea{
       border: none;
       background-color: rgb(232, 231, 231);
       border-radius: 1rem;
+      -moz-border-radius: 1rem;
+      -webkit-border-radius: 1rem;
       padding: 14px 10px 5px 15px;
       font-size: 1rem;
 
+
       &:invalid:not(:placeholder-shown),
       &.invalid {
-        outline: 1px solid red;
+        box-shadow: 0px 0px 1px 2px red;
       }
       &:valid:not(:focus):not(.invalid){
-        outline: 2px solid green;
+        box-shadow: 0px 0px 1px 2px green;
       }
 
       &::placeholder{
@@ -122,7 +126,7 @@
 
       &:hover {
         cursor:text;
-        outline: 1px solid grey;
+        box-shadow: 0px 0px 1px 2px solid grey;
 
         + label{
           top: 3px;

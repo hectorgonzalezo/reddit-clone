@@ -54,11 +54,10 @@ main {
 .main-input{
     background-color: rgb(242, 241, 241);
     padding: 6px 10px 6px 10px;
-    border: none;
-    outline: 1px solid var(--reddit-blue-super-light);
+    border: 1px solid var(--reddit-blue-super-light);
   
     &:hover{
-      outline: 1px solid var(--reddit-blue);
+      box-shadow: 0px 0px 1px 2px var(--reddit-blue);
       background-color: white;
     }
 }
@@ -98,7 +97,7 @@ main {
     text-align: left;
   }
   &:hover:not(#x-circle){
-    outline: 1px solid lightgray;
+    box-shadow: 0px 0px 1px 2px lightgray;
   }
 }
 
@@ -124,9 +123,6 @@ main {
   height:  16px;
 }
 
-// * {
-//   outline: 2px dashed red;
-// }
 
 
 @-webkit-keyframes heartbeat {
