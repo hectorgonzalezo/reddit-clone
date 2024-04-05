@@ -1,1 +1,1 @@
-export default 'https://reddit-server.onrender.com/';
+export default 'https://reddit-server.onrender.com';
